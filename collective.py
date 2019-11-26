@@ -12,6 +12,10 @@ class Collective(object):
         self.solutions.append(solution)
 
 
+    def evaluate(self):
+        self.algorithm.evaluate(self.algorithm.solutions)
+
+
     def init_algorithm(self, *args):
         constructor, kwargs = self.algorithm(*args)
 
