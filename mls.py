@@ -1,11 +1,17 @@
 import kmeans
+import time
 
 from collective import Collective
+from copy import copy
 
 from jmetal.core.algorithm import Algorithm
 from jmetal.config import store
 from jmetal.problem.multiobjective.zdt import ZDT1
-from jmetal.util.archive import NonDominatedSolutionListArchive
+from jmetal.util.archive import BoundedArchive
+from jmetal.util.density_estimator import CrowdingDistance
+from jmetal.util.solutions.comparator import DominanceComparator
+from jmetal.util.solutions.evaluator import SparkEvaluator
+
 
 from typing import TypeVar
 
@@ -35,9 +41,9 @@ class MultiLevelSelection(Algorithm[S, R]):
 
         self.max_evaluations = max_evaluations
         self.population_generator = population_generator
-        self.population_evaluator = population_evaluator
+        self.population_evaluator = SparkEvaluator()
 
-        self.pareto_front = NonDominatedSolutionListArchive()
+        self.pareto_front = BoundedArchive(1000, DominanceComparator(), CrowdingDistance())
         self.collectives = self.generate_collectives()
 
 
@@ -77,7 +83,11 @@ class MultiLevelSelection(Algorithm[S, R]):
                 if label == unique_label:
                     collective.add_solution(solution)
 
-            collective.init_algorithm(self.problem, len(collective.solutions), self.max_evaluations)
+            collective.init_algorithm(self.problem,
+                                      len(collective.solutions),
+                                      self.max_evaluations,
+                                      self.population_evaluator)
+
             collectives.append(collective)
 
         return collectives
@@ -119,8 +129,11 @@ class MultiLevelSelection(Algorithm[S, R]):
 
 
     def evaluate(self, solution_list):
+        for collective in self.collectives:
+            collective.evaluate()
+
         for solution in solution_list:
-            self.pareto_front.add(solution)
+            add = self.pareto_front.add(copy(solution))
 
         return self.pareto_front.solution_list
 
@@ -132,17 +145,24 @@ class MultiLevelSelection(Algorithm[S, R]):
 
     def stopping_condition_is_met(self):
         for collective in self.collectives:
-            print(collective.algorithm.evaluations)
             if collective.algorithm.stopping_condition_is_met():
                 return True
         return False
 
-    def step(self):
-        for collective in self.collectives:
-            print(collective.algorithm.get_name())
-            collective.algorithm.step()
 
-            self.solutions = self.evaluate(collective.algorithm.solutions)
+    def step(self):
+        start = time.time()
+        for collective in self.collectives:
+            collective.algorithm.step()
+            print("Collective: {}, solutions: {}, evaluations: {}".format(
+                collective.algorithm.get_name(),
+                len(collective.algorithm.get_result()),
+                collective.algorithm.evaluations))
+
+            self.solutions = self.evaluate(collective.algorithm.get_result())
+
+        print("Pareto front: {}".format(len(self.pareto_front.solution_list)))
+        print("Time taken: {}".format(time.time() - start))
 
     def update_progress(self):
         for collective in self.collectives:
@@ -152,7 +172,7 @@ class MultiLevelSelection(Algorithm[S, R]):
         pass
 
     def get_result(self):
-        pass
+        return self.pareto_front.solution_list
 
     def get_name(self):
         pass
