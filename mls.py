@@ -41,7 +41,7 @@ class MultiLevelSelection(Algorithm[S, R]):
 
         self.max_evaluations = max_evaluations
         self.population_generator = population_generator
-        self.population_evaluator = SparkEvaluator()
+        self.population_evaluator = population_evaluator
 
         self.pareto_front = BoundedArchive(1000, DominanceComparator(), CrowdingDistance())
         self.collectives = self.generate_collectives()
