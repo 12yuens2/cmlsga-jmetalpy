@@ -1,4 +1,5 @@
 import kmeans
+import math
 import time
 
 from collective import Collective
@@ -144,25 +145,61 @@ class MultiLevelSelection(Algorithm[S, R]):
 
 
     def stopping_condition_is_met(self):
-        for collective in self.collectives:
-            if collective.algorithm.stopping_condition_is_met():
-                return True
-        return False
+        return sum([
+            collective.evaluations for collective in self.collectives
+        ]) > self.max_evaluations
 
 
     def step(self):
+        self._update_collectives()
+        self._replace_worst_collective()
+
+
+    def _update_collectives(self):
         start = time.time()
         for collective in self.collectives:
-            collective.algorithm.step()
+            collective.step()
             print("Collective: {}, solutions: {}, evaluations: {}".format(
                 collective.algorithm.get_name(),
                 len(collective.algorithm.get_result()),
                 collective.algorithm.evaluations))
 
             self.solutions = self.evaluate(collective.algorithm.get_result())
-
         print("Pareto front: {}".format(len(self.pareto_front.solution_list)))
         print("Time taken: {}".format(time.time() - start))
+        print("Evaluations: {}\n".format(self.evaluations))
+
+
+    def _replace_worst_collective(self):
+        worst_collective = self._get_worst_collective()
+        worst_collective_size = len(worst_collective.solutions)
+
+        worst_collective.erase()
+        self.collectives.remove(worst_collective)
+
+        num_solutions = math.ceil(worst_collective_size / len(self.collectives))
+        for collective in self.collectives:
+            for best_solution in collective.best_solutions(num_solutions):
+                worst_collective.add_solution(best_solution, worst_collective_size)
+
+        worst_collective.restart()
+        self.collectives.append(worst_collective)
+
+
+    def _get_worst_collective(self):
+        worst_collective = None
+        fitness = 1e10
+
+        for collective in self.collectives:
+            collective_fitness = collective.calculate_fitness()
+            print("Collective: {}, fitness: {}".format(collective, collective_fitness))
+            if collective_fitness < fitness:
+                worst_collective = collective
+                fitness = collective_fitness
+
+        print("Replace {}".format(worst_collective))
+        return worst_collective
+
 
     def update_progress(self):
         for collective in self.collectives:

@@ -5,15 +5,50 @@ class Collective(object):
         self.algorithm = algorithm
         self.label = label
 
+        self.evaluations = 0
         self.solutions = []
 
 
-    def add_solution(self, solution):
-        self.solutions.append(solution)
+    def add_solution(self, solution, max_number=0):
+        if max_number != 0:
+            if len(self.solutions) < max_number:
+                self.solutions.append(solution)
+        else:
+            self.solutions.append(solution)
 
+    def erase(self):
+        self.solutions = []
+        self.algorithm.solutions = []
+
+    def restart(self):
+        self.algorithm.solutions = self.solutions
+        self.algorithm.init_progress()
+        self.algorithm.evaluations += self.evaluations
+
+
+    def step(self):
+        self.algorithm.step()
+        self.evaluations = self.algorithm.evaluations
 
     def evaluate(self):
         self.algorithm.evaluate(self.algorithm.solutions)
+
+
+    def calculate_fitness(self):
+        self.solutions = self.algorithm.evaluate(self.algorithm.solutions)
+
+        # Average fitness of all solutions (MLS1)
+        collective_fitness = avg([
+            avg([o for o in solution.objectives])
+            for solution in self.solutions
+        ])
+
+        return collective_fitness
+
+
+    # TODO get by fitness
+    def best_solutions(self, num_solutions):
+        return self.algorithm.solutions[:num_solutions]
 
 
     def init_algorithm(self, *args):
@@ -24,5 +59,9 @@ class Collective(object):
 
 
     def __repr__(self):
-        return "Collective {} - {} - {} solutions\n".format(
+        return "Collective {} - {} - {} solutions".format(
             self.label, self.algorithm, len(self.algorithm.solutions))
+
+
+def avg(l):
+    return sum(l) / len(l)

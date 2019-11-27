@@ -27,7 +27,7 @@ def nsgaii(problem, population_size, max_evaluations, evaluator):
                 probability=1.0 / problem.number_of_variables,
                 distribution_index=20
             ),
-            "crossover": SBXCrossover(probability=1.0, distribution_index=2),
+            "crossover": SBXCrossover(probability=1.0, distribution_index=1),
             "termination_criterion": StoppingByEvaluations(max=max_evaluations),
             "population_evaluator": evaluator
         }
@@ -77,43 +77,43 @@ def omopso(problem, population_size, max_evaluations, evaluator):
     )
 
 
-def configure_experiment(problems, num_runs):
+def configure_experiment(algorithms, problems, num_runs):
     jobs = []
     max_evaluations = 15000
     population_size = 100
 
     for run in range(num_runs):
         for problem in problems:
-            nsgaii_constructor, kwargs = nsgaii(problem, population_size,
-                                    max_evaluations, store.default_evaluator)
-            jobs.append(Job(
-                algorithm=nsgaii_constructor(**kwargs),
-                algorithm_tag="NSGAII",
-                problem_tag=problem.get_name(),
-                run=run
-            ))
+            for algorithm in algorithms:
+                nsgaii_constructor, kwargs = nsgaii(problem, population_size,
+                                        max_evaluations, store.default_evaluator)
+                jobs.append(Job(
+                    algorithm=nsgaii_constructor(**kwargs),
+                    algorithm_tag="NSGAII",
+                    problem_tag=problem.get_name(),
+                    run=run
+                ))
 
-            moead_constructor, kwargs = moead(problem, population_size,
-                                  max_evaluations, store.default_evaluator)
-            jobs.append(Job(
-                algorithm=moead_constructor(**kwargs),
-                algorithm_tag="MOEAD",
-                problem_tag=problem.get_name(),
-                run=run
-            ))
+                moead_constructor, kwargs = moead(problem, population_size,
+                                    max_evaluations, store.default_evaluator)
+                jobs.append(Job(
+                    algorithm=moead_constructor(**kwargs),
+                    algorithm_tag="MOEAD",
+                    problem_tag=problem.get_name(),
+                    run=run
+                ))
 
     return jobs
 
 
-
-if __name__ == "__main__":
-
+def experiment():
     jobs = configure_experiment([Srinivas(), ZDT1(), ZDT2()], 30)
 
     output_directory = "data"
+    algorithms = [nsgaii, moead]
 
-    #experiment = Experiment(output_directory, jobs)
-    #experiment.run()
+    experiment = Experiment(algorithms, output_directory, jobs)
+    experiment.run()
 
     generate_summary_from_experiment(
         output_directory,
@@ -121,19 +121,25 @@ if __name__ == "__main__":
         reference_fronts="resources/reference_front",
     )
 
-    #problem = Srinivas()
-    #problem.reference_front = read_solutions(filename="resources/reference_front/Srinivas.pf")
+def run_mlsga():
+    problem = Srinivas()
+    problem.reference_front = read_solutions(filename="resources/reference_front/Srinivas.pf")
 
-    #max_evaluations = 10000
+    max_evaluations = 10000
 
-    #mls = MultiLevelSelection(
-    #    max_evaluations=max_evaluations,
-    #    problem=problem,
-    #    algorithms=[nsgaii, moead]#, omopso]
-    #)
-    #mls.run()
+    mls = MultiLevelSelection(
+        max_evaluations=max_evaluations,
+        problem=problem,
+        algorithms=[nsgaii, moead]#, omopso]
+    )
+    mls.run()
 
-    #front = mls.get_result()
+    front = mls.get_result()
 
-    #plot_front = Plot(plot_title='Pareto front approximation', reference_front=problem.reference_front, axis_labels=problem.obj_labels)
-    #plot_front.plot(front, label="MLS", filename="MLS")
+    plot_front = Plot(plot_title='Pareto front approximation', reference_front=problem.reference_front, axis_labels=problem.obj_labels)
+    plot_front.plot(front, label="MLS", filename="MLS")
+
+
+if __name__ == "__main__":
+    #experiment()
+    run_mlsga()
