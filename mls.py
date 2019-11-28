@@ -145,9 +145,12 @@ class MultiLevelSelection(Algorithm[S, R]):
 
 
     def stopping_condition_is_met(self):
-        return sum([
+        evaluations = sum([
             collective.evaluations for collective in self.collectives
-        ]) > self.max_evaluations
+        ])
+
+        print("Evaluations: {}\n".format(evaluations))
+        return  evaluations > self.max_evaluations
 
 
     def step(self):
@@ -167,7 +170,6 @@ class MultiLevelSelection(Algorithm[S, R]):
             self.solutions = self.evaluate(collective.algorithm.get_result())
         print("Pareto front: {}".format(len(self.pareto_front.solution_list)))
         print("Time taken: {}".format(time.time() - start))
-        print("Evaluations: {}\n".format(self.evaluations))
 
 
     def _replace_worst_collective(self):
