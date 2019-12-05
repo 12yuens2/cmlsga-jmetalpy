@@ -53,7 +53,7 @@ class MultiLevelSelection(Algorithm[S, R]):
 
     def generate_collectives(self):
         collectives = self.initialise_temp_collectives()
-        print(collectives)
+        #print(collectives)
         return collectives
 
 
@@ -152,15 +152,15 @@ class MultiLevelSelection(Algorithm[S, R]):
 
 
     def stopping_condition_is_met(self):
-        self.generations += 1
-        return self.generations >= 100
+        #self.generations += 1
+        #return self.generations >= 100
 
-        #evaluations = sum([
-        #    collective.evaluations for collective in self.collectives
-        #])
+        evaluations = sum([
+            collective.evaluations for collective in self.collectives
+        ])
 
         #print("Evaluations: {}\n".format(evaluations))
-        #return  evaluations > self.max_evaluations
+        return  evaluations > self.max_evaluations
 
 
     def step(self):
@@ -173,14 +173,14 @@ class MultiLevelSelection(Algorithm[S, R]):
         start = time.time()
         for collective in self.collectives:
             collective.step()
-            print("Collective: {}, solutions: {}, evaluations: {}".format(
-                collective.algorithm.get_name(),
-                len(collective.algorithm.solutions),
-                collective.algorithm.evaluations))
+            #print("Collective: {}, solutions: {}, evaluations: {}".format(
+            #    collective.algorithm.get_name(),
+            #    len(collective.algorithm.solutions),
+            #    collective.algorithm.evaluations))
 
             self.solutions = self.evaluate(collective.algorithm.solutions)
-        print("Pareto front: {}".format(len(self.pareto_front.solution_list)))
-        print("Time taken: {}".format(time.time() - start))
+        #print("Pareto front: {}".format(len(self.pareto_front.solution_list)))
+        #print("Time taken: {}".format(time.time() - start))
 
 
     def _replace_worst_collective(self):
@@ -210,7 +210,7 @@ class MultiLevelSelection(Algorithm[S, R]):
                 worst_collective = collective
                 fitness = collective_fitness
 
-        print("Replace {}, fitness: {}".format(worst_collective, fitness))
+        #print("Replace {}, fitness: {}".format(worst_collective, fitness))
         return worst_collective
 
 
