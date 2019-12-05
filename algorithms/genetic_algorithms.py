@@ -1,18 +1,62 @@
 from jmetal.algorithm.multiobjective.nsgaii import NSGAII
 from jmetal.algorithm.multiobjective.moead import MOEAD
 from jmetal.algorithm.multiobjective.omopso import OMOPSO
+from jmetal.algorithm.singleobjective.genetic_algorithm import GeneticAlgorithm
+from jmetal.config import store
 from jmetal.operator import PolynomialMutation, UniformMutation, \
     DifferentialEvolutionCrossover, SBXCrossover
+from jmetal.operator.crossover import PMXCrossover
 from jmetal.operator.mutation import NonUniformMutation
+from jmetal.operator.selection import RouletteWheelSelection
 from jmetal.util.aggregative_function import Tschebycheff
 from jmetal.util.archive import CrowdingDistanceArchive
 from jmetal.util.termination_criterion import StoppingByEvaluations
 
+class MOGeneticAlgorithm(GeneticAlgorithm):
+    def __init__( self, problem, population_size, offspring_population_size,
+                  mutation, crossover, selection,
+                  termination_criterion=store.default_termination_criteria,
+                  population_generator=store.default_generator,
+                  population_evaluator=store.default_evaluator):
+
+        super(MOGeneticAlgorithm, self).__init__(
+            problem, population_size, offspring_population_size,
+            mutation, crossover, selection)
+
+    def replacement(self, population, offspring_population):
+        population.extend(offspring_population)
+
+        # average fitness of all objectives (MLS1)
+        population.sort(key=lambda s: sum([o for o in s.objectives])/len(s.objectives))
+
+        return population[:self.population_size]
+
+    def get_result(self):
+        return self.solutions
+
+
+def genetic_algorithm(problem, population_size, max_evaluations, evaluator):
+    return (
+        MOGeneticAlgorithm,
+        {
+            "problem": problem,
+            "population_size": population_size,
+            "offspring_population_size": population_size,
+            "mutation": PolynomialMutation(
+                0.08,#probability=1.0 / problem.number_of_variables,
+                distribution_index=20
+            ),
+            "crossover": SBXCrossover(0.7, distribution_index=20),
+            "selection": RouletteWheelSelection(),
+            "termination_criterion": StoppingByEvaluations(max=max_evaluations)
+        }
+    )
 
 def nsgaii(problem, population_size, max_evaluations, evaluator):
     return (
         NSGAII,
-        { "problem": problem,
+        {
+            "problem": problem,
             "population_size": population_size,
             "offspring_population_size": population_size,
             "mutation": PolynomialMutation(

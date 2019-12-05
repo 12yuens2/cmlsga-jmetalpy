@@ -38,10 +38,13 @@ class Collective(object):
         self.solutions = self.algorithm.evaluate(self.algorithm.solutions)
 
         # Average fitness of all solutions (MLS1)
-        collective_fitness = avg([
-            avg([o for o in solution.objectives])
-            for solution in self.solutions
-        ])
+        collective_fitness = 0
+        for solution in self.solutions:
+            temp_fitness = 0
+            for objective in solution.objectives:
+                temp_fitness += objective / len(solution.objectives)
+            collective_fitness += temp_fitness
+        collective_fitness /= len(self.solutions)
 
         return collective_fitness
 

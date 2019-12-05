@@ -23,8 +23,9 @@ class MultiLevelSelection(Algorithm[S, R]):
 
     def __init__(self,
                  problem=ZDT1(),
-                 number_of_collectives=2,
-                 population_size=1200,
+                 number_of_collectives=6,
+                 num_new_collectives=2,
+                 population_size=600,
                  algorithms=[],
                  mls_mode=7,
                  max_evaluations=30000,
@@ -34,6 +35,7 @@ class MultiLevelSelection(Algorithm[S, R]):
 
         self.problem = problem
         self.number_of_collectives = number_of_collectives
+        self.num_new_collectives = num_new_collectives
         self.population_size = population_size
 
         self.algorithms = algorithms
@@ -43,6 +45,7 @@ class MultiLevelSelection(Algorithm[S, R]):
         self.max_evaluations = max_evaluations
         self.population_generator = population_generator
         self.population_evaluator = population_evaluator
+        self.generations = 0
 
         self.pareto_front = BoundedArchive(1000, DominanceComparator(), CrowdingDistance())
         self.collectives = self.generate_collectives()
@@ -130,6 +133,10 @@ class MultiLevelSelection(Algorithm[S, R]):
 
 
     def evaluate(self, solution_list):
+        # TODO refactor, convert to list if given a single solution
+        if not isinstance(solution_list, list):
+            solution_list = [solution_list]
+
         for collective in self.collectives:
             collective.evaluate()
 
@@ -145,17 +152,21 @@ class MultiLevelSelection(Algorithm[S, R]):
 
 
     def stopping_condition_is_met(self):
-        evaluations = sum([
-            collective.evaluations for collective in self.collectives
-        ])
+        self.generations += 1
+        return self.generations >= 100
 
-        print("Evaluations: {}\n".format(evaluations))
-        return  evaluations > self.max_evaluations
+        #evaluations = sum([
+        #    collective.evaluations for collective in self.collectives
+        #])
+
+        #print("Evaluations: {}\n".format(evaluations))
+        #return  evaluations > self.max_evaluations
 
 
     def step(self):
         self._update_collectives()
-        self._replace_worst_collective()
+        for i in range(self.num_new_collectives):
+            self._replace_worst_collective()
 
 
     def _update_collectives(self):
@@ -164,10 +175,10 @@ class MultiLevelSelection(Algorithm[S, R]):
             collective.step()
             print("Collective: {}, solutions: {}, evaluations: {}".format(
                 collective.algorithm.get_name(),
-                len(collective.algorithm.get_result()),
+                len(collective.algorithm.solutions),
                 collective.algorithm.evaluations))
 
-            self.solutions = self.evaluate(collective.algorithm.get_result())
+            self.solutions = self.evaluate(collective.algorithm.solutions)
         print("Pareto front: {}".format(len(self.pareto_front.solution_list)))
         print("Time taken: {}".format(time.time() - start))
 
@@ -194,12 +205,12 @@ class MultiLevelSelection(Algorithm[S, R]):
 
         for collective in self.collectives:
             collective_fitness = collective.calculate_fitness()
-            print("Collective: {}, fitness: {}".format(collective, collective_fitness))
+            #print("Collective: {}, fitness: {}".format(collective, collective_fitness))
             if collective_fitness < fitness:
                 worst_collective = collective
                 fitness = collective_fitness
 
-        print("Replace {}".format(worst_collective))
+        print("Replace {}, fitness: {}".format(worst_collective, fitness))
         return worst_collective
 
 
