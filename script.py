@@ -54,46 +54,39 @@ def experiment():
         reference_fronts="resources/reference_front",
     )
 
+
+
+def run_algorithm(algorithm, problem,
+                  population_size=600, max_evaluations=30000, evaluator=store.default_evaluator):
+
+    constructor, kwargs = algorithm(problem, population_size, max_evaluations, evaluator)
+    algo = constructor(**kwargs)
+    algo.run()
+
+    return algo.get_result()
+
+
 def run_mlsga():
     problem = ZDT6()
     problem.reference_front = read_solutions(filename="resources/reference_front/ZDT6.pf")
 
-    max_evaluations = 30000
+    population_size = 600
+    max_evaluations = 100000
 
-    mls = MultiLevelSelection(
-        number_of_collectives=6,
-        max_evaluations=max_evaluations,
-        problem=problem,
-        algorithms=[genetic_algorithm]
-    )
-    mls.run()
+    algorithms = [mlsga, nsgaii, moead, omopso]
+    results = {}
+    for algorithm in algorithms:
+        print("Running {}".format(algorithm.__name__))
+        front = run_algorithm(algorithm, problem, population_size, max_evaluations)
+        results[algorithm.__name__] = front
 
-    print("nsga2")
-    nsga, kwargs = nsgaii(problem, 600, 30000, store.default_evaluator)
-    nsga2 = nsga(**kwargs)
-    nsga2.run()
 
-    print("moead")
-    moea, kwargs = moead(problem, 600, 30000, store.default_evaluator)
-    moea_d = moea(**kwargs)
-    moea_d.run()
-
-    print("omopso")
-    mopso, kwargs = omopso(problem, 600, 30000, store.default_evaluator)
-    ompso = mopso(**kwargs)
-    ompso.run()
-
-    front = mls.get_result()
-    nsga2_front = nsga2.get_result()
-    moead_front = moea_d.get_result()
-    omopso_front = ompso.get_result()
-
-    plot_front = Plot(plot_title='Pareto front approximation', reference_front=problem.reference_front, axis_labels=problem.obj_labels)
+    print(results)
+    plot_front = Plot(plot_title='Pareto front approximation',
+                      reference_front=problem.reference_front,
+                      axis_labels=problem.obj_labels)
     plot_front.plot(
-        [front, nsga2_front, moead_front, omopso_front],
-        label=["MLS", "NSGAII", "MOEAD", "OMOPSO"], filename="MLS")
-
-    return 0
+        list(results.values()), list(results.keys()), filename=problem.get_name())
 
 
 if __name__ == "__main__":

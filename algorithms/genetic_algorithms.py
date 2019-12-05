@@ -12,6 +12,8 @@ from jmetal.util.aggregative_function import Tschebycheff
 from jmetal.util.archive import CrowdingDistanceArchive
 from jmetal.util.termination_criterion import StoppingByEvaluations
 
+from mls import MultiLevelSelection
+
 class MOGeneticAlgorithm(GeneticAlgorithm):
     def __init__( self, problem, population_size, offspring_population_size,
                   mutation, crossover, selection,
@@ -49,6 +51,18 @@ def genetic_algorithm(problem, population_size, max_evaluations, evaluator):
             "crossover": SBXCrossover(0.7, distribution_index=20),
             "selection": RouletteWheelSelection(),
             "termination_criterion": StoppingByEvaluations(max=max_evaluations)
+        }
+    )
+
+def mlsga(problem, population_size, max_evaluations, evaluator):
+    return (
+        MultiLevelSelection,
+        {
+            "problem": problem,
+            "population_size": population_size,
+            "max_evaluations": max_evaluations,
+            "number_of_collectives": 6,
+            "algorithms": [genetic_algorithm]
         }
     )
 
