@@ -55,19 +55,13 @@ class MultiLevelSelection(Algorithm[S, R]):
     def generate_collectives(self):
         collectives = self.initialise_temp_collectives()
 
-        # collectives need to be even for jmetalpy reproduction
-        while not self.even_collectives(collectives):
-            collectives = self.initialise_temp_collectives()
+        # mating pool size must be even for jmetalpy
+        for col in collectives:
+            if len(col.solutions) % 2 != 0:
+                col.algorithm.mating_pool_size += 1
 
         return collectives
 
-
-    def even_collectives(self, collectives):
-        for col in collectives:
-            if len(col.solutions) % 2 != 0:
-                return False
-
-        return True
 
     def initialise_temp_collectives(self):
         subpopulation_sizes = self.get_subpopulation_sizes()
