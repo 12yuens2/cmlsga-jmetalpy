@@ -1,6 +1,6 @@
 from jmetal.config import store
 from jmetal.core.quality_indicator import *
-from jmetal.lab.experiment import Experiment, Job, generate_summary_from_experiment
+from jmetal.lab.experiment import *
 from jmetal.lab.visualization import Plot
 from jmetal.problem.multiobjective.constrained import Srinivas
 from jmetal.problem.multiobjective.zdt import ZDT1, ZDT2, ZDT6
@@ -34,7 +34,7 @@ def configure_experiment(algorithms, problems, num_runs):
     return jobs
 
 
-def experiment(algorithms=[nsgaii, moead, omopso],
+def experiment(algorithms=[mlsga, nsgaii, moead, omopso],
                problems=[Srinivas(), ZDT1(), ZDT2(), ZDT6()],
                number_of_runs=30):
 
@@ -86,13 +86,10 @@ def run_mlsga():
         list(results.values()), list(results.keys()), filename=problem.get_name())
 
 
+
 if __name__ == "__main__":
+
+    #generate_boxplot("QualityIndicatorSummary.csv")
+
     experiment()
-    #while True:
-    #    try:
-    #        run_mlsga()
-    #    except Exception as e:
-    #        print(e)
-    #        print("\n")
-    #        continue
-    #    break
+    #run_mlsga()
