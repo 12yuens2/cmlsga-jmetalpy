@@ -4,6 +4,7 @@ from jmetal.lab.experiment import Experiment, Job, generate_summary_from_experim
 from jmetal.lab.visualization import Plot
 from jmetal.problem.multiobjective.constrained import Srinivas
 from jmetal.problem.multiobjective.zdt import ZDT1, ZDT2, ZDT6
+from jmetal.util.observer import ProgressBarObserver
 from jmetal.util.solutions import read_solutions
 
 from mls import MultiLevelSelection
@@ -12,26 +13,20 @@ from algorithms.genetic_algorithms import *
 
 def configure_experiment(algorithms, problems, num_runs):
     jobs = []
-    max_evaluations = 15000
-    population_size = 100
+    max_evaluations = 30000
+    population_size = 600
 
     for run in range(num_runs):
         for problem in problems:
             for algorithm in algorithms:
-                nsgaii_constructor, kwargs = nsgaii(problem, population_size,
-                                        max_evaluations, store.default_evaluator)
-                jobs.append(Job(
-                    algorithm=nsgaii_constructor(**kwargs),
-                    algorithm_tag="NSGAII",
-                    problem_tag=problem.get_name(),
-                    run=run
-                ))
+                constructor, kwargs = algorithm(problem, population_size,
+                                                max_evaluations, store.default_evaluator)
+                algorithm = constructor(**kwargs)
+                algorithm.observable.register(observer=ProgressBarObserver(max=max_evaluations))
 
-                moead_constructor, kwargs = moead(problem, population_size,
-                                    max_evaluations, store.default_evaluator)
                 jobs.append(Job(
-                    algorithm=moead_constructor(**kwargs),
-                    algorithm_tag="MOEAD",
+                    algorithm=algorithm,
+                    algorithm_tag=algorithm.get_name(),
                     problem_tag=problem.get_name(),
                     run=run
                 ))
@@ -39,13 +34,14 @@ def configure_experiment(algorithms, problems, num_runs):
     return jobs
 
 
-def experiment():
-    jobs = configure_experiment([Srinivas(), ZDT1(), ZDT2()], 30)
+def experiment(algorithms=[nsgaii, moead, omopso],
+               problems=[Srinivas(), ZDT1(), ZDT2(), ZDT6()],
+               number_of_runs=30):
+
+    jobs = configure_experiment(algorithms, problems, number_of_runs)
 
     output_directory = "data"
-    algorithms = [nsgaii, moead]
-
-    experiment = Experiment(algorithms, output_directory, jobs)
+    experiment = Experiment(output_directory, jobs)
     experiment.run()
 
     generate_summary_from_experiment(
@@ -61,6 +57,7 @@ def run_algorithm(algorithm, problem,
 
     constructor, kwargs = algorithm(problem, population_size, max_evaluations, evaluator)
     algo = constructor(**kwargs)
+    algo.observable.register(observer=ProgressBarObserver(max=max_evaluations))
     algo.run()
 
     return algo.get_result()
@@ -90,12 +87,12 @@ def run_mlsga():
 
 
 if __name__ == "__main__":
-    #experiment()
-    while True:
-        try:
-            run_mlsga()
-        except Exception as e:
-            print(e)
-            print("\n")
-            continue
-        break
+    experiment()
+    #while True:
+    #    try:
+    #        run_mlsga()
+    #    except Exception as e:
+    #        print(e)
+    #        print("\n")
+    #        continue
+    #    break
