@@ -49,7 +49,7 @@ class Collective(object):
         return collective_fitness
 
 
-    # TODO get by fitness
+    # TODO sort and get by fitness
     def best_solutions(self, num_solutions):
         return self.algorithm.solutions[:num_solutions]
 

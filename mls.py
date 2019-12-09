@@ -12,6 +12,7 @@ from jmetal.util.archive import BoundedArchive
 from jmetal.util.density_estimator import CrowdingDistance
 from jmetal.util.solutions.comparator import DominanceComparator
 from jmetal.util.solutions.evaluator import SparkEvaluator
+from jmetal.util.termination_criterion import StoppingByEvaluations
 
 
 from typing import TypeVar
@@ -160,7 +161,7 @@ class MultiLevelSelection(Algorithm[S, R]):
         ])
 
         #print("Evaluations: {}\n".format(evaluations))
-        return  evaluations > self.max_evaluations
+        return evaluations > self.max_evaluations
 
 
     def step(self):
@@ -225,4 +226,4 @@ class MultiLevelSelection(Algorithm[S, R]):
         return self.pareto_front.solution_list
 
     def get_name(self):
-        pass
+        return "MLS"
