@@ -1,10 +1,11 @@
-import kmeans
 import math
 import time
 
-from collective import Collective
 from copy import copy
 
+import cmlsga.kmeans as kmeans
+
+from cmlsga.collective import Collective
 from jmetal.core.algorithm import Algorithm
 from jmetal.config import store
 from jmetal.problem.multiobjective.zdt import ZDT1

@@ -12,7 +12,7 @@ from jmetal.util.aggregative_function import Tschebycheff
 from jmetal.util.archive import CrowdingDistanceArchive
 from jmetal.util.termination_criterion import StoppingByEvaluations
 
-from mls import MultiLevelSelection
+from cmlsga.mls import MultiLevelSelection
 
 class MOGeneticAlgorithm(GeneticAlgorithm):
     def __init__( self, problem, population_size, offspring_population_size,
