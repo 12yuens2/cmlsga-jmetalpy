@@ -16,9 +16,11 @@ class Collective(object):
         else:
             self.solutions.append(solution)
 
+ 
     def erase(self):
         self.solutions = []
         self.algorithm.solutions = []
+
 
     def restart(self):
         self.algorithm.solutions = self.solutions
@@ -29,6 +31,7 @@ class Collective(object):
     def step(self):
         self.algorithm.step()
         self.evaluations = self.algorithm.evaluations
+
 
     def evaluate(self):
         self.algorithm.evaluate(self.algorithm.solutions)
