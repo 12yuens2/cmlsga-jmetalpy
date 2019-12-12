@@ -1,0 +1,14 @@
+jobs:
+  include:
+
+    # Experimentation step
+    - language: python
+      python: "3.6"
+      install:
+        - pip install -r requirements.txt
+
+      script:
+        - python src/run_experiment.py 60 1000 2
+        - python src/generate_visualisations.py 60pop-1000evals-2runs.csv
+
+    # Testing step
