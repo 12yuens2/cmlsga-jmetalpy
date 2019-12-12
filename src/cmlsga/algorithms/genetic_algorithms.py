@@ -1,15 +1,11 @@
 from jmetal.algorithm.multiobjective.nsgaii import NSGAII
 from jmetal.algorithm.multiobjective.moead import MOEAD
-from jmetal.algorithm.multiobjective.omopso import OMOPSO
 from jmetal.algorithm.singleobjective.genetic_algorithm import GeneticAlgorithm
 from jmetal.config import store
-from jmetal.operator import PolynomialMutation, UniformMutation, \
-    DifferentialEvolutionCrossover, SBXCrossover
+from jmetal.operator import PolynomialMutation, DifferentialEvolutionCrossover, SBXCrossover
 from jmetal.operator.crossover import PMXCrossover
-from jmetal.operator.mutation import NonUniformMutation
 from jmetal.operator.selection import RouletteWheelSelection
 from jmetal.util.aggregative_function import Tschebycheff
-from jmetal.util.archive import CrowdingDistanceArchive
 from jmetal.util.termination_criterion import StoppingByEvaluations
 
 from cmlsga.mls import MultiLevelSelection
@@ -103,26 +99,3 @@ def moead(problem, population_size, max_evaluations, evaluator):
             "population_evaluator": evaluator
         }
     )
-
-def omopso(problem, population_size, max_evaluations, evaluator):
-    return (
-        OMOPSO,
-        {
-            "problem": problem,
-            "swarm_size": population_size,
-            "epsilon": 0.0075,
-            "uniform_mutation": UniformMutation(
-                probability=1.0 / problem.number_of_variables,
-                perturbation=0.5
-            ),
-            "non_uniform_mutation": NonUniformMutation(
-                probability=1.0 / problem.number_of_variables,
-                perturbation=0.5,
-                max_iterations=int(max_evaluations / population_size)
-            ),
-            "leaders": CrowdingDistanceArchive(100),
-            "termination_criterion": StoppingByEvaluations(max=max_evaluations),
-            "swarm_evaluator": evaluator
-        }
-    )
-

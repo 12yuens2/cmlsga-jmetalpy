@@ -9,6 +9,7 @@ from jmetal.util.observer import ProgressBarObserver
 
 from cmlsga.mls import MultiLevelSelection
 from cmlsga.algorithms.genetic_algorithms import *
+from cmlsga.algorithms.particle_swarm_optimisation import *
 
 def configure_experiment(population_size, max_evaluations, number_of_runs,
                          algorithms, problems):
@@ -33,7 +34,7 @@ def configure_experiment(population_size, max_evaluations, number_of_runs,
 
 
 def run_experiment(population_size, max_evaluations, number_of_runs,
-                   algorithms=[mlsga, nsgaii, moead, omopso],
+                   algorithms=[mlsga, nsgaii, moead, omopso, smpso],
                    problems=[ZDT1(), ZDT2(), ZDT3(), ZDT4(), ZDT6()]):
 
     meta = "{}pop-{}evals-{}runs".format(population_size, max_evaluations, number_of_runs)
