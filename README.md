@@ -3,6 +3,8 @@
 Python implementation of [cMLSGA ](https://github.com/12yuens2/cmlsga) 
 built on top of the [jMetalPy](https://github.com/jMetal/jMetalPy) framework.
 
+[![Build Status](https://travis-ci.com/12yuens2/cmlsga-jmetalpy.svg?token=kw2dzDpUGFzFfNgSo4Ns&branch=master)](https://travis-ci.com/12yuens2/cmlsga-jmetalpy)
+
 ## Build instructions
 Install required packages with
 ```
