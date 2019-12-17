@@ -1,6 +1,8 @@
 import os
 import sys
 
+from functools import partial
+
 from jmetal.core.quality_indicator import *
 from jmetal.problem.multiobjective.constrained import Srinivas
 from jmetal.problem.multiobjective.zdt import *
@@ -33,11 +35,14 @@ def configure_experiment(population_size, max_evaluations, number_of_runs,
     return jobs
 
 
-def run_experiment(population_size, max_evaluations, number_of_runs,
-                   algorithms=[mlsga, nsgaii, moead, omopso, smpso],
+def run_experiment(population_size, max_evaluations, number_of_runs, comment="",
+                   algorithms=[partial(mlsga, [nsgaii]),
+                               partial(mlsga, [omopso]),
+                               nsgaii, moead, omopso],
                    problems=[ZDT1(), ZDT2(), ZDT3(), ZDT4(), ZDT6()]):
 
-    meta = "{}pop-{}evals-{}runs".format(population_size, max_evaluations, number_of_runs)
+    meta = "{}pop-{}evals-{}runs-{}".format(population_size, max_evaluations,
+                                            number_of_runs, comment)
 
     jobs = configure_experiment(population_size, max_evaluations, number_of_runs,
                                 algorithms, problems)
@@ -62,11 +67,13 @@ def print_usage():
     print("python {} [population size] [max evaluations] [number of runs]".format(sys.argv[0]))
 
 if __name__ == "__main__":
-    if len(sys.argv) != 4:
+    if len(sys.argv) < 4:
         print_usage()
     else:
         population_size = int(sys.argv[1])
         max_evaluations = int(sys.argv[2])
         number_of_runs = int(sys.argv[3])
+        if sys.argv[4]:
+            comment = sys.argv[4]
 
-        run_experiment(population_size, max_evaluations, number_of_runs)
+        run_experiment(population_size, max_evaluations, number_of_runs, comment=comment)

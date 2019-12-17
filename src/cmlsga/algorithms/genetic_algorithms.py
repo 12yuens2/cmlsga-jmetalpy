@@ -1,5 +1,6 @@
 from jmetal.algorithm.multiobjective.nsgaii import NSGAII
 from jmetal.algorithm.multiobjective.moead import MOEAD
+from jmetal.algorithm.multiobjective.spea2 import SPEA2
 from jmetal.algorithm.singleobjective.genetic_algorithm import GeneticAlgorithm
 from jmetal.config import store
 from jmetal.operator import PolynomialMutation, DifferentialEvolutionCrossover, SBXCrossover
@@ -33,6 +34,16 @@ class MOGeneticAlgorithm(GeneticAlgorithm):
         return self.solutions
 
 
+def random_search(problem, population_size, max_evaluations, evaluator):
+    return (
+        RandomSearch,
+        {
+            "problem": problem,
+            "termination_criterion": StoppingByEvaluations(max=max_evaluations)
+        }
+    )
+
+
 def genetic_algorithm(problem, population_size, max_evaluations, evaluator):
     return (
         MOGeneticAlgorithm,
@@ -40,17 +51,15 @@ def genetic_algorithm(problem, population_size, max_evaluations, evaluator):
             "problem": problem,
             "population_size": population_size,
             "offspring_population_size": population_size,
-            "mutation": PolynomialMutation(
-                0.08,#probability=1.0 / problem.number_of_variables,
-                distribution_index=20
-            ),
-            "crossover": SBXCrossover(0.7, distribution_index=20),
+            "mutation": PolynomialMutation(0.08, 20),
+            "crossover": SBXCrossover(0.7),
             "selection": RouletteWheelSelection(),
             "termination_criterion": StoppingByEvaluations(max=max_evaluations)
         }
     )
 
-def mlsga(problem, population_size, max_evaluations, evaluator):
+
+def mlsga(algorithms, problem, population_size, max_evaluations, evaluator):
     return (
         MultiLevelSelection,
         {
@@ -58,9 +67,10 @@ def mlsga(problem, population_size, max_evaluations, evaluator):
             "population_size": population_size,
             "max_evaluations": max_evaluations,
             "number_of_collectives": 6,
-            "algorithms": [genetic_algorithm]
+            "algorithms": algorithms
         }
     )
+
 
 def nsgaii(problem, population_size, max_evaluations, evaluator):
     return (
@@ -70,12 +80,29 @@ def nsgaii(problem, population_size, max_evaluations, evaluator):
             "population_size": population_size,
             "offspring_population_size": population_size,
             "mutation": PolynomialMutation(
-                probability=1.0 / problem.number_of_variables,
+                1.0 / problem.number_of_variables,
                 distribution_index=20
             ),
             "crossover": SBXCrossover(probability=1.0, distribution_index=20),
             "termination_criterion": StoppingByEvaluations(max=max_evaluations),
             "population_evaluator": evaluator
+        }
+    )
+
+
+def spea2(problem, population_size, max_evaluations, evaluator):
+    return (
+        SPEA2,
+        {
+            "problem": problem,
+            "population_size": population_size,
+            "offspring_population_size": population_size,
+            "mutation": PolynomialMutation(
+                probability=1.0 / problem.number_of_variables,
+                distribution_index=20
+            ),
+            "crossover": SBXCrossover(probability=1.0, distribution_index=20),
+            "termination_criterion":StoppingByEvaluations(max=max_evaluations)
         }
     )
 

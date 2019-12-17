@@ -58,7 +58,7 @@ class MultiLevelSelection(Algorithm[S, R]):
 
         # mating pool size must be even for jmetalpy
         for col in collectives:
-            if len(col.solutions) % 2 != 0:
+            if len(col.solutions) % 2 != 0 and hasattr(col.algorithm, "mating_pool_size"):
                 col.algorithm.mating_pool_size += 1
 
         return collectives
@@ -232,4 +232,4 @@ class MultiLevelSelection(Algorithm[S, R]):
         return self.pareto_front.solution_list
 
     def get_name(self):
-        return "MLS"
+        return "MLS{}".format([a.__name__ for a in self.algorithms])
