@@ -1,0 +1,10 @@
+{
+    "population_size": 60,
+    "max_evaluations": 1000,
+    "number_of_runs": 2,
+    "comment": "comment",
+
+    "mlsga": ["nsgaii"],
+    "algorithms": ["nsgaii", "moead", "omopso"],
+    "problems": ["ZDT1", "ZDT2"]
+}

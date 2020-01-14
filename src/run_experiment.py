@@ -1,4 +1,5 @@
 import os
+import json
 import sys
 
 from functools import partial
@@ -7,6 +8,7 @@ from jmetal.core.quality_indicator import *
 from jmetal.problem.multiobjective.constrained import Srinivas
 from jmetal.problem.multiobjective.zdt import *
 from jmetal.lab.experiment import *
+from jmetal.util.solutions import MapEvaluator, SparkEvaluator
 from jmetal.util.observer import ProgressBarObserver
 
 from cmlsga.mls import MultiLevelSelection
@@ -17,11 +19,12 @@ def configure_experiment(population_size, max_evaluations, number_of_runs,
                          algorithms, problems):
     jobs = []
 
+    e = MapEvaluator(processes=4)
     for run in range(number_of_runs):
         for problem in problems:
             for algorithm in algorithms:
                 constructor, kwargs = algorithm(problem, population_size,
-                                                max_evaluations, store.default_evaluator)
+                                                max_evaluations, e)
                 algorithm = constructor(**kwargs)
                 algorithm.observable.register(observer=ProgressBarObserver(max=max_evaluations))
 
@@ -64,16 +67,40 @@ def run_experiment(population_size, max_evaluations, number_of_runs, comment="",
 
 def print_usage():
     print("Usage:")
-    print("python {} [population size] [max evaluations] [number of runs]".format(sys.argv[0]))
+    print("python {} `parameters.json`".format(sys.argv[0]))
+
+
+def parse_algorithms(parameters):
+    # convert string names of algorithms into functions with globals()
+
+    algorithms = [globals()[name] for name in parameters["algorithms"]]
+    if parameters["mlsga"]:
+        collectives = [globals()[algorithm] for algorithm in parameters["mlsga"]]
+        algorithms.append(partial(mlsga, collectives))
+
+    return algorithms
+
+
+def parse_problems(parameters):
+    return [globals()[problem]() for problem in parameters["problems"]]
+
 
 if __name__ == "__main__":
-    if len(sys.argv) < 4:
-        print_usage()
-    else:
-        population_size = int(sys.argv[1])
-        max_evaluations = int(sys.argv[2])
-        number_of_runs = int(sys.argv[3])
-        if sys.argv[4]:
-            comment = sys.argv[4]
 
-        run_experiment(population_size, max_evaluations, number_of_runs, comment=comment)
+    if len(sys.argv) == 2:
+        json_file = open(sys.argv[1], "r")
+        parameters = json.loads(json_file.read())
+
+        population_size = parameters["population_size"]
+        max_evaluations = parameters["max_evaluations"]
+        number_of_runs = parameters["number_of_runs"]
+        comment = parameters["comment"]
+
+        algorithms = parse_algorithms(parameters)
+        problems = parse_problems(parameters)
+
+        run_experiment(population_size, max_evaluations, number_of_runs, comment=comment,
+                       algorithms=algorithms,
+                       problems=problems)
+    else:
+        print_usage()
