@@ -1,18 +1,18 @@
 #!/bin/bash
-#PBS -l walltime=10:00:00
-#PBS -l nodes=6:ppn=10
+#PBS -l walltime=18:00:00
+#PBS -l nodes=2:ppn=4
+
+# qsub command:
+# qsub -v PARAMETERS=parameters.json iridis.sh
+
 
 # Script to run code on iridis
 
-#POPULATION=$1
-#EVALUATIONS=$2
-#RUNS=$3
-#COMMENT=$4
-
 cd $PBS_O_WORKDIR
 
-echo "Running $POPULATION population, $EVALUATIONS evaluations, $RUNS runs, $COMMENT"
+echo "Running with params $PARAMETERS"
+cat $PARAMETERS
 
 module load conda/4.4.0
 source env/bin/activate
-python src/run_experiment.py $POPULATION $EVALUATIONS $RUNS $COMMENT
+python src/run_experiment.py $PARAMETERS
