@@ -60,8 +60,9 @@ if __name__ == "__main__":
         #os.rename("QualityIndicatorSummary.csv", filename)
         filename = data
 
-        print_mean(filename, "IGD")
-        #print_mean(filename, "HV")
+        print_stat(filename, "IGD", "mean")
+        print_stat(filename, "IGD", "min")
+        print_stat(filename, "IGD", "max")
 
     #generate_latex_tables(filename=datafile)
 
