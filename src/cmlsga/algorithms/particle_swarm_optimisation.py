@@ -1,3 +1,7 @@
+import random
+
+from copy import copy
+
 from jmetal.algorithm.multiobjective.omopso import OMOPSO
 from jmetal.algorithm.multiobjective.smpso import SMPSO
 from jmetal.operator import PolynomialMutation, UniformMutation
@@ -7,11 +11,12 @@ from jmetal.util.termination_criterion import StoppingByEvaluations
 
 class OMOPSO_Variant(OMOPSO):
 
-    def __init__(self, problem, swarm_size):
-        super(OMOPSO_Variant, self).__init__(problem, swarm_size)
+    def __init__(self, **kwargs):
+        super(OMOPSO_Variant, self).__init__(**kwargs)
 
 
     def update_velocity(self, swarm):
+        print("speed")
         for i in range(self.swarm_size):
             pbest = copy(swarm[i].attributes['local_best'])
             gbest = self.select_global_best()
@@ -33,8 +38,8 @@ class OMOPSO_Variant(OMOPSO):
 
 class SMPSO_Variant(SMPSO):
 
-    def __init__(self, problem, swarm_size):
-        super(SMPSO_Variant, self).__init__(problem, swarm_size)
+    def __init__(self, **kwargs):
+        super(SMPSO_Variant, self).__init__(**kwargs)
 
 
     def update_velocity(self, swarm):
