@@ -1,0 +1,27 @@
+{
+    "population_size": 30,
+    "max_evaluations": 1000,
+    "number_of_runs": 1,
+    "comment": "",
+
+    "mlsga": [],
+    "algorithms": ["omopso"],
+    "problems": ["ZDT1", "ZDT2"]
+}
+
+
+"algorithms": [
+
+    {
+        "Name": "OMOPSO_Variant",
+        "Properties": {
+            "problem": problem,
+            "swarm_size": 100,
+        }
+    },
+
+    {
+        "Name": "SMPSO_Variant",
+        "Properties": {}
+    }
+]
