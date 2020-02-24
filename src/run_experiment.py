@@ -57,7 +57,7 @@ def run_experiment(population_size, max_evaluations, number_of_runs, comment="",
 
     generate_summary_from_experiment(
         output_directory,
-        [InvertedGenerationalDistance(), HyperVolume([1.0, 1.0])],
+        [InvertedGenerationalDistance(""), HyperVolume([1.0, 1.0])],
         reference_fronts="resources/reference_front",
     )
 

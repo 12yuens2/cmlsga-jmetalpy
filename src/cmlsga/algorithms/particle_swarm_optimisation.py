@@ -76,7 +76,7 @@ def omopso(problem, population_size, max_evaluations, evaluator):
                 max_iterations=int(max_evaluations / population_size)
             ),
             "leaders": CrowdingDistanceArchive(100),
-            "termination_criterion": StoppingByEvaluations(max=max_evaluations),
+            "termination_criterion": StoppingByEvaluations(max_evaluations=max_evaluations),
             "swarm_evaluator": evaluator
         }
     )
@@ -93,6 +93,6 @@ def smpso(problem, population_size, max_evaluations, evaluator):
                 distribution_index=20
             ),
             "leaders": CrowdingDistanceArchive(100),
-            "termination_criterion": StoppingByEvaluations(max=max_evaluations)
+            "termination_criterion": StoppingByEvaluations(max_evaluations=max_evaluations)
         }
     )

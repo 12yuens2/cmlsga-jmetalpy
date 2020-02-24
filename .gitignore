@@ -1,10 +1,16 @@
+# jmetal
+jmetalpy.log
+
 # Data files
 *.csv
 *.tsv
 TIME.*
 
+# pyc
+*.pyc
+
 # Byte-compiled / optimized / DLL files
-__pycache__/
+*/__pycache__/
 *.py[cod]
 *$py.class
 
