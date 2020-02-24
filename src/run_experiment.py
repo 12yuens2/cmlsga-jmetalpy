@@ -8,7 +8,7 @@ from jmetal.core.quality_indicator import *
 from jmetal.problem.multiobjective.constrained import Srinivas
 from jmetal.problem.multiobjective.zdt import *
 from jmetal.lab.experiment import *
-from jmetal.util.solutions import MapEvaluator, SparkEvaluator
+from jmetal.util.evaluator import MapEvaluator, SparkEvaluator
 from jmetal.util.observer import ProgressBarObserver
 
 from cmlsga.mls import MultiLevelSelection
