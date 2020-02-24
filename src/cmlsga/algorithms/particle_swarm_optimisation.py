@@ -34,7 +34,6 @@ class OMOPSO_Variant(OMOPSO):
                                        + (c1 * r1 * (pbest.variables[var] - swarm_var)) \
                                        + (c2 * r2 * (gbest.variables[var] - swarm_var))
 
-
 class SMPSO_Variant(SMPSO):
 
     def __init__(self, **kwargs):

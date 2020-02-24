@@ -5,7 +5,6 @@ import sys
 from functools import partial
 
 from jmetal.core.quality_indicator import *
-from jmetal.problem.multiobjective.lircmop import *
 from jmetal.problem.multiobjective.constrained import Srinivas
 from jmetal.problem.multiobjective.zdt import *
 from jmetal.lab.experiment import *

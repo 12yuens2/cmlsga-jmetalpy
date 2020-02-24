@@ -1,27 +1,10 @@
 {
-    "population_size": 30,
-    "max_evaluations": 1000,
-    "number_of_runs": 1,
+    "population_size": 300,
+    "max_evaluations": 10000,
+    "number_of_runs": 3,
     "comment": "",
 
-    "mlsga": [],
-    "algorithms": ["omopso"],
+    "mlsga": ["nsgaii"],
+    "algorithms": ["nsgaii", "moead", "omopso"],
     "problems": ["ZDT1", "ZDT2"]
 }
-
-
-"algorithms": [
-
-    {
-        "Name": "OMOPSO_Variant",
-        "Properties": {
-            "problem": problem,
-            "swarm_size": 100,
-        }
-    },
-
-    {
-        "Name": "SMPSO_Variant",
-        "Properties": {}
-    }
-]
