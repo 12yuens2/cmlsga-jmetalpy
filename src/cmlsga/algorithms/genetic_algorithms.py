@@ -39,7 +39,7 @@ def random_search(problem, population_size, max_evaluations, evaluator):
         RandomSearch,
         {
             "problem": problem,
-            "termination_criterion": StoppingByEvaluations(max=max_evaluations)
+            "termination_criterion": StoppingByEvaluations(max_evaluations=max_evaluations)
         }
     )
 
@@ -54,7 +54,7 @@ def genetic_algorithm(problem, population_size, max_evaluations, evaluator):
             "mutation": PolynomialMutation(0.08, 20),
             "crossover": SBXCrossover(0.7),
             "selection": RouletteWheelSelection(),
-            "termination_criterion": StoppingByEvaluations(max=max_evaluations)
+            "termination_criterion": StoppingByEvaluations(max_evaluations=max_evaluations)
         }
     )
 
@@ -84,7 +84,7 @@ def nsgaii(problem, population_size, max_evaluations, evaluator):
                 distribution_index=20
             ),
             "crossover": SBXCrossover(probability=1.0, distribution_index=20),
-            "termination_criterion": StoppingByEvaluations(max=max_evaluations),
+            "termination_criterion": StoppingByEvaluations(max_evaluations=max_evaluations),
             "population_evaluator": evaluator
         }
     )
@@ -102,7 +102,7 @@ def spea2(problem, population_size, max_evaluations, evaluator):
                 distribution_index=20
             ),
             "crossover": SBXCrossover(probability=1.0, distribution_index=20),
-            "termination_criterion":StoppingByEvaluations(max=max_evaluations)
+            "termination_criterion":StoppingByEvaluations(max_evaluations=max_evaluations)
         }
     )
 
@@ -122,7 +122,7 @@ def moead(problem, population_size, max_evaluations, evaluator):
             "neighbourhood_selection_probability": 0.9,
             "max_number_of_replaced_solutions": 2,
             "weight_files_path": "resources/MOEAD_weights",
-            "termination_criterion": StoppingByEvaluations(max=max_evaluations),
+            "termination_criterion": StoppingByEvaluations(max_evaluations=max_evaluations),
             "population_evaluator": evaluator
         }
     )
