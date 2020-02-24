@@ -64,10 +64,8 @@ class UF2(UF1):
         sum2 = sum(y2)
         count2 = len(y2)
 
-        #solution.objectives[0] = x[0] + 2.0 * sum1 / count1
-        #solution.objectives[1] = 1 - math.sqrt(x[0]) + 2.0 * sum2 / count2
-        print(x[0] + 2.0 * sum1 / count1)
-        print(1 - math.sqrt(x[0]) + 2.0 * sum2 / count2)
+        solution.objectives[0] = x[0] + 2.0 * sum1 / count1
+        solution.objectives[1] = 1 - math.sqrt(x[0]) + 2.0 * sum2 / count2
 
 
     def get_name(self):

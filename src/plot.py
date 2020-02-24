@@ -4,19 +4,12 @@ from jmetal.problem.multiobjective.dtlz import *
 from jmetal.problem.multiobjective.zdt import *
 from jmetal.problem.multiobjective.lz09 import *
 from jmetal.lab.visualization import Plot
-<<<<<<< HEAD
 from jmetal.util.solution import read_solutions
-=======
-from jmetal.util.solutions import read_solutions
->>>>>>> aff3136b2b247b9629432cca4f452a65e607fe02
 from jmetal.util.observer import ProgressBarObserver
 
 from cmlsga.algorithms.genetic_algorithms import *
 from cmlsga.algorithms.particle_swarm_optimisation import *
-<<<<<<< HEAD
 from cmlsga.problems.uf import *
-=======
->>>>>>> aff3136b2b247b9629432cca4f452a65e607fe02
 
 
 def run_algorithm(algorithm, problem=LZ09_F3(), population_size=600,
@@ -45,10 +38,14 @@ def run_plots(algorithms, problems):
 
 class Solution(object):
     def __init__(self):
+        self.objectives = [0, 0]
         self.variables = [1] * 30
 
+s = Solution()
 uf1 = UF2()
-uf1.evaluate(Solution())
+uf1.evaluate(s)
+
+print(s.objectives)
 
 #run_plots([nsgaii, moead, omopso, partial(mlsga, [nsgaii])],
 #          [ZDT1(), DTLZ1()])

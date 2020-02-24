@@ -12,10 +12,11 @@ jobs:
         - python src/generate_visualisations.py 60pop-1000evals-2runs-comment.csv
 
     # Testing step
-    #- language: python
-    #  python: "3.6"
-    #  install:
-    #    - pip install -r requirements.txt
+    - language: python
+      python: "3.6"
+      install:
+        - pip install -r requirements.txt
 
-    #  script:
-    #
+      script:
+        - python -m unittest discover -s src/ -p *.py
+    
