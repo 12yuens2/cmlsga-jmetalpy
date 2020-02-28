@@ -18,5 +18,5 @@ jobs:
         - pip install -r requirements.txt
 
       script:
-        - python -m unittest discover -s src/ -p *.py
+        - python -m unittest discover -s src/ -p *.py -v
     
