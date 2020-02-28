@@ -42,10 +42,17 @@ class Solution(object):
         self.variables = [1] * 30
 
 s = Solution()
-uf1 = UF2()
+uf1 = UF4()
 uf1.evaluate(s)
 
 print(s.objectives)
+
+cmpso = CMPSO(ZDT1(), 10)
+print(cmpso.get_name())
+swarms = cmpso.create_initial_solutions()
+print(swarms)
+cmpso.evaluate(swarms)
+print(swarms)
 
 #run_plots([nsgaii, moead, omopso, partial(mlsga, [nsgaii])],
 #          [ZDT1(), DTLZ1()])
