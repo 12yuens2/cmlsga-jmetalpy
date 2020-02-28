@@ -1,4 +1,7 @@
+import operator
 import math
+
+from functools import reduce
 
 from jmetal.core.problem import FloatProblem
 from jmetal.core.solution import FloatSolution
@@ -80,17 +83,29 @@ class UF3(UF1):
         self.lower_bound = [0] * number_of_variables
 
 
-    def yj(self, x, j, num_variables):
-        return x[j - 1] - math.pow(x[0], 0.5 * (1 + 3.0 * (j - 2) / (num_variables - 2)))
+    def f(self, x, j, num_variables):
+        yj = x[j - 1] - math.pow(x[0], 0.5 * (1 + 3.0 * (j - 2) / (num_variables - 2)))
+        pj = math.cos(20 * yj * math.pi / math.sqrt(j))
 
-
-    def pj(self, j, yj):
-        return math.cos(20 * yj * math.pi / math.sqrt(j))
+        return yj * yj, pj
 
 
     def evaluate(self, solution):
         num_variables = self.number_of_variables
         x = solution.variables
+
+        yj1, pj1 = zip(*[self.f(x, j, num_variables) for j in range(3, num_variables + 1, 2)])
+        sum1 = sum(yj1)
+        prod1 = reduce(operator.mul, pj1, 1)
+        count1 = len(yj1)
+
+        yj2, pj2 = zip(*[self.f(x, j, num_variables) for j in range(2, num_variables + 1, 2)])
+        sum2 = sum(yj2)
+        prod2 = reduce(operator.mul, pj2, 1)
+        count2 = len(yj2)
+
+        solution.objectives[0] = x[0] + 2 * (4 * sum1 - 2 * prod1 + 2) / count1
+        solution.objectives[1] = 1 - math.sqrt(x[0]) + 2 * (4 * sum2 - 2 * prod2 + 2) / count2
 
 
     def get_name(self):
@@ -101,13 +116,46 @@ class UF4(UF1):
 
     def __init__(self, number_of_variables=30):
         super(UF4, self).__init__(number_of_variables)
-        pass
+
+        self.lower_bound = [0.0] + [-2.0] * (number_of_variables - 1)
+        self.upper_bound = [1.0] + [2.0] * (number_of_variables - 1)
+
+
+    def f(self, x, j, num_variables):
+        yj = x[j - 1] - math.sin(6 * math.pi * x[0] + j * math.pi / num_variables)
+        hj = abs(yj) / (1 + math.exp(2 * abs(yj)))
+
+        return hj
 
 
     def evaluate(self, solution):
-        pass
+        num_variables = self.number_of_variables
+        x = solution.variables
+
+        hj1 = [self.f(x, j, num_variables) for j in range(3, num_variables + 1, 2)]
+        sum1 = sum(hj1)
+        count1 = len(hj1)
+
+        hj2 = [self.f(x, j, num_variables) for j in range(2, num_variables + 1, 2)]
+        sum2 = sum(hj2)
+        count2 = len(hj2)
+
+        solution.objectives[0] = x[0] + 2 * sum1 / count1
+        solution.objectives[1] = 1 - x[0] * x[0] + 2 * sum2 / count2
 
 
     def get_name(self):
         return "UF4"
     
+
+class UF5(UF1):
+
+    def __init__(self, number_of_variables=30, n=10, epsilon=0.1):
+        super(UF5, self).__init__(number_of_variables)
+
+        self.n = 10
+        self.epsilon = 0.1
+
+
+    def get_name(self):
+        return "UF5"
