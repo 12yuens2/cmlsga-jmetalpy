@@ -31,9 +31,10 @@ class CMPSO(ParticleSwarmOptimization):
         self.archive = BoundedArchive(swarm_size, DominanceComparator(), CrowdingDistance())
         self.dominance_comparator = DominanceComparator()
 
-        self.w = 0.75 # Linearly decrease from 0.9 to 0.4
-        self.c1 = self.c2 = self.c3 = 2
-        self.r1 = self.r2 = self.r3 = [random.random() for _ in range(0, self.problem.number_of_variables)]
+        self.w_max = 0.9 # Linearly decrease from 0.9 to 0.4
+        self.w_min = 0.4
+        self.c1 = self.c2 = self.c3 = 4/3
+        self.change_velocity1 = self.change_velocity2 = -1
 
         # Zhan et al. Adaptive particle swarm optimization 2009
         # Set velocity range as 0.2(upper bound - lower bound)
@@ -88,32 +89,37 @@ class CMPSO(ParticleSwarmOptimization):
         swarms = self.evaluate(swarms)
 
         for m in range(0, len(swarms)):
-            for particle in range(0, len(swarms[m])):
-                if not self.gbests[m] or particle.attributes["local_best"].objectives[m]:
+            for i in range(0, len(swarms[m])):
+                particle = swarms[m][i]
+                if (not self.gbests[m]) or (particle.attributes["local_best"].objectives[m] < self.gbests[m].objectives[m]):
                     self.gbests[m] = particle
                     
 
 
     def update_archive(self):
-        # Add pbest of each particle
-        for swarm in self.solutions:
-            for particle in swarm:
-                self.archive.add(particle.attributes["local_best"])
-
         # Add elites
         elites = self.elitist_learning_strategy()
         for elite in elites:
             self.archive.add(elite)
 
+        # Add pbest of each particle
+        for swarm in self.solutions:
+            for particle in swarm:
+                self.archive.add(copy(particle.attributes["local_best"]))
+
+        #for solution in self.archive.solution_list:
+        #    print(solution.objectives)
+
+
     def select_archive_solution(self):
         return random.choice(self.archive.solution_list)
+
 
     def elitist_learning_strategy(self):
         elites = []
         for solution in self.archive.solution_list:
             e = solution
-            d = random.randint(0, self.problem.number_of_variables)
-            print(d)
+            d = random.randint(0, self.problem.number_of_variables - 1)
             Xmax = self.problem.upper_bound[d]
             Xmin = self.problem.lower_bound[d]
             e.variables[d] = e.variables[d] + (Xmax - Xmin) * np.random.normal(0, 1)
@@ -124,40 +130,58 @@ class CMPSO(ParticleSwarmOptimization):
             elif e.variables[d] < Xmin:
                 e.variables[d] = Xmin
 
-            elites.append(solution)
+            elites.append(e)
 
         self.evaluate([elites])
 
         return elites
 
 
-    def update_particle_best(self, swarm):
-        for swarm in swarms:
-            for particle in swarm:
-                flag = self.dominance_comparator.compare(particle,
-                                                         particle.attributes["local_best"])
-                if flag != 1:
-                    particle.attributes["local_host"] = copy(particle)
+    def update_particle_best(self, swarms):
+        for m in range(0, len(swarms)):
+            for particle in swarms[m]:
+                v = particle.objectives[m]
+                if v > 0 and v < particle.attributes["local_best"].objectives[m]:
+                    particle.attributes["local_best"] = copy(particle)
 
 
     def update_global_best(self, swarms):
-        for swarm in swarms:
-            for particle in swarm:
-                self.leaders.add(copy(particle))
+        for m in range(0, len(swarms)):
+            gbest = self.gbests[m]
+            for i in range(0, len(swarms[m])):
+                particle = swarms[m][i]
+                v = particle.objectives[m]
+
+                if v > 0 and v < self.gbests[m].objectives[m]:
+                    self.gbests[m] = copy(particle)
 
 
     def update_velocity(self, swarms):
+        w = self.w_max - self.w_min * (self.termination_criterion.evaluations / self.termination_criterion.max_evaluations)
+
         for m in range(0, len(swarms)):
-            for i in range(len(m)):
+            gbest = self.gbests[m]
+
+            for i in range(0, len(swarms[m])):
                 current_position = swarms[m][i]
                 archive_position = self.select_archive_solution()
 
-                for d in range(0, particle.number_of_variables):
-                    self.speed[m][i][d] = \
-                    self.w * self.speed[m][i][d]
-                    + (self.c1 * self.r1[d] * (pbest - current_position))
-                    + (self.c2 * self.r2[d] * (gbest - current_position))
-                    + (self.c3 * self.r3[d] * (archive_position - current_position))
+                pbest = current_position.attributes["local_best"]
+                r1 = self.generate_random_r()
+                r2 = self.generate_random_r()
+                r3 = self.generate_random_r()
+
+                for d in range(0, self.problem.number_of_variables):
+                    current = current_position.variables[d]
+                    v1 = (self.c1 * r1 * (pbest.variables[d] - current))
+                    v2 = (self.c2 * r2 * (gbest.variables[d] - current))
+                    v3 = (self.c3 * r3 * (archive_position.variables[d] - current))
+
+                    self.speed[m][i][d] = w * self.speed[m][i][d] + v1 + v2 + v3
+
+
+    def generate_random_r(self):
+        return round(random.random(), 2)
 
 
     def update_position(self, swarms):
@@ -168,14 +192,14 @@ class CMPSO(ParticleSwarmOptimization):
                 for d in range(particle.number_of_variables):
                     particle.variables[d] += self.speed[m][i][d]
 
-                # Limit speed to max velocities
-                if particle.variables[j] < self.problem.lower_bound[j]:
-                    particle.variables[j] = self.problem.lower_bound[j]
-                    self.speed[i][j] *= self.change_velocity1
+                    # Limit speed to max velocities
+                    if particle.variables[d] < self.problem.lower_bound[d]:
+                        particle.variables[d] = self.problem.lower_bound[d]
+                        self.speed[m][i][d] *= self.change_velocity1
 
-                if particle.variables[j] > self.problem.upper_bound[j]:
-                    particle.variables[j] = self.problem.upper_bound[j]
-                    self.speed[i][j] *= self.change_velocity2
+                    if particle.variables[d] > self.problem.upper_bound[d]:
+                        particle.variables[d] = self.problem.upper_bound[d]
+                        self.speed[m][i][d] *= self.change_velocity2
 
 
     def step(self):
