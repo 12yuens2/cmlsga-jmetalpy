@@ -5,6 +5,6 @@
     "comment": "comment",
 
     "mlsga": ["nsgaii"],
-    "algorithms": ["nsgaii", "moead", "omopso"],
+    "algorithms": ["nsgaii", "moead", "omopso", "smpso", "cmpso"],
     "problems": ["ZDT1", "ZDT2"]
 }
