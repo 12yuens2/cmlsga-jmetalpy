@@ -159,3 +159,33 @@ class UF5(UF1):
 
     def get_name(self):
         return "UF5"
+
+
+class UF6(UF1):
+
+    def __init__(self, number_of_variables=30):
+        super(UF6, self).__init__(number_of_variables)
+
+
+    def get_name(self):
+        return "UF6"
+
+
+class UF7(UF1):
+
+    def __init__(self, number_of_variables=30):
+        super(UF7, self).__init__(number_of_variables)
+
+
+    def get_name(self):
+        return "UF7"
+
+
+class UF8(UF1):
+
+    def __init__(self, number_of_variables=30):
+        super(UF8, self).__init__(number_of_variables)
+
+
+    def get_name(self):
+        return "UF8"
