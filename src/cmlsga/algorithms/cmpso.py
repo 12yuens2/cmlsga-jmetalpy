@@ -28,13 +28,15 @@ class CMPSO(ParticleSwarmOptimization):
         self.swarm_generator = swarm_generator
         self.swarm_evaluator = swarm_evaluator
 
-        self.archive = BoundedArchive(swarm_size, DominanceComparator(), CrowdingDistance())
         self.dominance_comparator = DominanceComparator()
 
-        self.w_max = 0.9 # Linearly decrease from 0.9 to 0.4
+        self.w_max = 0.9
         self.w_min = 0.4
         self.c1 = self.c2 = self.c3 = 4/3
         self.change_velocity1 = self.change_velocity2 = -1
+
+        self.archive_size = 100
+        self.archive = []
 
         # Zhan et al. Adaptive particle swarm optimization 2009
         # Set velocity range as 0.2(upper bound - lower bound)
@@ -76,8 +78,6 @@ class CMPSO(ParticleSwarmOptimization):
                 for d in range(self.problem.number_of_variables):
                     self.speed[m][i][d] = random.uniform(-self.speed_max[d], self.speed_max[d])
 
-        #self.solutions = self.evaluate(self.solutions)
-
 
     def initialize_particle_best(self, swarms):
         for swarm in swarms:
@@ -93,31 +93,52 @@ class CMPSO(ParticleSwarmOptimization):
                 particle = swarms[m][i]
                 if (not self.gbests[m]) or (particle.attributes["local_best"].objectives[m] < self.gbests[m].objectives[m]):
                     self.gbests[m] = particle
-                    
 
 
     def update_archive(self):
+        r = []
+        for s in self.archive:
+            r.append(copy(s))
+
         # Add elites
         elites = self.elitist_learning_strategy()
         for elite in elites:
-            self.archive.add(elite)
+            r.append(copy(elite))
 
         # Add pbest of each particle
         for swarm in self.solutions:
             for particle in swarm:
-                self.archive.add(copy(particle.attributes["local_best"]))
+                r.append(copy(particle.attributes["local_best"]))
 
-        #for solution in self.archive.solution_list:
-        #    print(solution.objectives)
+        self.archive = self.nondominated_sorting(r)
+
+        if len(self.archive) > self.archive_size:
+            distance_estimator = CrowdingDistance()
+            distance_estimator.compute_density_estimator(self.archive)
+            self.archive = sorted(self.archive, reverse=True, key=lambda x: x.attributes["crowding_distance"])[:self.archive_size]
+
+
+    def nondominated_sorting(self, solutions):
+        s = []
+        for i in range(0, len(solutions)):
+            flag = True
+            for j in range(0, len(solutions)):
+                for m in range(0, self.problem.number_of_objectives):
+                    if i != j and solutions[i].objectives[m] >= solutions[j].objectives[m]:
+                        flag = False
+                        break
+                if flag:
+                    s.append(solutions[i])
+        return s
 
 
     def select_archive_solution(self):
-        return random.choice(self.archive.solution_list)
+        return random.choice(self.archive)
 
 
     def elitist_learning_strategy(self):
         elites = []
-        for solution in self.archive.solution_list:
+        for solution in self.archive:
             e = solution
             d = random.randint(0, self.problem.number_of_variables - 1)
             Xmax = self.problem.upper_bound[d]
@@ -132,9 +153,9 @@ class CMPSO(ParticleSwarmOptimization):
 
             elites.append(e)
 
-        self.evaluate([elites])
+        elites = self.evaluate([elites])
 
-        return elites
+        return elites[0]
 
 
     def update_particle_best(self, swarms):
@@ -212,7 +233,7 @@ class CMPSO(ParticleSwarmOptimization):
 
 
     def get_result(self):
-        return self.archive.solution_list
+        return self.archive
 
 
     def get_name(self):
