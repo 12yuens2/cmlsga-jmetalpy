@@ -59,9 +59,24 @@ class TestUFFunctions(unittest.TestCase):
         self.assertAlmostEqual(0.1704097832512541, solution.objectives[1])
 
     def test_uf5(self):
+        solution = self.evaluate_solution(UF5, [1] * 30)
 
         self.assertEqual(UF5().get_name(), "UF5")
+        self.assertAlmostEqual(3.431569498865031, solution.objectives[0])
+        self.assertAlmostEqual(2.610657502493691, solution.objectives[1])
 
+    def test_uf6(self):
+        solution = self.evaluate_solution(UF6, [1] * 30)
+
+        self.assertEqual(UF6().get_name(), "UF6")
+        self.assertAlmostEqual(2.751192235727202, solution.objectives[0])
+        self.assertAlmostEqual(2.1168813135498286, solution.objectives[1])
+
+    def test_uf7(self):
+        pass
+
+    def test_uf8(self):
+        pass
 
 
 if __name__ == "__main__":
