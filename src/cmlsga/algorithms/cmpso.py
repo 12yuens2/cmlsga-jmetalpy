@@ -5,7 +5,7 @@ from copy import copy
 
 from jmetal.config import store
 from jmetal.core.algorithm import ParticleSwarmOptimization
-from jmetal.util.archive import BoundedArchive, CrowdingDistanceArchive
+from jmetal.util.archive import BoundedArchive, CrowdingDistanceArchive, NonDominatedSolutionsArchive
 from jmetal.util.comparator import DominanceComparator
 from jmetal.util.density_estimator import CrowdingDistance
 
@@ -15,7 +15,6 @@ class CMPSO(ParticleSwarmOptimization):
     def __init__(self,
                  problem,
                  swarm_size,
-                 leaders=CrowdingDistanceArchive(100),
                  termination_criterion=store.default_termination_criteria,
                  swarm_generator = store.default_generator,
                  swarm_evaluator = store.default_evaluator):
@@ -119,17 +118,11 @@ class CMPSO(ParticleSwarmOptimization):
 
 
     def nondominated_sorting(self, solutions):
-        s = []
-        for i in range(0, len(solutions)):
-            flag = True
-            for j in range(0, len(solutions)):
-                for m in range(0, self.problem.number_of_objectives):
-                    if i != j and solutions[i].objectives[m] >= solutions[j].objectives[m]:
-                        flag = False
-                        break
-                if flag:
-                    s.append(solutions[i])
-        return s
+        a = NonDominatedSolutionsArchive()
+        for s in solutions:
+            a.add(s)
+
+        return a.solution_list
 
 
     def select_archive_solution(self):
@@ -162,7 +155,7 @@ class CMPSO(ParticleSwarmOptimization):
         for m in range(0, len(swarms)):
             for particle in swarms[m]:
                 v = particle.objectives[m]
-                if v > 0 and v < particle.attributes["local_best"].objectives[m]:
+                if v < particle.attributes["local_best"].objectives[m]:
                     particle.attributes["local_best"] = copy(particle)
 
 
@@ -173,7 +166,7 @@ class CMPSO(ParticleSwarmOptimization):
                 particle = swarms[m][i]
                 v = particle.objectives[m]
 
-                if v > 0 and v < self.gbests[m].objectives[m]:
+                if v < self.gbests[m].objectives[m]:
                     self.gbests[m] = copy(particle)
 
 

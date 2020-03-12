@@ -1,4 +1,6 @@
+from jmetal.algorithm.multiobjective.ibea import IBEA
 from jmetal.algorithm.multiobjective.nsgaii import NSGAII
+from jmetal.algorithm.multiobjective.nsgaiii import NSGAIII, UniformReferenceDirectionFactory
 from jmetal.algorithm.multiobjective.moead import MOEAD
 from jmetal.algorithm.multiobjective.spea2 import SPEA2
 from jmetal.algorithm.singleobjective.genetic_algorithm import GeneticAlgorithm
@@ -89,6 +91,43 @@ def nsgaii(problem, population_size, max_evaluations, evaluator):
         }
     )
 
+
+def nsgaiii(problem, population_size, max_evaluations, evaluator):
+    return (
+        NSGAIII,
+        {
+            "problem": problem,
+            "population_size": population_size,
+            "reference_directions": UniformReferenceDirectionFactory(
+                problem.number_of_objectives,
+                n_points=population_size-1
+            ),
+            "mutation": PolynomialMutation(
+                1.0 / problem.number_of_variables,
+                distribution_index=20
+            ),
+            "crossover": SBXCrossover(probability=1.0, distribution_index=20),
+            "termination_criterion": StoppingByEvaluations(max_evaluations=max_evaluations),
+        }
+    )
+
+
+def ibea(problem, population_size, max_evaluations, evaluator):
+    return (
+        IBEA,
+        {
+            "problem": problem,
+            "kappa": 1,
+            "population_size": population_size,
+            "offspring_population_size": population_size,
+            "mutation": PolynomialMutation(
+                1.0 / problem.number_of_variables,
+                distribution_index=20
+            ),
+            "crossover": SBXCrossover(probability=1.0, distribution_index=20),
+            "termination_criterion": StoppingByEvaluations(max_evaluations=max_evaluations),
+        }
+    )
 
 def spea2(problem, population_size, max_evaluations, evaluator):
     return (
