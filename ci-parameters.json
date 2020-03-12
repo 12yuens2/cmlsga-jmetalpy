@@ -6,5 +6,5 @@
 
     "mlsga": ["nsgaii"],
     "algorithms": ["nsgaii", "moead", "omopso", "smpso", "cmpso"],
-    "problems": ["ZDT1", "ZDT2"]
+    "problems": ["ZDT1", "ZDT2", "WFG1", "UF1", "UF9"]
 }
