@@ -9,7 +9,7 @@ jobs:
 
       script:
         - python src/run_experiment.py ci-parameters.json
-        - python src/generate_visualisations.py 60pop-1000evals-2runs-comment.csv
+        - python src/generate_visualisations.py 100pop-1000evals-2runs-comment.csv
 
     # Testing step
     - language: python
