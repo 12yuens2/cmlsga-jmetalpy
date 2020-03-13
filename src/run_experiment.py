@@ -7,7 +7,7 @@ from functools import partial
 from jmetal.core.quality_indicator import *
 from jmetal.problem.multiobjective.constrained import Srinivas
 from jmetal.problem.multiobjective.zdt import *
-#from jmetal.problem.multiobjective.dtlz import *
+from jmetal.problem.multiobjective.dtlz import *
 from jmetal.lab.experiment import *
 from jmetal.util.evaluator import MapEvaluator, SparkEvaluator
 from jmetal.util.observer import ProgressBarObserver
@@ -16,6 +16,7 @@ from cmlsga.mls import MultiLevelSelection
 from cmlsga.algorithms.genetic_algorithms import *
 from cmlsga.algorithms.particle_swarm_optimisation import *
 from cmlsga.problems.uf import *
+from cmlsga.problems.wfg import *
 
 def configure_experiment(population_size, max_evaluations, number_of_runs,
                          algorithms, problems):
@@ -59,7 +60,7 @@ def run_experiment(population_size, max_evaluations, number_of_runs, comment="",
 
     generate_summary_from_experiment(
         output_directory,
-        [InvertedGenerationalDistance(None), HyperVolume([1.0, 1.0])],
+        [InvertedGenerationalDistance(None)],
         reference_fronts="resources/reference_front",
     )
 
