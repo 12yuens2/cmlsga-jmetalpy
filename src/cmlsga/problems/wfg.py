@@ -82,7 +82,7 @@ def sLinear(y, A):
 def sDecept(y, A, B, C):
     tmp1 = math.floor(y - A + B) * (1 - C + (A - B) / B) / (A - B)
     tmp2 = math.floor(A + B - y) * (1 - C + (1 - A - B) / B) / (1 - A - B)
-    tmp2 = abs(y - A) - B
+    tmp3 = abs(y - A) - B
 
     return correct_to_01(1 + tmp3 * (tmp1 + tmp2 + 1 / B))
 
@@ -97,8 +97,8 @@ def sMulti(y, A, B, C):
 def rSum(y, w):
     tmp1 = tmp2 = 0
     for i in range(len(y)):
-        tmp1 = tmp1 + y[i] * w[i]
-        tmp2 = w[i]
+        tmp1 += y[i] * w[i]
+        tmp2 += w[i]
 
     return correct_to_01(tmp1 / tmp2)
 
@@ -183,7 +183,7 @@ class WFG1(WFG):
         super(WFG1, self).__init__(k, l, m)
 
         self.s = [2 * (i + 1) for i in range(self.m)]
-        self.a = [i for i in range(self.m - 1)]
+        self.a = [1] * (self.m - 1)
 
 
     def evaluate(self, solution):
@@ -236,3 +236,73 @@ class WFG1(WFG):
 
     def get_name(self):
         return "WFG1"
+
+
+class WFG2(WFG):
+
+    def __init__(self, k=2, l=4, m=2):
+        super(WFG2, self).__init__(k, l, m)
+
+        self.s = [2 * (i + 1) for i in range(self.m)]
+        self.a = [1] * (self.m - 1)
+
+    def evaluate(self, solution):
+        x = reduce(
+            (lambda x,f: f(x)),
+            [self.normalise, self.t1, self.t2, self.t3, self.calculate_x],
+            solution.variables
+        )
+        result = [0] * self.m
+        for m in range(0, self.m):
+            result[m] = self.d * x[self.m - 1] + self.s[m] * convex(x, m + 1)
+        result[self.m - 1] = self.d * x[self.m - 1] + self.s[self.m - 1] * disc(x, 5, 1, 1)
+
+        for i in range(len(result)):
+            solution.objectives[i] = result[i]
+
+
+    def t1(self, z):
+        return z[:self.k] + [sLinear(z[i], 0.35) for i in range(self.k, len(z))]
+
+    def t2(self, z):
+        result = z[:self.k]
+
+        l = len(z) - self.k
+        for i in range(self.k + 1, int((self.k + l) / 2)):
+            head = self.k + 2 * (i - self.k) - 1
+            tail = self.k + 2 * (i - self.k)
+            subz = self.sub_vector(z, head - 1, tail - 1)
+
+            result[i - 1] = rNonsep(subz, 2)
+
+        return result
+
+    def t3(self, z):
+        result = [0] * self.m
+        w = [1] * len(z)
+
+        for i in range(1, self.m):
+            head = (i - 1) * self.k / (self.m - 1) + 1
+            tail = i * self.k / (self.m - 1)
+            subz = self.sub_vector(z, head - 1, tail - 1)
+            subw = self.sub_vector(w, head - 1, tail - 1)
+
+            result[i - 1] = rSum(subz, subw)
+
+        l = len(z) - self.k
+        head = self.k + 1
+        tail = self.k + l / 2
+        subz = self.sub_vector(z, head - 1, tail - 1)
+        subw = self.sub_vector(w, head - 1, tail - 1)
+
+        try:
+            result[self.m - 1] = rSum(subz, subw)
+        except:
+            pass
+        finally:
+            return z
+
+        return result
+
+    def get_name(self):
+        return "WFG2"
