@@ -19,6 +19,27 @@ from cmlsga.algorithms.particle_swarm_optimisation import *
 from cmlsga.problems.uf import *
 from cmlsga.problems.wfg import *
 
+class IncrementalOutputJob(Job):
+
+    def __init__(self, algorithm, algorithm_tag, problem_tag, run):
+        super(IncrementalOutputJob, self).__init__(algorithm, algorithm_tag, problem_tag, run)
+        self.algorithm.run_tag = run
+
+    def execute(self, output_path):
+        def incremental_output(evaluations):
+            if output_path:
+                file_name = os.path.join(output_path, 'FUN.{}.tsv.{}'.format(self.run_tag, evaluations))
+                print_function_values_to_file(self.algorithm.get_result(), filename=file_name)
+
+                file_name = os.path.join(output_path, 'VAR.{}.tsv.{}'.format(self.run_tag, evaluations))
+                print_variables_to_file(self.algorithm.get_result(), filename=file_name)
+
+        self.algorithm.output_job = incremental_output
+        self.algorithm.output_path = output_path
+
+        super().execute(output_path)
+
+
 def configure_experiment(population_size, max_evaluations, number_of_runs,
                          algorithms, problems):
     jobs = []
@@ -32,7 +53,7 @@ def configure_experiment(population_size, max_evaluations, number_of_runs,
                 algorithm = constructor(**kwargs)
                 algorithm.observable.register(observer=ProgressBarObserver(max=max_evaluations))
 
-                jobs.append(Job(
+                jobs.append(IncrementalOutputJob(
                     algorithm=algorithm,
                     algorithm_tag=algorithm.get_name(),
                     problem_tag=problem.get_name(),

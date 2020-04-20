@@ -15,15 +15,45 @@ from jmetal.util.archive import CrowdingDistanceArchive
 from jmetal.util.comparator import DominanceComparator
 from jmetal.util.termination_criterion import StoppingByEvaluations
 
+"""
+Extended classes for incremental data output. TODO refactor
+"""
+def incremental_stopping_condition_is_met(algo):
+    if algo.output_path:
+        if algo.termination_criterion.evaluations / (algo.output_count * 10000) > 1:
+            algo.output_job(algo.output_count * 10000)
+            algo.output_count += 1
 
-class OMOPSO_Variant(OMOPSO):
+    return algo.termination_criterion.is_met
 
+class IncrementalOMOPSO(OMOPSO):
     def __init__(self, **kwargs):
-        super(OMOPSO_Variant, self).__init__(**kwargs)
+        super(IncrementalOMOPSO, self).__init__(**kwargs)
+
+        self.output_count = 1
+
+    def stopping_condition_is_met(self):
+        return incremental_stopping_condition_is_met(self)
+
+class IncrementalSMPSO(SMPSO):
+    def __init__(self, **kwargs):
+        super(IncrementalSMPSO, self).__init__(**kwargs)
+
+        self.output_count = 1
+
+    def stopping_condition_is_met(self):
+        return incremental_stopping_condition_is_met(self)
+
+class IncrementalCMPSO(CMPSO):
+    def __init__(self, **kwargs):
+        super(IncrementalCMPSO, self).__init__(**kwargs)
+
+        self.output_count = 1
+
+    def stopping_condition_is_met(self):
+        return incremental_stopping_condition_is_met(self)
 
 
-    def step(self):
-        super().step()
 
 
 class SMPSO_Variant(SMPSO):
@@ -53,7 +83,7 @@ class SMPSO_Variant(SMPSO):
 
 def omopso(problem, population_size, max_evaluations, evaluator):
     return (
-        OMOPSO_Variant,
+        IncrementalOMOPSO,
         {
             "problem": problem,
             "swarm_size": population_size,
@@ -76,7 +106,7 @@ def omopso(problem, population_size, max_evaluations, evaluator):
 
 def smpso(problem, population_size, max_evaluations, evaluator):
     return (
-        SMPSO,
+        IncrementalSMPSO,
         {
             "problem": problem,
             "swarm_size": population_size,
@@ -92,7 +122,7 @@ def smpso(problem, population_size, max_evaluations, evaluator):
 
 def cmpso(problem, population_size, max_evaluations, evaluator):
     return (
-        CMPSO,
+        IncrementalCMPSO,
         {
             "problem": problem,
             "swarm_size": population_size,

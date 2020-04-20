@@ -13,6 +13,57 @@ from jmetal.util.termination_criterion import StoppingByEvaluations
 
 from cmlsga.mls import MultiLevelSelection
 
+"""
+Extended classes for incremental data output. TODO refactor
+"""
+def incremental_stopping_condition_is_met(algo):
+    if algo.output_path:
+        if algo.termination_criterion.evaluations / (algo.output_count * 10000) > 1:
+            algo.output_job(algo.output_count * 10000)
+            algo.output_count += 1
+
+    return algo.termination_criterion.is_met
+
+class IncrementalNSGAII(NSGAII):
+    def __init__(self, **kwargs):
+        super(IncrementalNSGAII, self).__init__(**kwargs)
+
+        self.output_count = 1
+
+    def stopping_condition_is_met(self):
+        return incremental_stopping_condition_is_met(self)
+
+
+class IncrementalNSGAIII(NSGAIII):
+    def __init__(self, **kwargs):
+        super(IncrementalNSGAIII, self).__init__(**kwargs)
+
+        self.output_count = 1
+
+    def stopping_condition_is_met(self):
+        return incremental_stopping_condition_is_met(self)
+
+class IncrementalIBEA(IBEA):
+    def __init__(self, **kwargs):
+        super(IncrementalIBEA, self).__init__(**kwargs)
+
+        self.output_count = 1
+
+    def stopping_condition_is_met(self):
+        return incremental_stopping_condition_is_met(self)
+
+class IncrementalMOEAD(MOEAD):
+    def __init__(self, **kwargs):
+        super(IncrementalMOEAD, self).__init__(**kwargs)
+
+        self.output_count = 1
+
+    def stopping_condition_is_met(self):
+        return incremental_stopping_condition_is_met(self)
+
+
+
+
 class MOGeneticAlgorithm(GeneticAlgorithm):
     def __init__( self, problem, population_size, offspring_population_size,
                   mutation, crossover, selection,
@@ -76,7 +127,7 @@ def mlsga(algorithms, problem, population_size, max_evaluations, evaluator):
 
 def nsgaii(problem, population_size, max_evaluations, evaluator):
     return (
-        NSGAII,
+        IncrementalNSGAII,
         {
             "problem": problem,
             "population_size": population_size,
@@ -94,7 +145,7 @@ def nsgaii(problem, population_size, max_evaluations, evaluator):
 
 def nsgaiii(problem, population_size, max_evaluations, evaluator):
     return (
-        NSGAIII,
+        IncrementalNSGAIII,
         {
             "problem": problem,
             "population_size": population_size,
@@ -114,7 +165,7 @@ def nsgaiii(problem, population_size, max_evaluations, evaluator):
 
 def ibea(problem, population_size, max_evaluations, evaluator):
     return (
-        IBEA,
+        IncrementalIBEA,
         {
             "problem": problem,
             "kappa": 1,
