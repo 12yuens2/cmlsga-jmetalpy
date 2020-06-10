@@ -83,7 +83,7 @@ class SMPSO_Variant(SMPSO):
 
 def omopso(problem, population_size, max_evaluations, evaluator):
     return (
-        IncrementalOMOPSO,
+        OMOPSO,
         {
             "problem": problem,
             "swarm_size": population_size,
@@ -106,7 +106,7 @@ def omopso(problem, population_size, max_evaluations, evaluator):
 
 def smpso(problem, population_size, max_evaluations, evaluator):
     return (
-        IncrementalSMPSO,
+        SMPSO,
         {
             "problem": problem,
             "swarm_size": population_size,
@@ -122,7 +122,7 @@ def smpso(problem, population_size, max_evaluations, evaluator):
 
 def cmpso(problem, population_size, max_evaluations, evaluator):
     return (
-        IncrementalCMPSO,
+        CMPSO,
         {
             "problem": problem,
             "swarm_size": population_size,
