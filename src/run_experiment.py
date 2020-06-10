@@ -53,7 +53,7 @@ def configure_experiment(population_size, max_evaluations, number_of_runs,
                 algorithm = constructor(**kwargs)
                 algorithm.observable.register(observer=ProgressBarObserver(max=max_evaluations))
 
-                jobs.append(IncrementalOutputJob(
+                jobs.append(Job(
                     algorithm=algorithm,
                     algorithm_tag=algorithm.get_name(),
                     problem_tag=problem.get_name(),
