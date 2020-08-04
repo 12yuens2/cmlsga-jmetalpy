@@ -127,7 +127,7 @@ def mlsga(algorithms, problem, population_size, max_evaluations, evaluator):
 
 def nsgaii(problem, population_size, max_evaluations, evaluator):
     return (
-        IncrementalNSGAII,
+        NSGAII,
         {
             "problem": problem,
             "population_size": population_size,
@@ -145,7 +145,7 @@ def nsgaii(problem, population_size, max_evaluations, evaluator):
 
 def nsgaiii(problem, population_size, max_evaluations, evaluator):
     return (
-        IncrementalNSGAIII,
+        NSGAIII,
         {
             "problem": problem,
             "population_size": population_size,
@@ -165,7 +165,7 @@ def nsgaiii(problem, population_size, max_evaluations, evaluator):
 
 def ibea(problem, population_size, max_evaluations, evaluator):
     return (
-        IncrementalIBEA,
+        IBEA,
         {
             "problem": problem,
             "kappa": 1,
