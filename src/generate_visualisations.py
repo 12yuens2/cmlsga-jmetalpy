@@ -50,19 +50,22 @@ if __name__ == "__main__":
 
     for data in data_directories:
         print(data)
-        #generate_summary_from_experiment(
-        #    data,
-        #    [InvertedGenerationalDistance(), HyperVolume([1.0, 1.0])],
-        #    reference_fronts="resources/reference_front"
-        #)
+        generate_summary_from_experiment(
+            data,
+            [InvertedGenerationalDistance(None)],
+            reference_fronts="resources/reference_front"
+        )
 
-        #filename = data[5:-1]
-        #os.rename("QualityIndicatorSummary.csv", filename)
-        filename = data
+        filename = data[5:].replace("/", "")
+        print(filename)
+        os.rename("QualityIndicatorSummary.csv", filename)
+        #filename = data
+
+        print("Filename: " + filename)
 
         print_stat(filename, "IGD", "mean")
-        print_stat(filename, "IGD", "min")
-        print_stat(filename, "IGD", "max")
+        #print_stat(filename, "IGD", "min")
+        #print_stat(filename, "IGD", "max")
 
     #generate_latex_tables(filename=datafile)
 
