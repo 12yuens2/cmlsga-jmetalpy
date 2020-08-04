@@ -145,7 +145,7 @@ def nsgaii(problem, population_size, max_evaluations, evaluator):
 
 def nsgaiii(problem, population_size, max_evaluations, evaluator):
     return (
-        IncrementalNSGAIII,
+        NSGAIII,
         {
             "problem": problem,
             "population_size": population_size,

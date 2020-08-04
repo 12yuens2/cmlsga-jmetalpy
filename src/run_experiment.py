@@ -18,6 +18,7 @@ from cmlsga.algorithms.genetic_algorithms import *
 from cmlsga.algorithms.particle_swarm_optimisation import *
 from cmlsga.problems.uf import *
 from cmlsga.problems.wfg import *
+from cmlsga.problems.dascmop import *
 
 class IncrementalOutputJob(Job):
 
@@ -107,7 +108,18 @@ def parse_algorithms(parameters):
 
 
 def parse_problems(parameters):
-    return [globals()[problem]() for problem in parameters["problems"]]
+    problems = []
+    for problem in parameters["problems"]:
+        problem_string = problem.split("(")
+
+        if len(problem_string) == 1:
+            problems.append(globals()[problem]())
+        else: # DASCMOP case
+            difficulty = int(problem_string[1][0])
+            problems.append(globals()[problem_string[0]](difficulty))
+
+    return problems
+
 
 
 if __name__ == "__main__":
