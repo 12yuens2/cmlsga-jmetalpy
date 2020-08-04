@@ -50,17 +50,13 @@ A csv file with the filename `600pop-30000evals-30runs.csv` will be created in t
 Detailed data for each algorithm and run will be stored in the `data-600pop-30000evals-30runs` directory.
 
 ### generate_visualisations
-This script aggregates stats from the csv file created by `run_experiment.py`
+This script aggregates stats from the csv file created by `run_experiupment.py`
 
-Pass the csv file into the script like so:
+Pass the data folder created into the script like so:
 ```
-python src/generate_visualisations.py 600pop-30000evals-30runs.csv
+python src/generate_visualisations.py data-600pop-30000evals-30runs-
 ```
 
-Multiple csv files can be passed in and statistics/visualisations will be generated for each of them
-```
-python src/generate_visualisations.py data1.csv data2.csv data3.csv
-```
 
 ## Acknowledgements
 Original idea by Adam Sobey

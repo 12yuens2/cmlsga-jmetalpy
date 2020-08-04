@@ -119,7 +119,7 @@ def mlsga(algorithms, problem, population_size, max_evaluations, evaluator):
             "problem": problem,
             "population_size": population_size,
             "max_evaluations": max_evaluations,
-            "number_of_collectives": 6,
+            "number_of_collectives": 8,
             "algorithms": algorithms
         }
     )
