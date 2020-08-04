@@ -1,308 +1,786 @@
-import operator
-import math
+"""
+Adapted from optproblems https://pypi.org/project/optproblems/
 
-from functools import reduce
+This module contains the test problems for multiobjective optimization
+published by the Walking Fish Group (WFG) [Huband2006]_. The problems here
+are a reimplementation of the original C++ code at
+http://www.wfg.csse.uwa.edu.au/toolkit/ . They are all minimization problems.
+"""
+
+import math
+import copy
+import random
 
 from jmetal.core.problem import FloatProblem
 
-x = [i for i in range(1, 20)]
-m = 1
+
+def correct_to_01(a, epsilon=1.0e-10):
+    """
+    Sets values in [-epsilon, 0] to 0 and in [1, 1 + epsilon] to 1.
+    Assumption is that these deviations result from rounding errors.
+    """
+    assert epsilon >= 0.0
+    min_value = 0.0
+    max_value = 1.0
+    min_epsilon = min_value - epsilon
+    max_epsilon = max_value + epsilon
+    if a <= min_value and a >= min_epsilon:
+        return min_value
+    elif a >= max_value and a <= max_epsilon:
+        return max_value
+    else:
+        return a
 
 
+def vector_in_01(x):
+    """
+    Returns True if all elements are in [0, 1].
+    """
+    for element in x:
+        if element < 0.0 or element > 1.0:
+            return False
+    return True
 
-"""
-Shape functions for WFG benchmarks
-"""
-def linear(x, m):
-    result = [x[i - 1] for i in range(1, len(x) - m)]
-    result = reduce(operator.mul, result, 1)
 
-    if m != 1:
-        result = result * (1 - x[len(x) - m])
+def shape_args_ok(x, m):
+    return vector_in_01(x) and m >= 1 and m <= len(x)
 
+
+def calculate_f(d, x, h, s):
+    assert d > 0.0
+    assert vector_in_01(x)
+    assert vector_in_01(h)
+    assert len(x) == len(h)
+    assert len(h) == len(s)
+
+    result = []
+    for i in range(0, len(h)):
+        assert s[i] > 0.0
+        result.append(d * x[-1] + s[i] * h[i])
     return result
-
-
-def convex(x, m):
-    result = [1 - math.cos(x[i-1] * math.pi * 0.5) for i in range(1, len(x) - m)]
-    result = reduce(operator.mul, result, 1)
-
-    if m != 1:
-        result = result * math.sin(x[len(x) - m] * math.pi * 0.5)
-
-    return result
-
-
-def concave(x, m):
-    result = [math.sin(x[i-1] * math.pi * 0.5) for i in range(1, len(x) - m)]
-    result = reduce(operator.mul, result, 1)
-
-    if m != 1:
-        result = result * math.cos(x[len(x) - m] * math.pi * 0.5)
-
-    return result
-
-
-def mixed(x, A, alpha):
-    tmp = math.cos(2 * A * math.pi * x[0] + math.pi * 0.5) / (2 * A * math.pi)
-
-    return math.pow(1 - x[0] - tmp, alpha)
-
-
-def disc(x, A, alpha, beta):
-    tmp = math.cos(A * math.pow(x[0], beta) * math.pi)
-
-    return 1 - math.pow(x[0], alpha) * math.pow(tmp, 2)
 
 
 """
 Transformations for WFG benchmarks
 """
 
-TRANSFORMATION_EPSILON = 1e-10
-
-def bPoly(y, alpha):
-    if not alpha > 0:
-        raise Exception("WFG bPoly transformation: alpha must be > 0")
-
+def b_poly(y, alpha):
+    assert alpha > 0.0
+    assert alpha != 1.0
     return correct_to_01(math.pow(y, alpha))
 
 
-def bFlat(y, A, B, C):
-    tmp1 = min(0, math.floor(y - B)) * A * (B - y) / B
-    tmp2 = min(0, math.floor(C - y)) * (1 - A) * (y - C) / (1 - C)
+def b_flat(y, a, b, c):
+    tmp1 = min(0.0, math.floor(y - b)) * a * (b - y) / b
+    tmp2 = min(0.0, math.floor(c - y)) * (1.0 - a) * (y - c) / (1.0 - c)
 
-    return correct_to_01(A + tmp1 - tmp2)
-
-
-def sLinear(y, A):
-    return correct_to_01(abs(y - A) / abs(math.floor(A - y) + A))
+    return correct_to_01(a + tmp1 - tmp2)
 
 
-def sDecept(y, A, B, C):
-    tmp1 = math.floor(y - A + B) * (1 - C + (A - B) / B) / (A - B)
-    tmp2 = math.floor(A + B - y) * (1 - C + (1 - A - B) / B) / (1 - A - B)
-    tmp3 = abs(y - A) - B
-
-    return correct_to_01(1 + tmp3 * (tmp1 + tmp2 + 1 / B))
+def b_param(y, u, a, b, c):
+    v = a - (1.0 - 2.0 * u) * abs(math.floor(0.5 - u) + a)
+    return correct_to_01(math.pow(y, b + (c - b) * v))
 
 
-def sMulti(y, A, B, C):
-    tmp1 = (4 * A + 2) * math.pi * (0.5 - abs(y - C) / (2 * (math.floor(C - y) + C)))
-    tmp2 = 4 * B * math.pow(abs(y - C) / (2 * (math.floor(C - y) + C)), 2)
-
-    return correct_to_01((1 + math.cos(tmp1) + tmp2) / (B + 2))
+def s_linear(y, a):
+    return correct_to_01(abs(y - a) / abs(math.floor(a - y) + a))
 
 
-def rSum(y, w):
-    tmp1 = tmp2 = 0
+def s_decept(y, a, b, c):
+    tmp1 = math.floor(y - a + b) * (1.0 - c + (a - b) / b) / (a - b)
+    tmp2 = math.floor(a + b - y) * (1.0 - c + (1.0 - a - b) / b) / (1.0 - a - b)
+    tmp3 = abs(y - a) - b
+
+    return correct_to_01(1.0 + tmp3 * (tmp1 + tmp2 + 1.0 / b))
+
+
+def s_multi(y, a, b, c):
+    assert (4.0 * a + 2.0) * math.pi >= 4.0 * b
+
+    tmp1 = abs(y - c) / (2.0 * (math.floor(c - y) + c))
+    tmp2 = (4.0 * a + 2.0) * math.pi * (0.5 - tmp1)
+
+    result = (1.0 + math.cos(tmp2) + 4.0 * b * math.pow(tmp1, 2.0)) / (b + 2.0)
+    return correct_to_01(result)
+
+
+def r_sum(y, w):
+    assert len(w) == len(y)
+    assert vector_in_01(y)
+
+    numerator = 0.0
+    denominator = sum(w)
     for i in range(len(y)):
-        tmp1 += y[i] * w[i]
-        tmp2 += w[i]
+        assert w[i] > 0.0
+        numerator += w[i] * y[i]
 
-    return correct_to_01(tmp1 / tmp2)
+    return correct_to_01(numerator / denominator)
 
 
-def rNonsep(y, A):
-    tmp = math.ceil(A / 2)
-    denominator = len(y) * tmp * (1 + 2 * A - 2 * tmp) / A
+def r_nonsep(y, a):
+    assert vector_in_01(y)
+    assert len(y) % a == 0
 
-    numerator = 0
+    tmp = math.ceil(a / 2.0)
+    denominator = len(y) * tmp * (1.0 + 2.0 * a - 2.0 * tmp) / a
+
+    numerator = 0.0
     for j in range(len(y)):
         numerator += y[j]
-        for k in range(A - 1):
+        for k in range(0, a - 1):
             numerator += abs(y[j] - y[(j + k + 1) % len(y)])
 
     return correct_to_01(numerator / denominator)
 
 
-def bParam(y, u, A, B, C):
-    tmp = A - (1 - 2 * U) * abs(math.floor(0.5 - u) + A)
-    exp = B + (C - B) * v
-
-    return correct_to_01(math.pow(y, exp))
-
-
-def correct_to_01(a):
-    min = 0
-    max = 1
-    min_epsilon = min - TRANSFORMATION_EPSILON
-    max_epsilon = max + TRANSFORMATION_EPSILON
-
-    if (a <= min and a >= min_epsilon) or (a >= min and a <= min_epsilon):
-        return min
-    elif (a >= max and a <= max_epsilon) or (a <= max and a >= max_epsilon):
-        return max
-    else:
-        return a
-
-
 """
-WFG problems
+Shape functions for WFG benchmarks
 """
+
+def linear(x, m):
+    assert shape_args_ok(x, m)
+    result = 1.0
+    for i in range(1, len(x) - m + 1):
+        result *= x[i-1]
+    if m != 1:
+        result *= 1 - x[len(x) - m]
+    return correct_to_01(result)
+
+
+def convex(x, m):
+    assert shape_args_ok(x, m)
+    result = 1.0
+    for i in range(1, len(x) - m + 1):
+        result *= 1.0 - math.cos(x[i - 1] * math.pi / 2.0)
+    if m != 1:
+        result *= 1.0 - math.sin(x[len(x) - m] * math.pi / 2.0)
+    return correct_to_01(result)
+
+
+def concave(x, m):
+    assert shape_args_ok(x, m)
+    result = 1.0
+    for i in range(1, len(x) - m + 1):
+        result *= math.sin(x[i - 1] * math.pi / 2.0)
+    if m != 1:
+        result *= math.cos(x[len(x) - m] * math.pi / 2.0)
+    return correct_to_01(result)
+
+
+def mixed(x, a, alpha):
+    assert vector_in_01(x)
+    assert len(x) != 0
+    assert a >= 1
+    assert alpha > 0.0
+
+    tmp = 2.0 * a * math.pi
+    result = math.pow(1.0 - x[0] - math.cos(tmp * x[0] + math.pi / 2.0) / tmp, alpha)
+    return correct_to_01(result)
+
+
+def disc(x, a, alpha, beta):
+    assert vector_in_01(x)
+    assert len(x) != 0
+    assert a >= 1
+    assert alpha > 0.0
+    assert beta > 0.0
+
+    tmp1 = a * math.pow(x[0], beta) * math.pi
+    result = 1.0 - math.pow(x[0], alpha) * math.pow(math.cos(tmp1), 2.0)
+    return correct_to_01(result)
+
+
+class Shape:
+    """Abstract base class for shape objects."""
+
+    @staticmethod
+    def create_a(m, is_degenerate):
+        assert m >= 2
+        if is_degenerate:
+            a = [0] * (m - 1)
+            a[0] = 1
+            return a
+        else:
+            return [1] * (m - 1)
+
+
+    @staticmethod
+    def normalize_z(z, z_max):
+        result = []
+        for i in range(0, len(z)):
+            assert z[i] >= 0.0
+            assert z[i] <= z_max[i]
+            assert z_max[i] > 0.0
+            result.append(z[i] / z_max[i])
+        return result
+
+
+    @staticmethod
+    def calculate_x(tp, a):
+        assert vector_in_01(tp)
+        assert len(tp) != 0
+        assert len(a) == len(tp) - 1
+
+        result = []
+        for i in range(0, len(tp) - 1):
+            assert a[i] == 0 or a[i] == 1
+            tmp1 = max(tp[-1], a[i])
+            result.append(tmp1 * (tp[i] - 0.5) + 0.5)
+        result.append(tp[-1])
+        return result
+
+
+    @staticmethod
+    def calculate_f(x, h):
+        assert vector_in_01(x)
+        assert vector_in_01(h)
+        assert len(x) == len(h)
+
+        s = []
+        for m in range(1, len(h) + 1):
+            s.append(m * 2.0)
+        return calculate_f(1.0, x, h, s)
+
+
+    def __call__(self, tp):
+        raise NotImplementedError("Abstract class `Shape` is not callable.")
+
+
 class WFG(FloatProblem):
 
-    def __init__(self, k, l, m):
+    def __init__(self, objective_function, num_objectives, num_variables, k):
         super(WFG, self).__init__()
-        self.k = k
-        self.l = l
-        self.m = m
-        self.d = 1
+        self.num_objectives = num_objectives
 
-        self.number_of_variables = k + l
-        self.number_of_objectives = m
+        self.max_objectives = None
+        self.min_objectives = None
+        if num_objectives == 3:
+            self.max_objectives = [10.0, 10.0, 10.0]
+            self.min_objectives = [0.0, 0.0, 0.0]
+        elif num_objectives == 5:
+            self.max_objectives = [10.0, 10.0, 10.0, 10.0, 12.0]
+            self.min_objectives = [0.0, 0.0, 0.0, 0.0, 0.0]
+        self.lower_bound = [0.0] * num_variables
+        self.upper_bound = [2.0 * i for i in range(1, num_variables + 1)]
+
+        self.k = k
+        self.num_variables = num_variables
+        self.number_of_variables = num_variables
+        self.number_of_objectives = num_objectives
         self.number_of_constraints = 0
 
-        self.lower_bound = [0.0] * self.number_of_variables
-        self.upper_bound = [2 * (i+1) for i in range(self.number_of_variables)]
+        self.is_deterministic = True
+        self.do_maximize = False
+        if num_objectives <= 4:
+            self.default_reference_set_size = 500
+        else:
+            self.default_reference_set_size = 1000
 
 
-    # Gets the x vector
-    def calculate_x(self, t):
-        return [
-            max(t[self.m - 1], self.a[i]) * (t[i] - 0.5) + 0.5
-            for i in range(0, self.m - 1)
-        ] + [t[self.m - 1]]
+    @staticmethod
+    def args_ok(z, k, m):
+        return k >= 1 and k < len(z) and m >= 2 and k % (m - 1) == 0
 
 
-    def normalise(self, z):
-        return [correct_to_01(z[i] / (2 * (i + 1))) for i in range(len(z))]
+    def normalize_z(self, z):
+        result = []
+        for i in range(0, len(z)):
+            if z[i] < self.lower_bound[i] or z[i] > self.upper_bound[i]:
+                raise Exception("Normalise z")
+            result.append(z[i] / self.upper_bound[i])
+        return result
 
 
-    def sub_vector(self, z, head, tail):
-        """
-        Get a subvector of a given vector (Head and tail inclusive)
-        """
-        return z[int(head):int(tail) + 1].copy()
-
-
-
-class WFG1(WFG):
-
-    def __init__(self, k=2, l=4, m=2):
-        super(WFG1, self).__init__(k, l, m)
-
-        self.s = [2 * (i + 1) for i in range(self.m)]
-        self.a = [1] * (self.m - 1)
+    @property
+    def m(self):
+        return self.num_objectives
 
 
     def evaluate(self, solution):
-        x = reduce(
-            (lambda x,f: f(x)),
-            [self.normalise, self.t1, self.t2, self.t3, self.t4, self.calculate_x],
-            solution.variables
-        )
-
-        result = [0] * self.m
-        for m in range(1, self.m):
-            result[m] = self.d * x[self.m - 1] + self.s[m - 1] * convex(x, m)
-        result[self.m - 1] = self.d * x[self.m - 1] + x[self.m - 1] * mixed(x, 5, 1)
-
+        result = self.objective_function(solution.variables)
+        assert len(result) == len(solution.objectives)
         for i in range(len(result)):
             solution.objectives[i] = result[i]
 
 
-    def t1(self, z):
-        return z[:self.k] + [sLinear(z[i], 0.35) for i in range(self.k, len(z))]
+class WFG1(WFG):
+    def __init__(self, num_objectives=2, num_variables=6, k=2):
+        super(WFG1, self).__init__(self.objective_function,
+                                num_objectives,
+                                num_variables,
+                                k)
+        self.shape = self.WFG1Shape()
 
-    def t2(self, z):
-        return z[:self.k] + [bFlat(z[i], 0.8, 0.75, 0.85) for i in range(self.k, len(z))]
 
-    def t3(self, z):
-        return [bPoly(z[i], 0.02) for i in range(0, len(z))]
+    @staticmethod
+    def transition1(y, k):
+        n = len(y)
+        assert vector_in_01(y)
+        assert k >= 1
+        assert k < n
+        t = y[0:k]
+        for i in range(k, n):
+            t.append(s_linear(y[i], 0.35))
+        return t
 
-    def t4(self, z):
-        result = [0] * self.m
-        w = [2 * (i + 1) for i in range(len(z))]
 
-        for i in range(1, self.m + 1):
-            head = (i - 1) * self.k / (self.m - 1) + 1
-            tail = i * self.k / (self.m - 1)
+    @staticmethod
+    def transition2(y, k):
+        n = len(y)
+        assert vector_in_01(y)
+        assert k >= 1
+        assert k < n
+        t = y[0:k]
+        for i in range(k, n):
+            t.append(b_flat(y[i], 0.8, 0.75, 0.85))
+        return t
 
-            subz = self.sub_vector(z, head-1, tail-1)
-            subw = self.sub_vector(w, head-1, tail-1)
 
-            result[i - 1] = rSum(subz, subw)
+    @staticmethod
+    def transition3(y):
+        n = len(y)
+        assert vector_in_01(y)
+        t = []
+        for i in range(0, n):
+            t.append(b_poly(y[i], 0.02))
+        return t
 
-        head = self.k
-        tail = len(z) - 1
 
-        subz = self.sub_vector(z, head, tail)
-        subw = self.sub_vector(w, head, tail)
+    @staticmethod
+    def transition4(y, k, m):
+        n = len(y)
+        assert vector_in_01(y)
+        assert k >= 1
+        assert k < n
+        assert m >= 2
+        assert k % (m - 1) == 0
+        w = []
+        for i in range(1, n + 1):
+            w.append(2.0 * i)
+        t = []
+        for i in range(1, m):
+            head = int((i - 1) * k / (m - 1))
+            tail = int(i * k / (m - 1))
+            y_sub = y[head:tail]
+            w_sub = w[head:tail]
+            t.append(r_sum(y_sub, w_sub))
+        y_sub = y[k:n]
+        w_sub = w[k:n]
+        t.append(r_sum(y_sub, w_sub))
+        return t
 
-        result[self.m - 1] = rSum(subz, subw)
-        return result
 
+    class WFG1Shape(Shape):
+
+        def __call__(self, tp):
+            assert vector_in_01(tp)
+            assert len(tp) >= 2
+            a = self.create_a(len(tp), False)
+            x = self.calculate_x(tp, a)
+            h = []
+            for m in range(1, len(tp)):
+                h.append(convex(x, m))
+            h.append(mixed(x, 5, 1.0))
+            return self.calculate_f(x, h)
+
+
+    def objective_function(self, phenome):
+        assert len(phenome) == self.num_variables
+        assert self.args_ok(phenome, self.k, self.m)
+        y = self.normalize_z(phenome)
+        y = self.transition1(y, self.k)
+        y = self.transition2(y, self.k)
+        y = self.transition3(y)
+        y = self.transition4(y, self.k, self.m)
+        return self.shape(y)
 
     def get_name(self):
         return "WFG1"
 
 
+
 class WFG2(WFG):
-
-    def __init__(self, k=2, l=4, m=2):
-        super(WFG2, self).__init__(k, l, m)
-
-        self.s = [2 * (i + 1) for i in range(self.m)]
-        self.a = [1] * (self.m - 1)
-
-    def evaluate(self, solution):
-        x = reduce(
-            (lambda x,f: f(x)),
-            [self.normalise, self.t1, self.t2, self.t3, self.calculate_x],
-            solution.variables
-        )
-        result = [0] * self.m
-        for m in range(0, self.m):
-            result[m] = self.d * x[self.m - 1] + self.s[m] * convex(x, m + 1)
-        result[self.m - 1] = self.d * x[self.m - 1] + self.s[self.m - 1] * disc(x, 5, 1, 1)
-
-        for i in range(len(result)):
-            solution.objectives[i] = result[i]
-
-
-    def t1(self, z):
-        return z[:self.k] + [sLinear(z[i], 0.35) for i in range(self.k, len(z))]
-
-    def t2(self, z):
-        result = z[:self.k]
-
-        l = len(z) - self.k
-        for i in range(self.k + 1, int((self.k + l) / 2)):
-            head = self.k + 2 * (i - self.k) - 1
-            tail = self.k + 2 * (i - self.k)
-            subz = self.sub_vector(z, head - 1, tail - 1)
-
-            result[i - 1] = rNonsep(subz, 2)
-
-        return result
-
-    def t3(self, z):
-        result = [0] * self.m
-        w = [1] * len(z)
-
-        for i in range(1, self.m):
-            head = (i - 1) * self.k / (self.m - 1) + 1
-            tail = i * self.k / (self.m - 1)
-            subz = self.sub_vector(z, head - 1, tail - 1)
-            subw = self.sub_vector(w, head - 1, tail - 1)
-
-            result[i - 1] = rSum(subz, subw)
-
-        l = len(z) - self.k
-        head = self.k + 1
-        tail = self.k + l / 2
-        subz = self.sub_vector(z, head - 1, tail - 1)
-        subw = self.sub_vector(w, head - 1, tail - 1)
-
-        try:
-            result[self.m - 1] = rSum(subz, subw)
-        except:
-            pass
-        finally:
-            return z
-
-        return result
+    def __init__(self, num_objectives=2, num_variables=6, k=2):
+        super(WFG2, self).__init__(self.objective_function,
+                                num_objectives,
+                                num_variables,
+                                k)
+        assert (num_variables - k) % 2 == 0
+        self.shape = self.WFG2Shape()
+        self.transition1 = WFG1.transition1
 
     def get_name(self):
         return "WFG2"
+
+
+    @staticmethod
+    def transition2(y, k):
+        n = len(y)
+        l = n - k
+        assert vector_in_01(y)
+        assert k >= 1
+        assert k < n
+        assert l % 2 == 0
+        t = []
+        for i in range(k):
+            t.append(y[i])
+        for i in range(k + 1, int(k + l / 2 + 1)):
+            head = k + 2 * (i - k) - 2
+            tail = k + 2 * (i - k)
+            y_sub = y[head:tail]
+            t.append(r_nonsep(y_sub, 2))
+        return t
+
+
+    @staticmethod
+    def transition3(y, k, m):
+        n = len(y)
+        assert vector_in_01(y)
+        assert k >= 1
+        assert k < n
+        assert m >= 2
+        assert k % (m - 1) == 0
+        w = [1.0] * n
+        t = []
+        for i in range(1, m):
+            head = int((i - 1) * k / (m - 1))
+            tail = int(i * k / (m - 1))
+            y_sub = y[head:tail]
+            w_sub = w[head:tail]
+            t.append(r_sum(y_sub, w_sub))
+        y_sub = y[k:n]
+        w_sub = w[k:n]
+        t.append(r_sum(y_sub, w_sub))
+        return t
+
+
+    class WFG2Shape(Shape):
+
+        def __call__(self, tp):
+            assert vector_in_01(tp)
+            assert len(tp) >= 2
+            a = self.create_a(len(tp), False)
+            x = self.calculate_x(tp, a)
+            h = []
+            for m in range(1, len(tp)):
+                h.append(convex(x, m))
+            h.append(disc(x, 5, 1.0, 1.0))
+            return self.calculate_f(x, h)
+
+
+    def objective_function(self, phenome):
+        assert len(phenome) == self.num_variables
+        assert self.args_ok(phenome, self.k, self.m)
+        assert (len(phenome) - self.k) % 2 == 0
+        y = self.normalize_z(phenome)
+        y = self.transition1(y, self.k)
+        y = self.transition2(y, self.k)
+        y = self.transition3(y, self.k, self.m)
+        return self.shape(y)
+
+
+
+class WFG3(WFG):
+    def __init__(self, num_objectives=2, num_variables=6, k=2):
+        super(WFG3, self).__init__(self.objective_function,
+                                num_objectives,
+                                num_variables,
+                                k)
+        assert (num_variables - k) % 2 == 0
+        self.shape = self.WFG3Shape()
+        self.transition1 = WFG1.transition1
+        self.transition2 = WFG2.transition2
+        self.transition3 = WFG2.transition3
+
+    def get_name(self):
+        return "WFG3"
+
+    class WFG3Shape(Shape):
+
+        def __call__(self, tp):
+            assert vector_in_01(tp)
+            assert len(tp) >= 2
+            a = self.create_a(len(tp), True)
+            x = self.calculate_x(tp, a)
+            h = []
+            for m in range(1, len(tp) + 1):
+                h.append(linear(x, m))
+            return self.calculate_f(x, h)
+
+
+    def objective_function(self, phenome):
+        assert len(phenome) == self.num_variables
+        assert self.args_ok(phenome, self.k, self.m)
+        assert (len(phenome) - self.k) % 2 == 0
+        y = self.normalize_z(phenome)
+        y = self.transition1(y, self.k)
+        y = self.transition2(y, self.k)
+        y = self.transition3(y, self.k, self.m)
+        return self.shape(y)
+
+
+
+class WFG4(WFG):
+    def __init__(self, num_objectives=2, num_variables=6, k=2):
+        super(WFG4, self).__init__(self.objective_function,
+                                num_objectives,
+                                num_variables,
+                                k)
+        assert k % (num_objectives - 1) == 0
+        self.shape = self.WFG4Shape()
+        self.transition2 = WFG2.transition3
+
+    def get_name(self):
+        return "WFG4"
+
+
+    @staticmethod
+    def transition1(y):
+        n = len(y)
+        assert vector_in_01(y)
+        t = []
+        for i in range(0, n):
+            t.append(s_multi(y[i], 30, 10, 0.35))
+        return t
+
+
+    class WFG4Shape(Shape):
+
+        def __call__(self, tp):
+            assert vector_in_01(tp)
+            assert len(tp) >= 2
+            a = self.create_a(len(tp), False)
+            x = self.calculate_x(tp, a)
+            h = []
+            for m in range(1, len(tp) + 1):
+                h.append(concave(x, m))
+            return self.calculate_f(x, h)
+
+
+    def objective_function(self, phenome):
+        assert len(phenome) == self.num_variables
+        assert self.args_ok(phenome, self.k, self.m)
+        y = self.normalize_z(phenome)
+        y = self.transition1(y)
+        y = self.transition2(y, self.k, self.m)
+        return self.shape(y)
+
+
+
+class WFG5(WFG):
+    def __init__(self, num_objectives=2, num_variables=6, k=2):
+        super(WFG5, self).__init__(self.objective_function,
+                                num_objectives,
+                                num_variables,
+                                k)
+        self.shape = WFG4.WFG4Shape()
+        self.transition2 = WFG2.transition3
+
+    def get_name(self):
+        return "WFG5"
+
+    @staticmethod
+    def transition1(y):
+        n = len(y)
+        assert vector_in_01(y)
+        t = []
+        for i in range(0, n):
+            t.append(s_decept(y[i], 0.35, 0.001, 0.05))
+        return t
+
+
+    def objective_function(self, phenome):
+        assert len(phenome) == self.num_variables
+        assert self.args_ok(phenome, self.k, self.m)
+        y = self.normalize_z(phenome)
+        y = self.transition1(y)
+        y = self.transition2(y, self.k, self.m)
+        return self.shape(y)
+
+
+
+class WFG6(WFG):
+    """The WFG6 problem."""
+
+    def __init__(self, num_objectives=2, num_variables=6, k=2):
+        super(WFG6, self).__init__(self.objective_function,
+                                num_objectives,
+                                num_variables,
+                                k)
+        self.shape = WFG4.WFG4Shape()
+        self.transition1 = WFG1.transition1
+
+    def get_name(self):
+        return "WFG6"
+
+    @staticmethod
+    def transition2(y, k, m):
+        n = len(y)
+        assert vector_in_01(y)
+        assert k >= 1
+        assert k < n
+        assert m >= 2
+        assert k % (m - 1) == 0
+        t = []
+        for i in range(1, m):
+            head = int((i - 1) * k / (m - 1))
+            tail = int(i * k / (m - 1))
+            y_sub = y[head:tail]
+            t.append(r_nonsep(y_sub, int(k / (m - 1))))
+        y_sub = y[k:n]
+        t.append(r_nonsep(y_sub, n - k))
+        return t
+
+
+    def objective_function(self, phenome):
+        assert len(phenome) == self.num_variables
+        assert self.args_ok(phenome, self.k, self.m)
+        y = self.normalize_z(phenome)
+        y = self.transition1(y, self.k)
+        y = self.transition2(y, self.k, self.m)
+        return self.shape(y)
+
+
+
+class WFG7(WFG):
+    """The WFG7 problem."""
+
+    def __init__(self, num_objectives=2, num_variables=6, k=2):
+        super(WFG7, self).__init__(self.objective_function,
+                                num_objectives,
+                                num_variables,
+                                k)
+        self.shape = WFG4.WFG4Shape()
+        self.transition2 = WFG1.transition1
+        self.transition3 = WFG2.transition3
+
+    def get_name(self):
+        return "WFG7"
+
+    @staticmethod
+    def transition1(y, k):
+        n = len(y)
+        assert vector_in_01(y)
+        assert k >= 1
+        assert k < n
+        w = [1.0] * n
+        t = []
+        for i in range(k):
+            y_sub = y[i+1:n]
+            w_sub = w[i+1:n]
+            u = r_sum(y_sub, w_sub)
+            t.append(b_param(y[i], u, 0.98/49.98, 0.02, 50))
+        for i in range(k, n):
+            t.append(y[i])
+        return t
+
+
+    def objective_function(self, phenome):
+        assert len(phenome) == self.num_variables
+        assert self.args_ok(phenome, self.k, self.m)
+        y = self.normalize_z(phenome)
+        y = self.transition1(y, self.k)
+        y = self.transition2(y, self.k)
+        y = self.transition3(y, self.k, self.m)
+        return self.shape(y)
+
+
+
+class WFG8(WFG):
+    def __init__(self, num_objectives=2, num_variables=6, k=2):
+        super(WFG8, self).__init__(self.objective_function, num_objectives, num_variables, k)
+
+        self.shape = WFG4.WFG4Shape()
+        self.transition2 = WFG1.transition1
+        self.transition3 = WFG2.transition3
+
+        if num_objectives <= 4:
+            self.default_reference_set_size = 500
+        else:
+            self.default_reference_set_size = 1000
+
+
+    def get_name(self):
+        return "WFG8"
+
+
+    @staticmethod
+    def transition1(y, k):
+        n = len(y)
+        assert vector_in_01(y)
+        assert k >= 1
+        assert k < n
+        w = [1.0] * n
+        t = y[0:k]
+        for i in range(k, n):
+            y_sub = y[0:i]
+            w_sub = w[0:i]
+            u = r_sum(y_sub, w_sub)
+            t.append(b_param(y[i], u, 0.98 / 49.98, 0.02, 50))
+        return t
+
+
+    def objective_function(self, phenome):
+        assert len(phenome) == self.num_variables
+        assert self.args_ok(phenome, self.k, self.m)
+        y = self.normalize_z(phenome)
+        y = self.transition1(y, self.k)
+        y = self.transition2(y, self.k)
+        y = self.transition3(y, self.k, self.m)
+        return self.shape(y)
+
+
+class WFG9(WFG):
+    def __init__(self, num_objectives=2, num_variables=6, k=2):
+        super(WFG9, self).__init__(self.objective_function, num_objectives, num_variables, k)
+
+        self.shape = WFG4.WFG4Shape()
+        self.transition3 = WFG6.transition2
+
+        if num_objectives <= 4:
+            self.default_reference_set_size = 500
+        else:
+            self.default_reference_set_size = 1000
+
+
+    def get_name(self):
+        return "WFG9"
+
+
+    @staticmethod
+    def transition1(y):
+        n = len(y)
+        assert vector_in_01(y)
+        w = [1.0] * n
+        t = []
+        for i in range(0, n - 1):
+            y_sub = y[i+1:n]
+            w_sub = w[i+1:n]
+            u = r_sum(y_sub, w_sub)
+            t.append(b_param(y[i], u, 0.98 / 49.98, 0.02, 50))
+        t.append(y[-1])
+        return t
+
+
+    @staticmethod
+    def transition2(y, k):
+        n = len(y)
+        assert vector_in_01(y)
+        assert k >= 1
+        assert k < n
+        t = []
+        for i in range(0, k):
+            t.append(s_decept(y[i], 0.35, 0.001, 0.05))
+        for i in range(k, n):
+            t.append(s_multi(y[i], 30, 95, 0.35))
+        return t
+
+
+    def objective_function(self, phenome):
+        assert len(phenome) == self.num_variables
+        assert self.args_ok(phenome, self.k, self.m)
+        y = self.normalize_z(phenome)
+        y = self.transition1(y)
+        y = self.transition2(y, self.k)
+        y = self.transition3(y, self.k, self.m)
+        return self.shape(y)
