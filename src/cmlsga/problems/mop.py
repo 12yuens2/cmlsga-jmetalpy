@@ -1,6 +1,4 @@
-import operator
 import math
-
 
 from jmetal.core.problem import FloatProblem
 
