@@ -1,3 +1,4 @@
+import numpy as np
 import math
 
 from jmetal.core.problem import FloatProblem
@@ -37,6 +38,13 @@ class IMB1(FloatProblem):
         solution.objectives[1] = (1 + g) * (1 - math.sqrt(x[0]))
 
 
+    def pf(self, obj, num_points):
+        f1 = [0 + i * 1/(num_points - 1) for i in range(num_points)]
+        f2 = [1 - math.sqrt(i) for i in f1]
+
+        return zip(f1, f2)
+
+
     def get_name(self):
         return "IMB1"
 
@@ -62,6 +70,13 @@ class IMB2(IMB1):
         solution.objectives[1] = (1 + g) * (1 - x[0])
 
 
+    def pf(self, obj, num_points):
+        f1 = [0 + i * 1/(num_points - 1) for i in range(num_points)]
+        f2 = [1 - i for i in f1]
+
+        return zip(f1, f2)
+
+
     def get_name(self):
         return "IMB2"
 
@@ -85,6 +100,13 @@ class IMB3(IMB1):
 
         solution.objectives[0] = (1 + g) * math.cos(math.pi * x[0] / 2)
         solution.objectives[1] = (1 + g) * math.sin(math.pi * x[0] / 2)
+
+
+    def pf(self, obj, num_points):
+        f1 = [0 + i * 1/(num_points - 1) for i in range(num_points)]
+        f2 = [1 - math.sqrt(1 - i * i) for i in f1]
+
+        return zip(f1, f2)
 
 
     def get_name(self):
@@ -117,6 +139,19 @@ class IMB4(IMB1):
         solution.objectives[2] = (1 + g) * (1 - x[0])
 
 
+    # todo refactor with mop pf code
+    def pf(self, obj, num_points):
+        points = []
+        for i in range(num_points):
+            # Generate random points, then normalise
+            vec = np.random.uniform(0, 1, 3)
+            arr = vec / np.sum(vec)
+
+            points.append(tuple(arr))
+
+        return points
+
+
     def get_name(self):
         return "IMB4"
 
@@ -141,6 +176,24 @@ class IMB5(IMB4):
         solution.objectives[0] = (1 + g) * math.cos(math.pi * x[0] / 2) * math.cos(math.pi * x[1] / 2)
         solution.objectives[1] = (1 + g) * math.cos(math.pi * x[0] / 2) * math.sin(math.pi * x[1] / 2)
         solution.objectives[2] = (1 + g) * math.sin(math.pi * x[0] / 2)
+
+
+    def pf(self, obj, num_points):
+        #todo refactor uniform point generation into a mop6 function
+        points = []
+        for i in range(num_points):
+            vec = np.random.uniform(0, 1, 3)
+            arr = vec / np.sum(vec)
+
+            points.append(arr)
+
+        norm_points = []
+        for arr in points:
+            s = math.sqrt(sum([i * i for i in arr]))
+            norm = [i / s for i in arr]
+            norm_points.append(tuple(norm))
+
+        return norm_points
 
 
     def get_name(self):
@@ -230,6 +283,13 @@ class IMB8(IMB1):
         solution.objectives[1] = (1 + g) * (1 - x[0])
 
 
+    def pf(self, obj, num_points):
+        f1 = [0 + i * 1/(num_points - 1) for i in range(num_points)]
+        f2 = [1 - i for i in f1]
+
+        return zip(f1, f2)
+
+
     def get_name(self):
         return "IMB8"
 
@@ -258,6 +318,13 @@ class IMB9(IMB1):
 
         solution.objectives[0] = (1 + g) * math.cos(math.pi * x[0] / 2)
         solution.objectives[1] = (1 + g) * math.sin(math.pi * x[0] / 2)
+
+
+    def pf(self, obj, num_points):
+        f1 = [0 + i * 1/(num_points - 1) for i in range(num_points)]
+        f2 = [math.sqrt(1 - i * i) for i in f1]
+
+        return zip(f1, f2)
 
 
     def get_name(self):
@@ -342,6 +409,12 @@ class IMB12(IMB11):
 
         return G
 
+    def pf(self, obj, num_points):
+        f1 = [0 + i * 1/(num_points - 1) for i in range(num_points)]
+        f2 = [1 - i for i in f1]
+
+        return zip(f1, f2)
+
 
     def get_name(self):
         return "IMB12"
@@ -365,6 +438,13 @@ class IMB13(IMB11):
         solution.objectives[1] = (1 + g) * (1 - math.pow(x[0], 2))
 
         solution.constraints[0] = constraints
+
+
+    def pf(self, obj, num_points):
+        f1 = [0 + i * 1/(num_points - 1) for i in range(num_points)]
+        f2 = [1 - i * i for i in f1]
+
+        return zip(f1, f2)
 
 
     def get_name(self):
