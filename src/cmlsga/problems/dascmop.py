@@ -28,8 +28,7 @@ class DASCMOP(FloatProblem):
         self.obj_labels = ["x" "y"]
 
         self.lower_bound = [0.0] * self.number_of_variables
-        self.upper_bound = [0.0] * self.number_of_variables
-
+        self.upper_bound = [1.0] * self.number_of_variables
 
         self.eta, self.zeta, self.gamma = self.get_difficulty_values(difficulty)
 
