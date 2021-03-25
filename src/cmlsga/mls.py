@@ -107,7 +107,7 @@ class MultiLevelSelection(Algorithm[S, R]):
     def cluster_population(self, population):
         labels = []
         if self.number_of_collectives > 1:
-            labels = kmeans.Clustering(population, self.number_of_collectives)
+            labels = kmeans.Clustering(population, self.number_of_collectives, self.problem)
         elif self.number_of_collectives == 1:
             labels = [1 for _ in range(0, self.population_size)]
         else:
@@ -232,4 +232,5 @@ class MultiLevelSelection(Algorithm[S, R]):
         return self.pareto_front.solution_list
 
     def get_name(self):
-        return "MLS{}".format([a.__name__ for a in self.algorithms])
+        return "cMLSGA"
+        #return "MLS{}".format([a.__name__ for a in self.algorithms])
