@@ -32,8 +32,17 @@ class IncrementalOMOPSO(OMOPSO):
 
         self.output_count = 1
 
-    def stopping_condition_is_met(self):
-        return incremental_stopping_condition_is_met(self)
+    #def stopping_condition_is_met(self):
+    #    return incremental_stopping_condition_is_met(self)
+
+    def get_observable_data(self):
+        return {
+            "PROBLEM": self.problem,
+            "EVALUATIONS": self.evaluations,
+            "SOLUTIONS": self.get_result(),
+            "ALL_SOLUTIONS": self.solutions
+        }
+
 
 class IncrementalSMPSO(SMPSO):
     def __init__(self, **kwargs):
@@ -41,8 +50,16 @@ class IncrementalSMPSO(SMPSO):
 
         self.output_count = 1
 
-    def stopping_condition_is_met(self):
-        return incremental_stopping_condition_is_met(self)
+    def get_observable_data(self):
+        return {
+            "PROBLEM": self.problem,
+            "EVALUATIONS": self.evaluations,
+            "SOLUTIONS": self.get_result(),
+            "ALL_SOLUTIONS": self.solutions
+        }
+
+    #def stopping_condition_is_met(self):
+    #    return incremental_stopping_condition_is_met(self)
 
 class IncrementalCMPSO(CMPSO):
     def __init__(self, **kwargs):
@@ -61,29 +78,52 @@ class SMPSO_Variant(SMPSO):
     def __init__(self, **kwargs):
         super(SMPSO_Variant, self).__init__(**kwargs)
 
+        self.epigenetic_proba = 0.1
 
-    def update_velocity(self, swarm):
+
+    #def update_velocity(self, swarm):
+    #    for i in range(self.swarm_size):
+    #        pbest = copy(swarm[i].attributes['local_best'])
+    #        gbest = self.select_global_best()
+
+    #        r1 = round(random.uniform(self.r1_min, self.r1_max), 1)
+    #        r2 = round(random.uniform(self.r2_min, self.r2_max), 1)
+    #        c1 = round(random.uniform(self.c1_min, self.c1_max), 1)
+    #        c2 = round(random.uniform(self.c2_min, self.c2_max), 1)
+
+    #        w = round(random.uniform(self.weight_min, self.weight_max), 1)
+
+    #        for var in range(swarm[i].number_of_variables):
+    #            swarm_var = swarm[i].variables[var]
+    #            self.speed[i][var] = w * self.speed[i][var] \
+    #                                   + (c1 * r1 * (pbest.variables[var] - swarm_var)) \
+    #                                   + (c2 * r2 * (gbest.variables[var] - swarm_var))
+
+    def update_position(self, swarm) -> None:
         for i in range(self.swarm_size):
-            pbest = copy(swarm[i].attributes['local_best'])
-            gbest = self.select_global_best()
+            particle = swarm[i]
 
-            r1 = round(random.uniform(self.r1_min, self.r1_max), 1)
-            r2 = round(random.uniform(self.r2_min, self.r2_max), 1)
-            c1 = round(random.uniform(self.c1_min, self.c1_max), 1)
-            c2 = round(random.uniform(self.c2_min, self.c2_max), 1)
+            for j in range(particle.number_of_variables):
+                if random.random() < self.epigenetic_proba:
+                    continue
 
-            w = round(random.uniform(self.weight_min, self.weight_max), 1)
+                particle.variables[j] += self.speed[i][j]
 
-            for var in range(swarm[i].number_of_variables):
-                swarm_var = swarm[i].variables[var]
-                self.speed[i][var] = w * self.speed[i][var] \
-                                       + (c1 * r1 * (pbest.variables[var] - swarm_var)) \
-                                       + (c2 * r2 * (gbest.variables[var] - swarm_var))
+                if particle.variables[j] < self.problem.lower_bound[j]:
+                    particle.variables[j] = self.problem.lower_bound[j]
+                    self.speed[i][j] *= self.change_velocity1
+
+                if particle.variables[j] > self.problem.upper_bound[j]:
+                    particle.variables[j] = self.problem.upper_bound[j]
+                    self.speed[i][j] *= self.change_velocity2
+
+    def get_name(self):
+        return "SMPSO-e"
 
 
 def omopso(problem, population_size, max_evaluations, evaluator):
     return (
-        OMOPSO,
+        IncrementalOMOPSO,
         {
             "problem": problem,
             "swarm_size": population_size,
@@ -106,7 +146,23 @@ def omopso(problem, population_size, max_evaluations, evaluator):
 
 def smpso(problem, population_size, max_evaluations, evaluator):
     return (
-        SMPSO,
+        IncrementalSMPSO,
+        {
+            "problem": problem,
+            "swarm_size": population_size,
+            "mutation": PolynomialMutation(
+                probability=1.0 / problem.number_of_variables,
+                distribution_index=20
+            ),
+            "leaders": CrowdingDistanceArchive(100),
+            "termination_criterion": StoppingByEvaluations(max_evaluations=max_evaluations)
+        }
+    )
+
+
+def smpsoe(problem, population_size, max_evaluations, evaluator):
+    return (
+        SMPSO_Variant,
         {
             "problem": problem,
             "swarm_size": population_size,

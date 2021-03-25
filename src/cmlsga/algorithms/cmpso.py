@@ -225,6 +225,13 @@ class CMPSO(ParticleSwarmOptimization):
         return swarms
 
 
+    def get_observable_data(self):
+        return {
+            "PROBLEM": self.problem,
+            "EVALUATIONS": self.evaluations,
+            "SOLUTIONS": self.get_result(),
+            "ALL_SOLUTIONS": [s for swarm in self.solutions for s in swarm]        }
+
     def get_result(self):
         return self.archive
 
