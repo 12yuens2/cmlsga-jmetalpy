@@ -70,7 +70,32 @@ class IncrementalCMPSO(CMPSO):
     def stopping_condition_is_met(self):
         return incremental_stopping_condition_is_met(self)
 
+class OMOPSOe(OMOPSO):
+    def __init__(self, **kwargs):
+        super(OMOPSOe, self).__init__(**kwargs)
 
+        self.epigenetic_proba = 0.1
+
+    def update_position(self, swarm):
+        for i in range(self.swarm_size):
+            particle = swarm[i]
+
+            for j in range(particle.number_of_variables):
+                if random.random() < 1.0 / particle.number_of_variables:
+                    continue
+
+                particle.variables[j] += self.speed[i][j]
+
+                if particle.variables[j] < self.problem.lower_bound[j]:
+                    particle.variables[j] = self.problem.lower_bound[j]
+                    self.speed[i][j] *= self.change_velocity1
+
+                if particle.variables[j] > self.problem.upper_bound[j]:
+                    particle.variables[j] = self.problem.upper_bound[j]
+                    self.speed[i][j] *= self.change_velocity2
+
+    def get_name(self):
+        return "OMOPSOe"
 
 
 class SMPSO_Variant(SMPSO):
@@ -124,6 +149,29 @@ class SMPSO_Variant(SMPSO):
 def omopso(problem, population_size, max_evaluations, evaluator):
     return (
         IncrementalOMOPSO,
+        {
+            "problem": problem,
+            "swarm_size": population_size,
+            "epsilon": 0.0075,
+            "uniform_mutation": UniformMutation(
+                probability=1.0 / problem.number_of_variables,
+                perturbation=0.5
+            ),
+            "non_uniform_mutation": NonUniformMutation(
+                probability=1.0 / problem.number_of_variables,
+                perturbation=0.5,
+                max_iterations=int(max_evaluations / population_size)
+            ),
+            "leaders": CrowdingDistanceArchive(100),
+            "termination_criterion": StoppingByEvaluations(max_evaluations=max_evaluations),
+            "swarm_evaluator": evaluator
+        }
+    )
+
+
+def omopsoe(problem, population_size, max_evaluations, evaluator):
+    return (
+        OMOPSOe,
         {
             "problem": problem,
             "swarm_size": population_size,
