@@ -39,6 +39,11 @@ def compute_indicator(filename, indicator_name, stat_function):
 
 
 def print_stat(datafile, indicator_name, stat_function):
+    pd.set_option('display.max_rows', None)
+    pd.set_option('display.max_columns', None)
+    pd.set_option('display.width', None)
+    pd.set_option('display.max_colwidth', -1)
+
     stat = compute_indicator(datafile, indicator_name, stat_function)
     print("{} {}:".format(indicator_name, stat_function))
     print("{} \n".format(stat))
@@ -57,7 +62,7 @@ if __name__ == "__main__":
         )
 
         filename = data[5:].replace("/", "")
-        print(filename)
+        print("rename to " + filename)
         os.rename("QualityIndicatorSummary.csv", filename)
         #filename = data
 
