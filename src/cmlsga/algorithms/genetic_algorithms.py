@@ -1,3 +1,5 @@
+import random
+
 from jmetal.algorithm.multiobjective.ibea import IBEA
 from jmetal.algorithm.multiobjective.nsgaii import NSGAII
 from jmetal.algorithm.multiobjective.nsgaiii import NSGAIII, UniformReferenceDirectionFactory
@@ -10,6 +12,13 @@ from jmetal.operator.crossover import PMXCrossover
 from jmetal.operator.selection import RouletteWheelSelection
 from jmetal.util.aggregative_function import Tschebycheff
 from jmetal.util.termination_criterion import StoppingByEvaluations
+
+from jmetal.util.archive import BoundedArchive
+from jmetal.util.comparator import DominanceComparator
+from jmetal.util.density_estimator import CrowdingDistance
+
+from copy import copy
+
 
 from cmlsga.mls import MultiLevelSelection
 
@@ -24,42 +33,140 @@ def incremental_stopping_condition_is_met(algo):
 
     return algo.termination_criterion.is_met
 
-class IncrementalNSGAII(NSGAII):
+class NSGAIIe(NSGAII):
     def __init__(self, **kwargs):
-        super(IncrementalNSGAII, self).__init__(**kwargs)
+        super(NSGAIIe, self).__init__(**kwargs)
 
-        self.output_count = 1
+        #self.pf = BoundedArchive(1000, DominanceComparator(), CrowdingDistance())
 
-    def stopping_condition_is_met(self):
-        return incremental_stopping_condition_is_met(self)
+        self.epigenetic_proba = 0.1
+        self.block_size = 6
+
+    #def get_observable_data(self):
+    #    for solution in self.solutions:
+    #        self.pf.add(copy(solution))
+    #    return {
+    #        "PROBLEM": self.problem,
+    #        "EVALUATIONS": self.evaluations,
+    #        "SOLUTIONS": self.get_result(),
+    #        "ALL_SOLUTIONS": self.pf.solution_list
+    #    }
+
+    def reproduction(self, mating_population):
+        number_of_parents_to_combine = self.crossover_operator.get_number_of_parents()
+
+        if len(mating_population) % number_of_parents_to_combine != 0:
+            raise Exception('Wrong number of parents')
+
+        offspring_population = []
+        for i in range(0, self.offspring_population_size, number_of_parents_to_combine):
+            parents = []
+            for j in range(number_of_parents_to_combine):
+                parents.append(mating_population[i + j])
+
+            offspring = self.crossover_operator.execute(parents)
+
+            for solution in offspring:
+
+                #blocking
+                if random.random < self.epigenetic_proba:
+                    block = int(solution.number_of_variables / self.block_size)
+                    block_start = random.randint(0, solution.number_of_variables - block)
+
+                    for v in range(block_start, block_start + block):
+                        solution.variables[v] = parents[0].variables[v]
+
+                self.mutation_operator.execute(solution)
+                offspring_population.append(solution)
+
+                if len(offspring_population) >= self.offspring_population_size:
+                    break
+
+        return offspring_population
+
+
+    def get_name(self):
+        return "NSGA-IIe"
+    #    self.output_count = 1
+
+    #def stopping_condition_is_met(self):
+    #    return incremental_stopping_condition_is_met(self)
 
 
 class IncrementalNSGAIII(NSGAIII):
     def __init__(self, **kwargs):
         super(IncrementalNSGAIII, self).__init__(**kwargs)
 
-        self.output_count = 1
 
-    def stopping_condition_is_met(self):
-        return incremental_stopping_condition_is_met(self)
+    def get_name(self):
+        return "U-NSGA-III"
+
+    #    self.output_count = 1
+
+
+    #def stopping_condition_is_met(self):
+    #    return incremental_stopping_condition_is_met(self)
 
 class IncrementalIBEA(IBEA):
     def __init__(self, **kwargs):
         super(IncrementalIBEA, self).__init__(**kwargs)
 
-        self.output_count = 1
+    def get_name(self):
+        return "IBEA"
 
-    def stopping_condition_is_met(self):
-        return incremental_stopping_condition_is_met(self)
+    def get_observable_data(self):
+        return {
+            "PROBLEM": self.problem,
+            "EVALUATIONS": self.evaluations,
+            "SOLUTIONS": self.get_result(),
+            "ALL_SOLUTIONS": self.solutions
+        }
 
-class IncrementalMOEAD(MOEAD):
+    #    self.output_count = 1
+
+    #def stopping_condition_is_met(self):
+    #    return incremental_stopping_condition_is_met(self)
+
+class MOEADe(MOEAD):
     def __init__(self, **kwargs):
-        super(IncrementalMOEAD, self).__init__(**kwargs)
+        super(MOEADe, self).__init__(**kwargs)
 
-        self.output_count = 1
+        self.epigenetic_proba = 0.1
+        self.block_size = 6
 
-    def stopping_condition_is_met(self):
-        return incremental_stopping_condition_is_met(self)
+        #self.output_count = 1
+
+    #def stopping_condition_is_met(self):
+    #    return incremental_stopping_condition_is_met(self)
+
+    def get_observable_data(self):
+        return {
+                "PROBLEM": self.problem,
+                "EVALUATIONS": self.evaluations,
+                "SOLUTIONS": self.get_result(),
+                "ALL_SOLUTIONS": self.solutions
+            }
+
+    def reproduction(self, mating_population):
+        self.crossover_operator.current_individual = self.solutions[self.current_subproblem]
+
+        offspring_population = self.crossover_operator.execute(mating_population)
+
+        # blocking
+        offspring = offspring_population[0]
+        if random.random() < self.epigenetic_proba:
+            block = int(offspring.number_of_variables / self.block_size)
+            block_start = random.randint(0, offspring.number_of_variables - block)
+            for v in range(block_start, block_start + block):
+                offspring.variables[v] = mating_population[0].variables[v]
+
+        self.mutation_operator.execute(offspring)
+
+        return offspring_population
+
+
+    def get_name(self):
+        return "MOEAD-e"
 
 
 
@@ -127,7 +234,24 @@ def mlsga(algorithms, problem, population_size, max_evaluations, evaluator):
 
 def nsgaii(problem, population_size, max_evaluations, evaluator):
     return (
-        NSGAII,
+        IncrementalNSGAII,
+        {
+            "problem": problem,
+            "population_size": population_size,
+            "offspring_population_size": population_size,
+            "mutation": PolynomialMutation(
+                1.0 / problem.number_of_variables,
+                distribution_index=20
+            ),
+            "crossover": SBXCrossover(probability=1.0, distribution_index=20),
+            "termination_criterion": StoppingByEvaluations(max_evaluations=max_evaluations),
+            "population_evaluator": evaluator
+        }
+    )
+
+def nsgaiie(problem, population_size, max_evaluations, evaluator):
+    return (
+        IncrementalNSGAII,
         {
             "problem": problem,
             "population_size": population_size,
@@ -145,7 +269,7 @@ def nsgaii(problem, population_size, max_evaluations, evaluator):
 
 def nsgaiii(problem, population_size, max_evaluations, evaluator):
     return (
-        NSGAIII,
+        IncrementalNSGAIII,
         {
             "problem": problem,
             "population_size": population_size,
@@ -165,7 +289,7 @@ def nsgaiii(problem, population_size, max_evaluations, evaluator):
 
 def ibea(problem, population_size, max_evaluations, evaluator):
     return (
-        IBEA,
+        IncrementalIBEA,
         {
             "problem": problem,
             "kappa": 1,
@@ -216,3 +340,27 @@ def moead(problem, population_size, max_evaluations, evaluator):
             "population_evaluator": evaluator
         }
     )
+
+
+def moeade(problem, population_size, max_evaluations, evaluator):
+    return (
+        MOEADe,
+        {
+            "problem": problem,
+            "population_size": population_size,
+            "crossover": DifferentialEvolutionCrossover(CR=1.0, F=0.5, K=0.5),
+            "mutation": PolynomialMutation(
+                probability=1.0 / problem.number_of_variables,
+                distribution_index=20
+            ),
+            "aggregative_function": Tschebycheff(dimension=problem.number_of_objectives),
+            "neighbor_size": 3,
+            "neighbourhood_selection_probability": 0.9,
+            "max_number_of_replaced_solutions": 2,
+            "weight_files_path": "resources/MOEAD_weights",
+            "termination_criterion": StoppingByEvaluations(max_evaluations=max_evaluations),
+            "population_evaluator": evaluator
+        }
+    )
+
+
