@@ -64,8 +64,8 @@ if __name__ == "__main__":
         print("Filename: " + filename)
 
         print_stat(filename, "IGD", "mean")
-        #print_stat(filename, "IGD", "min")
-        #print_stat(filename, "IGD", "max")
+        print_stat(filename, "IGD", "min")
+        print_stat(filename, "IGD", "max")
 
     #generate_latex_tables(filename=datafile)
 
@@ -73,5 +73,5 @@ if __name__ == "__main__":
     #generate_boxplot(filename=datafile)
 
     # Wilcoxon
-    #compute_wilcoxon(filename=datafile)
+    compute_wilcoxon(filename)
 
