@@ -69,7 +69,7 @@ class NSGAIIe(NSGAII):
             for solution in offspring:
 
                 #blocking
-                if random.random < self.epigenetic_proba:
+                if random.random() < self.epigenetic_proba:
                     block = int(solution.number_of_variables / self.block_size)
                     block_start = random.randint(0, solution.number_of_variables - block)
 
@@ -193,6 +193,54 @@ class MOGeneticAlgorithm(GeneticAlgorithm):
     def get_result(self):
         return self.solutions
 
+    def get_name(self):
+        return "MOGA"
+
+
+class MOGeneticAlgorithme(MOGeneticAlgorithm):
+    def __init__(self, **kwargs):
+        super(MOGeneticAlgorithme, self).__init__(**kwargs)
+
+        self.epigenetic_proba = 0.1
+        self.block_size = 6
+
+
+    def reproduction(self, mating_population):
+        number_of_parents_to_combine = self.crossover_operator.get_number_of_parents()
+
+        if len(mating_population) % number_of_parents_to_combine != 0:
+            raise Exception('Wrong number of parents')
+
+        offspring_population = []
+        for i in range(0, self.offspring_population_size, number_of_parents_to_combine):
+            parents = []
+            for j in range(number_of_parents_to_combine):
+                parents.append(mating_population[i + j])
+
+            offspring = self.crossover_operator.execute(parents)
+
+            for solution in offspring:
+
+                #blocking
+                if random.random() < self.epigenetic_proba:
+                    block = int(solution.number_of_variables / self.block_size)
+                    block_start = random.randint(0, solution.number_of_variables - block)
+
+                    for v in range(block_start, block_start + block):
+                        solution.variables[v] = parents[0].variables[v]
+
+                self.mutation_operator.execute(solution)
+                offspring_population.append(solution)
+
+                if len(offspring_population) >= self.offspring_population_size:
+                    break
+
+        return offspring_population
+
+    def get_name(self):
+        return "MOGAe"
+
+
 
 def random_search(problem, population_size, max_evaluations, evaluator):
     return (
@@ -204,7 +252,7 @@ def random_search(problem, population_size, max_evaluations, evaluator):
     )
 
 
-def genetic_algorithm(problem, population_size, max_evaluations, evaluator):
+def moga(problem, population_size, max_evaluations, evaluator):
     return (
         MOGeneticAlgorithm,
         {
@@ -217,6 +265,21 @@ def genetic_algorithm(problem, population_size, max_evaluations, evaluator):
             "termination_criterion": StoppingByEvaluations(max_evaluations=max_evaluations)
         }
     )
+
+def mogae(problem, population_size, max_evaluations, evaluator):
+    return (
+        MOGeneticAlgorithme,
+        {
+            "problem": problem,
+            "population_size": population_size,
+            "offspring_population_size": population_size,
+            "mutation": PolynomialMutation(0.08, 20),
+            "crossover": SBXCrossover(0.7),
+            "selection": RouletteWheelSelection(),
+            "termination_criterion": StoppingByEvaluations(max_evaluations=max_evaluations)
+        }
+    )
+
 
 
 def mlsga(algorithms, problem, population_size, max_evaluations, evaluator):
@@ -234,7 +297,7 @@ def mlsga(algorithms, problem, population_size, max_evaluations, evaluator):
 
 def nsgaii(problem, population_size, max_evaluations, evaluator):
     return (
-        IncrementalNSGAII,
+        NSGAII,
         {
             "problem": problem,
             "population_size": population_size,
@@ -251,7 +314,7 @@ def nsgaii(problem, population_size, max_evaluations, evaluator):
 
 def nsgaiie(problem, population_size, max_evaluations, evaluator):
     return (
-        IncrementalNSGAII,
+        NSGAIIe,
         {
             "problem": problem,
             "population_size": population_size,
