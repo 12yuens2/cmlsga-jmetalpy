@@ -34,7 +34,7 @@ class Collective(object):
 
 
     def evaluate(self):
-        self.algorithm.evaluate(self.algorithm.solutions)
+        return self.algorithm.evaluate(self.algorithm.solutions)
 
 
     def calculate_fitness(self):
