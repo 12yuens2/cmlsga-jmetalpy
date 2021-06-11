@@ -226,6 +226,9 @@ class MultiLevelSelection(Algorithm[S, R]):
         observable_data = self.get_observable_data()
         self.observable.notify_all(**observable_data)
 
+    def stopping_condition_is_met(self):
+        return self.termination_criterion.is_met
+
     def get_observable_data(self):
         return {
             "PROBLEM": self.problem,
