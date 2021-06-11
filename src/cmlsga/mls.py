@@ -31,6 +31,7 @@ class MultiLevelSelection(Algorithm[S, R]):
                  algorithms=[],
                  mls_mode=7,
                  max_evaluations=30000,
+                 termination_criterion = store.default_termination_criteria,
                  population_generator = store.default_generator,
                  population_evaluator = store.default_evaluator):
         super(MultiLevelSelection, self).__init__()
@@ -45,12 +46,15 @@ class MultiLevelSelection(Algorithm[S, R]):
         self.mls_mode = mls_mode
 
         self.max_evaluations = max_evaluations
+        self.termination_criterion = termination_criterion
+        self.observable.register(termination_criterion)
         self.population_generator = population_generator
         self.population_evaluator = population_evaluator
         self.generations = 0
 
-        self.pareto_front = BoundedArchive(1000, DominanceComparator(), CrowdingDistance())
+        self.solutions = []
         self.collectives = self.generate_collectives()
+        self.active_collective = None
 
 
     def generate_collectives(self):
@@ -144,30 +148,20 @@ class MultiLevelSelection(Algorithm[S, R]):
         if not isinstance(solution_list, list):
             solution_list = [solution_list]
 
-        for collective in self.collectives:
-            collective.evaluate()
+        solutions = []
+        if self.active_collective:
+            solutions = self.active_collective.evaluate()
+            self.active_collective = None
+        else:
+            for collective in self.collectives:
+                solutions.extend(collective.evaluate())
 
-        for solution in solution_list:
-            add = self.pareto_front.add(copy(solution))
-
-        return self.pareto_front.solution_list
+        return solutions
 
 
     def init_progress(self):
         for collective in self.collectives:
             collective.algorithm.init_progress()
-
-
-    def stopping_condition_is_met(self):
-        #self.generations += 1
-        #return self.generations >= 100
-
-        evaluations = sum([
-            collective.evaluations for collective in self.collectives
-        ])
-
-        #print("Evaluations: {}\n".format(evaluations))
-        return evaluations > self.max_evaluations
 
 
     def step(self):
@@ -178,16 +172,17 @@ class MultiLevelSelection(Algorithm[S, R]):
 
     def _update_collectives(self):
         start = time.time()
+        evaluations = 0
+        solutions = []
         for collective in self.collectives:
             collective.step()
-            #print("Collective: {}, solutions: {}, evaluations: {}".format(
-            #    collective.algorithm.get_name(),
-            #    len(collective.algorithm.solutions),
-            #    collective.algorithm.evaluations))
 
-            self.solutions = self.evaluate(collective.algorithm.solutions)
-        #print("Pareto front: {}".format(len(self.pareto_front.solution_list)))
-        #print("Time taken: {}".format(time.time() - start))
+            self.active_collective = collective
+            solutions.extend(self.evaluate(collective.algorithm.solutions))
+            evaluations += collective.evaluations
+
+        self.evaluations = evaluations
+        self.solutions = solutions
 
 
     def _replace_worst_collective(self):
@@ -222,15 +217,26 @@ class MultiLevelSelection(Algorithm[S, R]):
 
 
     def update_progress(self):
+        evaluations = 0
         for collective in self.collectives:
             collective.algorithm.update_progress()
+            evaluations += collective.evaluations
+        self.evaluations = self.evaluations
+
+        observable_data = self.get_observable_data()
+        self.observable.notify_all(**observable_data)
 
     def get_observable_data(self):
-        pass
+        return {
+            "PROBLEM": self.problem,
+            "EVALUATIONS": self.evaluations,
+            "SOLUTIONS": self.get_result(),
+            "COMPUTING_TIME": time.time() - self.start_computing_time,
+            "COLLECTIVES": self.collectives
+        }
 
     def get_result(self):
-        return self.pareto_front.solution_list
+        return self.solutions
 
     def get_name(self):
         return "cMLSGA"
-        #return "MLS{}".format([a.__name__ for a in self.algorithms])
