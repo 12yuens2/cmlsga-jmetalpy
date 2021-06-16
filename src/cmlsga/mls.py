@@ -21,6 +21,11 @@ from typing import TypeVar
 S = TypeVar('S')
 R = TypeVar('R')
 
+import numpy as np
+import os
+cwd = os.getcwd()
+fitness_dir = cwd+'/src/cmlsga/Individuals'
+
 class MultiLevelSelection(Algorithm[S, R]):
 
     def __init__(self,
@@ -35,6 +40,9 @@ class MultiLevelSelection(Algorithm[S, R]):
                  population_generator = store.default_generator,
                  population_evaluator = store.default_evaluator):
         super(MultiLevelSelection, self).__init__()
+        print('Started new generation')
+        self.current_gen = 1
+        np.save(fitness_dir + '/current_gen.npy', np.array([self.current_gen]))
 
         self.problem = problem
         self.number_of_collectives = number_of_collectives
@@ -172,16 +180,15 @@ class MultiLevelSelection(Algorithm[S, R]):
 
     def _update_collectives(self):
         start = time.time()
-        evaluations = 0
+        self.current_gen += 1
+        np.save(fitness_dir + '/current_gen.npy', np.array([self.current_gen]))
         solutions = []
         for collective in self.collectives:
             collective.step()
 
             self.active_collective = collective
-            solutions.extend(self.evaluate(collective.algorithm.solutions))
-            evaluations += collective.evaluations
+            solutions.extend(collective.algorithm.solutions)
 
-        self.evaluations = evaluations
         self.solutions = solutions
 
 
@@ -207,7 +214,6 @@ class MultiLevelSelection(Algorithm[S, R]):
 
         for collective in self.collectives:
             collective_fitness = collective.calculate_fitness()
-            #print("Collective: {}, fitness: {}".format(collective, collective_fitness))
             if collective_fitness < fitness:
                 worst_collective = collective
                 fitness = collective_fitness
@@ -220,8 +226,8 @@ class MultiLevelSelection(Algorithm[S, R]):
         evaluations = 0
         for collective in self.collectives:
             collective.algorithm.update_progress()
-            evaluations += collective.evaluations
-        self.evaluations = self.evaluations
+            evaluations += collective.algorithm.evaluations
+        self.evaluations = evaluations
 
         observable_data = self.get_observable_data()
         self.observable.notify_all(**observable_data)
