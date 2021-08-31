@@ -200,7 +200,6 @@ class MultiLevelSelection(Algorithm[S, R]):
         worst_collective.restart()
         self.collectives.append(worst_collective)
 
-
     def _get_worst_collective(self):
         worst_collective = None
         fitness = 1e10
@@ -221,13 +220,15 @@ class MultiLevelSelection(Algorithm[S, R]):
         for collective in self.collectives:
             collective.algorithm.update_progress()
             evaluations += collective.evaluations
-        self.evaluations = self.evaluations
+        self.evaluations = evaluations
 
         observable_data = self.get_observable_data()
         self.observable.notify_all(**observable_data)
 
+
     def stopping_condition_is_met(self):
         return self.termination_criterion.is_met
+
 
     def get_observable_data(self):
         return {
@@ -235,6 +236,7 @@ class MultiLevelSelection(Algorithm[S, R]):
             "EVALUATIONS": self.evaluations,
             "SOLUTIONS": self.get_result(),
             "COMPUTING_TIME": time.time() - self.start_computing_time,
+            "COUNTER": self.evaluations / self.population_size,
             "COLLECTIVES": self.collectives
         }
 
