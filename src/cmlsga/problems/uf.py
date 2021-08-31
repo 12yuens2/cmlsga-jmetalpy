@@ -218,6 +218,15 @@ class UF6(UF1):
         solution.objectives[0] = x[0] + hj + 2 * (4 * sum1 - 2 * prod1 + 2) / count1
         solution.objectives[1] = 1 - x[0] + hj + 2 * (4 * sum2 - 2 * prod2 + 2) / count2
 
+
+
+    def pf(self, obj, num_points):
+        step = 0.25 / (num_points - 1)
+        f1 = [0] + [0.25 + i * step for i in range(num_points)] + [0.75 + i * step for i in range(num_points)]
+        f2 = [1 - i for i in f1]
+
+        return zip(f1, f2)
+        
     def get_name(self):
         return "UF6"
 
