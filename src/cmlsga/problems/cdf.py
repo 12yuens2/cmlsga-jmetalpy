@@ -1,4 +1,4 @@
-
+import random
 import math
 import numpy as np
 
@@ -675,3 +675,231 @@ class CDF11(CDF):
 
     def get_name(self):
         return "CDF11"
+
+
+class CDF12(CDF):
+    def __init__(self):
+        super().__init__(1)
+
+        self.upper_bounds = [1] + [1 for _ in range(self.number_of_variables - 1)]
+        self.lower_bounds = [0] + [-1 for _ in range(self.number_of_variables - 1)]
+
+
+    def evaluate(self, solution):
+        x = solution.variables
+        size_j1 = j1 = size_j2 = j2 = 0
+        mt = 0.5 + abs(self.gt)
+
+        for i in range(2, self.number_of_variables + 1):
+            y = 0
+            if i % 2 == 1:
+                y = x[i - 1] - math.sin((6 * math.pi * x[0]) + (i * math.pi / self.number_of_variables))
+                size_j1 += 1
+                j1 += math.pow(y, 2)
+            else:
+                y = x[i - 1] - math.cos((6 * math.pi * x[0]) + (i * math.pi / self.number_of_variables))
+                size_j2 += 1
+                j2 += math.pow(y, 2)
+
+        solution.objectives[0] = x[0] + (2 / size_j1) * j1
+        solution.objectives[1] = 1 - math.pow(x[0], mt) + (2 / size_j2) * j2
+
+        solution.constraints = self.eval_constraints(solution.objectives)
+
+
+    def eval_constraints(self, x):
+        k = x[1] + math.sqrt(x[0]) - 1 * math.sin(self.nT * math.pi * (math.sqrt(x[0]) - x[1] + 1)) - 1
+
+        return k / (1 + math.exp(4 * abs(k)))
+
+
+    def pf(self, obj, num_points, time):
+        gt = math.sin(0.5 * math.pi * time)
+        mt = 0.5 + abs(gt)
+        f1 = f2 = []
+
+        for i in range(0, 2 * self.nT + 2):
+            v = (1 - math.pow(i, mt))
+            k = v + math.sqrt(i) - math.sin(self.nT * math.pi * (math.sqrt(i) - v + 1)) - 1
+            if (k / 1 + math.exp(4 * abs(k))) > -0.00001:
+                f1.append(i)
+                f2.append(v)
+
+        return zip(f1, f2)
+
+    def get_name(self):
+        return "CDF12"
+
+
+class CDF13(CDF):
+    def __init__(self):
+        super().__init__(1)
+
+        self.upper_bounds = [1] + [2 for _ in range(self.number_of_variables - 1)]
+        self.lower_bounds = [0] + [-2 for _ in range(self.number_of_variables - 1)]
+
+        self.time_vector = 5 * [0]
+
+
+    def update(self, *args, **kwargs):
+        super.update(args, kwargs)
+
+        i = random.randint(0, 4)
+        self.time_vector[i] += 1
+
+
+    def evaluate(self, solution):
+        x = solution.variables
+        gt = [math.sin(0.5 * math.pi * self.time_vector[t]) for t in self.time_vector]
+        kt = math.ceil(self.number_of_variables * gt[0])
+        ht4 = 0.5 + abs(gt[3])
+        ht5 = 0.5 + abs(gt[4])
+
+        size_j1 = j1 = size_j2 = j2 = 0
+
+        for i in range(2, self.number_of_variables + 1):
+            y = x[i - 1] - math.sin(6 * math.pi * x[0] + (i + kt) * math.pi / self.number_of_variables) - gt[1]
+            if i % 2 == 1:
+                size_j1 += 1
+                j1 += math.pow(y, 2)
+            else:
+                size_j2 += 1
+                j2 += math.pow(y, 2)
+
+        solution.objectives[0] = x[0] + abs(gt[2]) + (2 / size_j1) * j1
+        solution.objectives[1] = 1 - ht4 * math.pow(x[0], ht5) + abs(gt[2]) + (2 / size_j2) * j2
+
+        solution.constraints = self.eval_constraints(solution.objectives)
+
+
+    def eval_constraints(self, x):
+        gt = [math.sin(0.5 * math.pi * self.time_vector[t]) for t in self.time_vector]
+        ht4 = 0.5 + abs(gt[3])
+        ht5 = 0.5 + abs(gt[4])
+
+        k = x[1] + ht4 * math.pow(x[0], ht5) - math.sin(self.nT * math.pi * (ht4 * math.pow(x[0], ht5) - x[1] + 1)) - 1
+
+        return k
+
+
+    def pf(self, obj, num_points, time):
+        gt = [math.sin(0.5 * math.pi * self.time_vector[t]) for t in self.time_vector]
+        ht4 = 0.5 + abs(gt[3])
+        ht5 = 0.5 + abs(gt[4])
+        f1 = f2 = []
+
+        for i in range(0, 1 + (1 / (self.num_points - 1)), 1 / (self.num_points - 1)):
+            v = 1 - ht4 * math.pow(i, ht5) + abs(gt[2])
+            h = ht4 * math.pow(i + abs(gt[2]), ht5)
+            k = v + h - math.sin(2 * math.pi * (h - v + 1)) - 1
+            if k > -0.00001:
+                f1.append(i + abs(gt[2]))
+                f2.append(v)
+
+        return zip(f1, f2)
+
+    def get_name(self):
+        return "CDF13"
+
+
+
+class CDF14(CDF):
+    def __init__(self):
+        super().__init__(1)
+
+        self.upper_bounds = [1] + [1 for _ in range(self.number_of_variables - 1)]
+        self.lower_bounds = [0] + [0 for _ in range(self.number_of_variables - 1)]
+
+
+    def evaluate(self, solution):
+        x = solution.variables
+        size_j1 = j1 = size_j2 = j2 = 0
+
+        for i in range(2, self.number_of_variables + 1):
+            y = x[i - 1] - math.pow(x[0], (0.5 * (1 + (3 * (i - 2) / (self.number_of_variables - 2)))))
+            if i % 2 == 1:
+                size_j1 += 1
+                j1 += math.pow(y, 2)
+            else:
+                size_j2 += 1
+                j2 += math.pow(y, 2)
+
+        solution.objectives[0] = x[0] + (2 / size_j1) * j1
+        solution.objectives[1] = 1 - x[0] + (2 / size_j2) * j2
+
+        solution.constraints = self.eval_constraints(solution.objectives)
+
+
+    def eval_constraints(self, x):
+        k = x[0] + x[1] - abs(math.sin(self.nT * math.pi * (x[0] - x[1] + 1))) - 1 + abs(gt)
+
+        return k
+
+
+    def pf(self, obj, num_points, time):
+        gt = math.sin(0.5 * math.pi * time)
+        f1 = f2 = []
+
+        for i in range(0, 1 + (1 / (self.num_points - 1)), 1 / (self.num_points - 1)):
+            v = 1 - i
+            k = i + v - abs(math.sin(self.nT * math.pi * (i - v + 1))) - 1 + abs(gt)
+            if k > -0.00001:
+                f1.append(i)
+                f2.append(v)
+
+        return zip(f1, f2)
+
+    def get_name(self):
+        return "CDF14"
+
+
+
+class CDF15(CDF):
+    def __init__(self):
+        super().__init__(1)
+
+        self.upper_bounds = [1] + [2 for _ in range(self.number_of_variables - 1)]
+        self.lower_bounds = [0] + [-2 for _ in range(self.number_of_variables - 1)]
+
+
+    def evaluate(self, solution):
+        x = solution.variables
+        size_j1 = j1 = size_j2 = j2 = 0
+
+        for i in range(2, self.number_of_variables + 1):
+            y = x[i - 1] - math.sin(6 * math.pi * x[0] + (i * math.pi / self.number_of_variables))
+            if i % 2 == 1:
+                size_j1 += 1
+                j1 += math.pow(y, 2)
+            else:
+                size_j2 += 1
+                j2 += math.pow(y, 2)
+
+        solution.objectives[0] = x[0] + (2 / size_j1) * j1
+        solution.objectives[1] = 1 - math.pow(x[0], 2) + (2 / size_j2) * j2
+
+        solution.constraints = self.eval_constraints(solution.objectives)
+
+
+    def eval_constraints(self, x):
+        k = x[1] + math.pow(x[0], 2) - 1 * math.sin(self.nT * math.pi * (math.pow(x[0], 2) - x[1] + 1 + self.gt)) - 1
+
+        return k
+
+
+    def pf(self, obj, num_points, time):
+        gt = math.sin(0.5 * math.pi * time)
+        ht = 0.5 + abs(gt)
+        f1 = f2 = []
+
+        for i in range(0, 1 + (1 / (self.num_points - 1)), 1 / (self.num_points - 1)):
+            v = 1 - math.pow(i, 2)
+            k = math.pow(i, 2) + v - math.sin(self.nT * math.pi * (math.pow(i, 2) - v + 1 + gt)) - 1
+            if k > -0.00001:
+                f1.append(i)
+                f2.append(v)
+
+        return zip(f1, f2)
+
+    def get_name(self):
+        return "CDF15"
