@@ -8,16 +8,16 @@ from jmetal.core.solution import FloatSolution
 class UDF(DynamicProblem, FloatProblem):
     def __init__(self):
         super(UDF, self).__init__()
-        self.number_of_variables = 30
+        self.number_of_variables = 10
         self.number_of_objectives = 2
         self.number_of_constraints = 0
 
         self.tau = 5
-        self.nT = 2
+        self.nT = 10
         self.time = 1
         self.problem_modified = False
 
-        self.gt = math.sin(0.5 * math.pi * self.time)
+        self.gt = math.sin(0.5 * math.pi * self.time/10)
 
         self.upper_bound = [1] + [2 for _ in range(self.number_of_variables - 1)]
         self.lower_bound = [0] + [-1 for _ in range(self.number_of_variables - 1)]
@@ -66,9 +66,9 @@ class UDF1(UDF):
 
 
     def pf(self, obj, num_points, time):
-        gt = math.sin(0.5 * math.pi * time)
+        gt = math.sin(0.5 * math.pi * time/10)
 
-        f1 = [0 + i * 1/(num_points - 1) for i in range(num_points)]
+        f1 = [0 + abs(gt) + i * 1/(num_points - 1) for i in range(num_points)]
         f2 = [1 - i + 2 * abs(gt) for i in f1]
 
         return zip(f1, f2)
@@ -141,13 +141,28 @@ class UDF3(UDF):
 
 
     def pf(self, obj, num_points, time):
-        gt = math.sin(0.5 * math.pi * time)
-        f1 = f2 = []
+        N = 10
+        gt = math.sin(0.5 * math.pi * time/10)
+        f1 = []
+        f2 = []
 
-        for i in range(0, 1 + 1 / (num_points - 1), 1 / (num_points - 1)):
-            if math.sin(2 * self.nT * math.pi * i) < abs(2 * self.nT * gt):
-                f1.append(i)
-                f2.append(1 - i)
+        print("gt")
+        print(gt)
+
+#        for i in np.arange(0, 1 + (1 / (num_points - 1)), 1 / (num_points - 1)):
+#            if math.sin(2 * self.nT * math.pi * i) < abs(2 * self.nT * gt):
+#                f1.append(i)
+#                f2.append(1 - i)
+        for i in range(1, N):
+            v1 = ((2 * i) / (2 * N)) + abs(gt)
+            v2 = (1 - (2 * i) / (2 * N)) + abs(gt)
+
+            print(v1)
+            print(v2)
+
+            f1.append(v1)
+            f2.append(v2)
+
 
         return zip(f1, f2)
 
@@ -168,7 +183,7 @@ class UDF4(UDF):
         x = solution.variables
         size_j1 = j1 = size_j2 = j2 = 0
         mt = 0.5 + abs(self.gt)
-        kt = ceil(self.number_of_variables * self.gt)
+        kt = math.ceil(self.number_of_variables * self.gt)
 
         for i in range(2, self.number_of_variables + 1):
             y = x[i - 1] - math.sin((6 * math.pi * x[0]) + ((i + kt) * math.pi) / self.number_of_variables)
@@ -185,11 +200,11 @@ class UDF4(UDF):
 
 
     def pf(self, obj, num_points, time):
-        gt = math.sin(0.5 * math.pi * time)
+        gt = math.sin(0.5 * math.pi * time/10)
         mt = 0.5 + abs(gt)
 
         f1 = [0 + i * 1/(num_points - 1) for i in range(num_points)]
-        f2 = [1 - mt * math.pow(i, mt)]
+        f2 = [1 - mt * math.pow(i, mt) for i in f1]
 
         return zip(f1, f2)
 
@@ -235,6 +250,8 @@ class UDF6(UDF):
     def __init__(self):
         super().__init__()
 
+        self.nT = 10
+
         self.upper_bound = [1] + [1 for _ in range(self.number_of_variables - 1)]
         self.lower_bound = [0] + [-1 for _ in range(self.number_of_variables - 1)]
 
@@ -255,30 +272,22 @@ class UDF6(UDF):
                 size_j2 += 1
                 j2 += (2 * math.pow(y, 2)) - math.cos(4 * math.pi * y) + 1
 
-        solution.objectives[0] = x[0] + h (2 / size_j1) * j1
+        solution.objectives[0] = x[0] + h + (2 / size_j1) * j1
         solution.objectives[1] = 1 - mt * x[0] + h + (2 / size_j2) * j2
 
 
     def pf(self, obj, num_points, time):
-        f1 = f2 = []
-        gt = math.sin(0.5 * math.pi * time)
+        f1 = []
+        f2 = []
+        gt = math.sin(0.5 * math.pi * time/10)
         mt = 0.5 + abs(gt)
-        pf_res = 6
 
-        for i in range(0, 2* self.nT + 1):
-            if abs(gt) <= math.pow(10, -pf_res):
-                t1 = i / 2 * self.nT
-                t2 = 1 - (i / 2 * self.nT) * 0.5
+        for i in range(0, 2 * self.nT + 2):
+            v1 = i / (2 * self.nT) + abs(gt)
+            v2 = 1 - (i / (2 * self.nT)) * mt + abs(gt)
 
-                f1.append(t1)
-                f2.append(t2)
-
-            elif i % 2 == 0:
-                t1 = i / 2 * self.nT + ((1 / 2 * self.nT) + 0.1) * (abs(2 * self.nT * gt) - 1) + (1 / 4 * self.nT)
-                t2 = 1 - (i / (2 * self.nT) + (1 / (4 * self.T))) * mt + ((1 / 2 * self.nT) + 0.1) * (abs(2 * self.nT * gt) - 1)
-
-                f1.append(t1)
-                f2.append(t2)
+            f1.append(v1)
+            f2.append(v2)
 
         return zip(f1, f2)
 
@@ -298,11 +307,23 @@ class UDF8(UDF):
         self.time_vector = 5 * [0]
 
 
+    def update(self, *args, **kwargs):
+        counter = kwargs["COUNTER"]
+        self.time = (1.0 / self.nT) * math.floor(counter * 1.0 / self.tau)
+        self.gt = math.sin(0.5 * math.pi * self.time)
+
+        i = random.randint(0, 4)
+        self.time_vector[i] += 0.1
+
+        self.problem_modified = True
+
+
+
     def evaluate(self, solution):
         x = solution.variables
         size_j1 = j1 = size_j2 = j2 = 0
         gt = [math.sin(0.5 * math.pi * i) for i in self.time_vector]
-        kt = ceil(self.number_of_variables * gt[0])
+        kt = math.ceil(self.number_of_variables * gt[0])
         ht4 = 0.5 + abs(gt[3])
         ht5 = 0.5 + abs(gt[4])
 
@@ -319,6 +340,7 @@ class UDF8(UDF):
         solution.objectives[0] = x[0] + abs(gt[2]) + (2 / size_j1) * j1
         solution.objectives[1] = 1 - ht4 * math.pow(x[0], ht5) + abs(gt[2]) + (2 / size_j2) * j2
 
+
     def pf(self, obj, num_points, time):
         gt3 = math.sin(0.5 * math.pi * self.time_vector[2])
         gt4 = math.sin(0.5 * math.pi * self.time_vector[3])
@@ -326,8 +348,9 @@ class UDF8(UDF):
         ht4 = 0.5 + abs(gt4)
         ht5 = 0.5 + abs(gt5)
 
-        f1 = f2 = []
-        for i in range(0 + abs(gt3), 1 + abs(gt3) + (1 / (num_points - 1)), 1 / (num_points - 1)):
+        f1 = []
+        f2 = []
+        for i in np.arange(0 + abs(gt3), 1 + abs(gt3) + (1 / (num_points - 1)), 1 / (num_points - 1)):
             f1.append(i)
             f2.append(1 - ht4 * math.pow(i - abs(gt3), ht5) + abs(gt3))
 
@@ -351,7 +374,7 @@ class UDF9(UDF8):
         x = solution.variables
         size_j1 = j1 = size_j2 = j2 = 0
         gt = [math.sin(0.5 * math.pi * i) for i in self.time_vector]
-        kt = ceil(self.number_of_variables * gt[0])
+        kt = math.ceil(self.number_of_variables * gt[0])
         ht4 = 0.5 + abs(gt[3])
         ht5 = 0.5 + abs(gt[4])
 
