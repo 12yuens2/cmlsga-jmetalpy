@@ -20,10 +20,10 @@ def Clustering(population, number_of_collectives, problem):
     train_pop = [generator.new(problem) for _ in range(len(population))]
     labels = generate_labels(population, number_of_collectives)
 
-    clf = svm.SVC(decision_function_shape='ovr')
-    real_pop = [s.variables for s in population]
-    clf.fit([s.variables for s in train_pop], labels)
-    clf.predict(real_pop)
+    #clf = svm.SVC(decision_function_shape='ovr')
+    #real_pop = [s.variables for s in population]
+    #clf.fit([s.variables for s in train_pop], labels)
+    #clf.predict(real_pop)
 
     return labels
 
