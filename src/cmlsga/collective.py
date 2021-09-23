@@ -24,8 +24,8 @@ class Collective(object):
 
     def restart(self):
         self.algorithm.solutions = self.solutions
-        self.algorithm.init_progress()
-        self.algorithm.evaluations += self.evaluations
+        # self.algorithm.init_progress()
+        # self.algorithm.evaluations += self.evaluations
 
 
     def step(self):
@@ -34,11 +34,11 @@ class Collective(object):
 
 
     def evaluate(self):
-        self.algorithm.evaluate(self.algorithm.solutions)
+        return self.algorithm.evaluate(self.algorithm.solutions)
 
 
     def calculate_fitness(self):
-        self.solutions = self.algorithm.evaluate(self.algorithm.solutions)
+        self.solutions = self.algorithm.solutions
 
         # Average fitness of all solutions (MLS1)
         collective_fitness = 0
