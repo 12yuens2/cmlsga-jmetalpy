@@ -1,4 +1,5 @@
 import random
+import time
 
 from jmetal.algorithm.multiobjective.ibea import IBEA
 from jmetal.algorithm.multiobjective.nsgaii import NSGAII
@@ -26,12 +27,24 @@ from cmlsga.mls import MultiLevelSelection
 Extended classes for incremental data output. TODO refactor
 """
 def incremental_stopping_condition_is_met(algo):
+    eval_step = 1000
     if algo.output_path:
-        if algo.termination_criterion.evaluations / (algo.output_count * 10000) > 1:
-            algo.output_job(algo.output_count * 10000)
+        if algo.termination_criterion.evaluations / (algo.output_count * eval_step) > 1:
+            algo.output_job(algo.output_count * eval_step)
             algo.output_count += 1
 
     return algo.termination_criterion.is_met
+
+
+class IncrementalNSGAII(NSGAII):
+    def __init__(self, **kwargs):
+        super(IncrementalNSGAII, self).__init__(**kwargs)
+
+        self.output_count = 1
+
+    def stopping_condition_is_met(self):
+        return incremental_stopping_condition_is_met(self)
+    
 
 class NSGAIIe(NSGAII):
     def __init__(self, **kwargs):
@@ -41,6 +54,8 @@ class NSGAIIe(NSGAII):
 
         self.epigenetic_proba = 0.1
         self.block_size = 6
+
+        self.output_count = 1
 
     #def get_observable_data(self):
     #    for solution in self.solutions:
@@ -87,10 +102,9 @@ class NSGAIIe(NSGAII):
 
     def get_name(self):
         return "NSGA-IIe"
-    #    self.output_count = 1
 
-    #def stopping_condition_is_met(self):
-    #    return incremental_stopping_condition_is_met(self)
+    def stopping_condition_is_met(self):
+        return incremental_stopping_condition_is_met(self)
 
 
 class IncrementalNSGAIII(NSGAIII):
@@ -127,25 +141,50 @@ class IncrementalIBEA(IBEA):
     #def stopping_condition_is_met(self):
     #    return incremental_stopping_condition_is_met(self)
 
-class MOEADe(MOEAD):
+class IncrementalcMLSGA(MultiLevelSelection):
+    def __init__(self, **kwargs):
+        super(IncrementalcMLSGA, self).__init__(**kwargs)
+        self.output_count = 1
+
+    def stopping_condition_is_met(self):
+        return incremental_stopping_condition_is_met(self)
+
+
+class IncrementalMOEAD(MOEAD):
+    def __init__(self, **kwargs):
+        super(IncrementalMOEAD, self).__init__(**kwargs)
+
+        self.output_count = 1
+
+    def stopping_condition_is_met(self):
+        return incremental_stopping_condition_is_met(self)
+
+   # def get_observable_data(self):
+   #     return {
+   #         'PROBLEM': self.problem,
+   #         'EVALUATIONS': self.evaluations,
+   #         'SOLUTIONS': self.get_result(),
+   #         'COMPUTING_TIME': time.time() - self.start_computing_time,
+   #         "COUNTER": int(self.evaluations / self.population_size)
+   #     }
+
+
+
+class MOEADe(IncrementalMOEAD):
     def __init__(self, **kwargs):
         super(MOEADe, self).__init__(**kwargs)
 
         self.epigenetic_proba = 0.1
         self.block_size = 6
 
-        #self.output_count = 1
-
-    #def stopping_condition_is_met(self):
-    #    return incremental_stopping_condition_is_met(self)
-
-    def get_observable_data(self):
-        return {
-                "PROBLEM": self.problem,
-                "EVALUATIONS": self.evaluations,
-                "SOLUTIONS": self.get_result(),
-                "ALL_SOLUTIONS": self.solutions
-            }
+   # def get_observable_data(self):
+   #     return {
+   #             "PROBLEM": self.problem,
+   #             "EVALUATIONS": self.evaluations,
+   #             "SOLUTIONS": self.get_result(),
+   #             "ALL_SOLUTIONS": self.solutions,
+   #             "COUNTER": int(self.evaluations / self.population_size)
+   #         }
 
     def reproduction(self, mating_population):
         self.crossover_operator.current_individual = self.solutions[self.current_subproblem]
@@ -281,23 +320,24 @@ def mogae(problem, population_size, max_evaluations, evaluator):
     )
 
 
-
 def mlsga(algorithms, problem, population_size, max_evaluations, evaluator):
     return (
-        MultiLevelSelection,
+        IncrementalcMLSGA,
+        #MultiLevelSelection,
         {
             "problem": problem,
             "population_size": population_size,
             "max_evaluations": max_evaluations,
             "number_of_collectives": 8,
-            "algorithms": algorithms
+            "algorithms": algorithms,
+            "termination_criterion": StoppingByEvaluations(max_evaluations)
         }
     )
 
 
 def nsgaii(problem, population_size, max_evaluations, evaluator):
     return (
-        NSGAII,
+        IncrementalNSGAII,
         {
             "problem": problem,
             "population_size": population_size,
@@ -385,7 +425,7 @@ def spea2(problem, population_size, max_evaluations, evaluator):
 
 def moead(problem, population_size, max_evaluations, evaluator):
     return (
-        MOEAD,
+        IncrementalMOEAD,
         {
             "problem": problem,
             "population_size": population_size,

@@ -15,7 +15,7 @@ class JY(DynamicProblem, FloatProblem):
 
         self.tau = 5
         self.nT = 10
-        self.time = 1
+        self.time = 0
         self.problem_modified = False
 
         self.gt = math.sin(0.5 * math.pi * self.time)
@@ -42,7 +42,7 @@ class JY(DynamicProblem, FloatProblem):
         pass
 
     def eval_objectives(self, x, at, wt):
-        sum_gx = [math.pow(x[i] - self.gt, 2) for i in range(1, self.number_of_variables)]
+        sum_gx = sum([math.pow(x[i] - self.gt, 2) for i in range(1, self.number_of_variables)])
 
         obj1 = (1 + sum_gx) * (x[0] + at * math.sin(wt * math.pi * x[0]))
         obj2 = (1 + sum_gx) * (1 - x[0] + at * math.sin(wt * math.pi * x[0]))
@@ -162,7 +162,7 @@ class JY5(JY):
 
     def evaluate(self, solution):
         x = solution.variables
-        at = 0.3 * math.sin(0,5 * math.pi * (self.time - 1))
+        at = 0.3 * math.sin(0.5 * math.pi * (self.time - 1))
         wt = 1
 
         solution.objectives[0], solution.objectives[1] = self.eval_objectives(x, at, wt)
@@ -248,7 +248,7 @@ class JY8(JY):
         sum_gx = sum([math.pow(x[i], 2) for i in range(1, self.number_of_variables)])
 
         solution.objectives[0] = (1 + sum_gx) * math.pow(x[0] + at * math.sin(wt * math.pi * x[0]), alpha_t)
-        solution.objectives[1] = (1 + sum_gx) * math.pow(1 - x[0] + at * math.sin(wt * math.pi * x[0]), alpha_t)
+        solution.objectives[1] = (1 + sum_gx) * math.pow(1 - (x[0] + at * math.sin(wt * math.pi * x[0])), alpha_t)
 
         
     def pf(self, obj, num_points, time):
