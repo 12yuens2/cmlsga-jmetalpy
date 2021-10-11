@@ -24,6 +24,8 @@ from cmlsga.problems.dascmop import *
 from cmlsga.problems.cdf import *
 from cmlsga.problems.udf import *
 from cmlsga.problems.jy import *
+from cmlsga.problems.imb import *
+from cmlsga.problems.mop import *
 
 class IncrementalOutputJob(Job):
 
@@ -89,15 +91,6 @@ def run_experiment(population_size, max_evaluations, number_of_runs, comment="",
 
     experiment = Experiment(output_directory, jobs)
     experiment.run()
-
-    generate_summary_from_experiment(
-        output_directory,
-        [InvertedGenerationalDistance(None)],
-        reference_fronts="resources/reference_front",
-    )
-
-    #rename file
-    os.rename("QualityIndicatorSummary.csv", "{}.csv".format(meta))
 
 
 def print_usage():

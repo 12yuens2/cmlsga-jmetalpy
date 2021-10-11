@@ -1,10 +1,27 @@
 {
     "population_size": 100,
     "max_evaluations": 1000,
-    "number_of_runs": 2,
+    "number_of_runs": 1,
     "comment": "comment",
 
-    "mlsga": ["nsgaii"],
-    "algorithms": ["nsgaii", "moead", "omopso", "smpso", "cmpso"],
-    "problems": ["ZDT1", "ZDT2", "WFG1", "UF1", "UF9"]
+    "mlsga": [],
+    "algorithms": ["nsgaii", "moead", "nsgaiii", "ibea",
+                   "moeade", "nsgaiie",
+                   "omopso", "smpso", "cmpso",
+                   "omopsoe"],
+
+    "problems": ["ZDT1", "ZDT2", "ZDT3", "ZDT4", "ZDT6",
+                 "WFG1", "WFG2", "WFG3", "WFG4", "WFG5", "WFG6","WFG7", "WFG8", "WFG9",
+                 "UF1", "UF2", "UF3", "UF4", "UF5", "UF6","UF7", "UF8", "UF9", "UF10",
+                 "DTLZ1", "DTLZ2", "DTLZ3", "DTLZ4", "DTLZ5", "DTLZ6","DTLZ7",
+                 "IMB1", "IMB2", "IMB3", "IMB4", "IMB5", "IMB6","IMB7", "IMB8", "IMB9",
+                 "IMB10", "IMB11", "IMB12", "IMB13", "IMB14",
+                 "MOP1", "MOP2", "MOP3", "MOP4", "MOP5", "MOP6", "MOP7",
+                 "DASCMOP1(5)", "DASCMOP2(6)", "DASCMOP3(7)", "DASCMOP4(5)", "DASCMOP5(6)", "DASCMOP6(7)",
+
+                 "UDF1", "UDF2", "UDF3", "UDF4", "UDF5", "UDF6", "UDF8",
+                 "JY1", "JY2", "JY3", "JY5", "JY6", "JY7", "JY8"
+                 "CDF1", "CDF2", "CDF3", "CDF4", "CDF5", "CDF6","CDF7", "CDF8", "CDF9",
+                 "CDF10", "CDF11", "CDF12", "CDF13", "CDF14", "CDF15"
+                ]
 }
