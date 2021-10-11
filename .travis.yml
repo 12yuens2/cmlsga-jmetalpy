@@ -9,14 +9,14 @@ jobs:
 
       script:
         - python src/run_experiment.py ci-parameters.json
-        - python src/generate_visualisations.py 100pop-1000evals-2runs-comment.csv
+        #- python src/generate_visualisations.py 100pop-1000evals-2runs-comment.csv
 
     # Testing step
-    - language: python
-      python: "3.6"
-      install:
-        - pip install -r requirements.txt
+    #- language: python
+    #  python: "3.6"
+    #  install:
+    #    - pip install -r requirements.txt
 
-      script:
-        - python -m unittest discover -s src/ -p *.py -v
+    #  script:
+    #    - python -m unittest discover -s src/ -p *.py -v
     
