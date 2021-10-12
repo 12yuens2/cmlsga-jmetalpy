@@ -14,7 +14,7 @@ class CDF(DynamicProblem, FloatProblem):
 
         self.tau = 5
         self.nT = 10
-        self.time = 1
+        self.time = 0
         self.problem_modified = False
 
         self.gt = math.sin(0.5 * math.pi * self.time)
@@ -689,7 +689,6 @@ class CDF11(CDF):
         for i in range(0, 2 * self.nT + 1):
             v = (i - gt) / (2 * self.nT)
             v2 = 0
-            print(v)
             if v > 0:
                 if   v <= 0.5:  v2 = 1 - v
                 elif v <= 0.75: v2 = -0.5 * v + 0.75
@@ -880,7 +879,6 @@ class CDF14(CDF):
         for i in np.arange(0, 1 + (1 / (num_points - 1)), 1 / (num_points - 1)):
             v = 1 - i
             k = i + v - abs(math.sin(self.nT * math.pi * (i - v + 1))) - 1 + abs(gt)
-            print(k)
             if k > -0.000001:
                 f1.append(i)
                 f2.append(v)

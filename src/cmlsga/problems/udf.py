@@ -14,7 +14,7 @@ class UDF(DynamicProblem, FloatProblem):
 
         self.tau = 5
         self.nT = 10
-        self.time = 1
+        self.time = 0
         self.problem_modified = False
 
         self.gt = math.sin(0.5 * math.pi * self.time/10)
@@ -146,9 +146,6 @@ class UDF3(UDF):
         f1 = []
         f2 = []
 
-        print("gt")
-        print(gt)
-
 #        for i in np.arange(0, 1 + (1 / (num_points - 1)), 1 / (num_points - 1)):
 #            if math.sin(2 * self.nT * math.pi * i) < abs(2 * self.nT * gt):
 #                f1.append(i)
@@ -156,9 +153,6 @@ class UDF3(UDF):
         for i in range(1, N):
             v1 = ((2 * i) / (2 * N)) + abs(gt)
             v2 = (1 - (2 * i) / (2 * N)) + abs(gt)
-
-            print(v1)
-            print(v2)
 
             f1.append(v1)
             f2.append(v2)
