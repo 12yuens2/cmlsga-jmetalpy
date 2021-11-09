@@ -2,7 +2,7 @@ import random
 import time
 
 from jmetal.algorithm.multiobjective.ibea import IBEA
-from jmetal.algorithm.multiobjective.nsgaii import NSGAII
+from jmetal.algorithm.multiobjective.nsgaii import NSGAII, DynamicNSGAII
 from jmetal.algorithm.multiobjective.nsgaiii import NSGAIII, UniformReferenceDirectionFactory
 from jmetal.algorithm.multiobjective.moead import MOEAD
 from jmetal.algorithm.multiobjective.spea2 import SPEA2
@@ -36,7 +36,7 @@ def incremental_stopping_condition_is_met(algo):
     return algo.termination_criterion.is_met
 
 
-class IncrementalNSGAII(NSGAII):
+class IncrementalNSGAII(DynamicNSGAII):
     def __init__(self, **kwargs):
         super(IncrementalNSGAII, self).__init__(**kwargs)
 
@@ -44,7 +44,7 @@ class IncrementalNSGAII(NSGAII):
 
     def stopping_condition_is_met(self):
         return incremental_stopping_condition_is_met(self)
-    
+
 
 class NSGAIIe(NSGAII):
     def __init__(self, **kwargs):
@@ -159,14 +159,25 @@ class IncrementalMOEAD(MOEAD):
     def stopping_condition_is_met(self):
         return incremental_stopping_condition_is_met(self)
 
-   # def get_observable_data(self):
-   #     return {
-   #         'PROBLEM': self.problem,
-   #         'EVALUATIONS': self.evaluations,
-   #         'SOLUTIONS': self.get_result(),
-   #         'COMPUTING_TIME': time.time() - self.start_computing_time,
-   #         "COUNTER": int(self.evaluations / self.population_size)
-   #     }
+
+    def update_progress(self):
+        if self.problem.the_problem_has_changed():
+            self.solutions = self.evaluate(self.solutions)
+            self.problem.clear_changed()
+
+        observable_data = self.get_observable_data()
+        self.observable.notify_all(**observable_data)
+
+        self.evaluations += self.offspring_population_size
+
+    def get_observable_data(self):
+        return {
+            'PROBLEM': self.problem,
+            'EVALUATIONS': self.evaluations,
+            'SOLUTIONS': self.get_result(),
+            'COMPUTING_TIME': time.time() - self.start_computing_time,
+            "COUNTER": int(self.evaluations / self.population_size)
+        }
 
 
 
