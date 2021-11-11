@@ -42,31 +42,27 @@ class IncrementalNSGAII(NSGAII):
 
         self.output_count = 1
 
+    def get_observable_data(self):
+        return {
+            'PROBLEM': self.problem,
+            'EVALUATIONS': self.evaluations,
+            'SOLUTIONS': self.get_result(),
+            'COMPUTING_TIME': time.time() - self.start_computing_time,
+            "COUNTER": int(self.evaluations / self.population_size)
+        }
+
     def stopping_condition_is_met(self):
         return incremental_stopping_condition_is_met(self)
     
 
-class NSGAIIe(NSGAII):
+class NSGAIIe(IncrementalNSGAII):
     def __init__(self, **kwargs):
         super(NSGAIIe, self).__init__(**kwargs)
-
-        #self.pf = BoundedArchive(1000, DominanceComparator(), CrowdingDistance())
 
         self.epigenetic_proba = 0.1
         self.block_size = 6
 
-        self.output_count = 1
-
-    #def get_observable_data(self):
-    #    for solution in self.solutions:
-    #        self.pf.add(copy(solution))
-    #    return {
-    #        "PROBLEM": self.problem,
-    #        "EVALUATIONS": self.evaluations,
-    #        "SOLUTIONS": self.get_result(),
-    #        "ALL_SOLUTIONS": self.pf.solution_list
-    #    }
-
+    
     def reproduction(self, mating_population):
         number_of_parents_to_combine = self.crossover_operator.get_number_of_parents()
 
@@ -87,7 +83,6 @@ class NSGAIIe(NSGAII):
                 if random.random() < self.epigenetic_proba:
                     block = int(solution.number_of_variables / self.block_size)
                     block_start = random.randint(0, solution.number_of_variables - block)
-
                     for v in range(block_start, block_start + block):
                         solution.variables[v] = parents[0].variables[v]
 
@@ -102,9 +97,6 @@ class NSGAIIe(NSGAII):
 
     def get_name(self):
         return "NSGA-IIe"
-
-    def stopping_condition_is_met(self):
-        return incremental_stopping_condition_is_met(self)
 
 
 class IncrementalNSGAIII(NSGAIII):
@@ -159,14 +151,14 @@ class IncrementalMOEAD(MOEAD):
     def stopping_condition_is_met(self):
         return incremental_stopping_condition_is_met(self)
 
-   # def get_observable_data(self):
-   #     return {
-   #         'PROBLEM': self.problem,
-   #         'EVALUATIONS': self.evaluations,
-   #         'SOLUTIONS': self.get_result(),
-   #         'COMPUTING_TIME': time.time() - self.start_computing_time,
-   #         "COUNTER": int(self.evaluations / self.population_size)
-   #     }
+    def get_observable_data(self):
+        return {
+            'PROBLEM': self.problem,
+            'EVALUATIONS': self.evaluations,
+            'SOLUTIONS': self.get_result(),
+            'COMPUTING_TIME': time.time() - self.start_computing_time,
+            "COUNTER": int(self.evaluations / self.population_size)
+        }
 
 
 
@@ -177,24 +169,30 @@ class MOEADe(IncrementalMOEAD):
         self.epigenetic_proba = 0.1
         self.block_size = 6
 
-   # def get_observable_data(self):
-   #     return {
-   #             "PROBLEM": self.problem,
-   #             "EVALUATIONS": self.evaluations,
-   #             "SOLUTIONS": self.get_result(),
-   #             "ALL_SOLUTIONS": self.solutions,
-   #             "COUNTER": int(self.evaluations / self.population_size)
-   #         }
+    def get_observable_data(self):
+        return {
+                "PROBLEM": self.problem,
+                "EVALUATIONS": self.evaluations,
+                "SOLUTIONS": self.get_result(),
+                "ALL_SOLUTIONS": self.solutions,
+                "COUNTER": int(self.evaluations / self.population_size)
+            }
 
     def reproduction(self, mating_population):
         self.crossover_operator.current_individual = self.solutions[self.current_subproblem]
 
         offspring_population = self.crossover_operator.execute(mating_population)
+        offspring = offspring_population[0]
 
         # blocking
-        offspring = offspring_population[0]
+        block_max = offspring.number_of_variables / 2
+        block_size = max(2, int((self.evaluations / 100000.0) * block_max))
+
+        proba_max = 0.5
+        epigenetic_proba = max(0.1, (self.evaluations / 100000.0) * proba_max)
+
         if random.random() < self.epigenetic_proba:
-            block = int(offspring.number_of_variables / self.block_size)
+            block = int(offspring.number_of_variables / block_size)
             block_start = random.randint(0, offspring.number_of_variables - block)
             for v in range(block_start, block_start + block):
                 offspring.variables[v] = mating_population[0].variables[v]
