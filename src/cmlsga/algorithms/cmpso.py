@@ -111,6 +111,7 @@ class CMPSO(ParticleSwarmOptimization):
 
         self.archive = self.nondominated_sorting(r)
 
+        # Keep best particles if archive is full
         if len(self.archive) > self.archive_size:
             distance_estimator = CrowdingDistance()
             distance_estimator.compute_density_estimator(self.archive)

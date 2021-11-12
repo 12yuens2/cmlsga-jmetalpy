@@ -1,6 +1,8 @@
 import random
 import time
 
+from cmlsga.algorithms.heia import HEIA
+
 from jmetal.algorithm.multiobjective.ibea import IBEA
 from jmetal.algorithm.multiobjective.nsgaii import NSGAII, DynamicNSGAII
 from jmetal.algorithm.multiobjective.nsgaiii import NSGAIII, UniformReferenceDirectionFactory
@@ -203,7 +205,7 @@ class MOEADe(IncrementalMOEAD):
         epigenetic_proba = max(0.1, (self.evaluations / 100000.0) * proba_max)
 
         if random.random() < self.epigenetic_proba:
-            block = int(offspring.number_of_variables / block_size)
+            block = int(offspring.number_of_variables / self.block_size)
             block_start = random.randint(0, offspring.number_of_variables - block)
             for v in range(block_start, block_start + block):
                 offspring.variables[v] = mating_population[0].variables[v]
@@ -474,5 +476,23 @@ def moeade(problem, population_size, max_evaluations, evaluator):
             "population_evaluator": evaluator
         }
     )
+
+def heia(problem, population_size, max_evaluations, evaluator):
+    return (
+        HEIA,
+        {
+            "problem": problem,
+            "population_size": population_size,
+            "mutation": PolynomialMutation(
+                probability=1.0 / problem.number_of_variables,
+                distribution_index=20
+            ),
+            "crossover": SBXCrossover(0.7),
+            "selection": None,
+            "termination_criterion": StoppingByEvaluations(max_evaluations=max_evaluations),
+            "population_evaluator": evaluator
+        }
+    )
+            
 
 
