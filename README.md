@@ -37,25 +37,35 @@ Example of parameter file:
 }
 ```
 - `mlsga` determines if the experiment uses the MLSGA algorithm. Use an empty array to disable using MLSGA. Supported algorithms in this field are:
-  - `nsagii`, `moead`, `omopso`, `smpso`, `genetic_algorithm`
+  - `nsagii`, `nsgaiii`, `moead`, `omopso`, `smpso`, `cmpso`, `genetic_algorithm`
 - `algorithms`: List of algorithms to use in this experiment, supported algorithms are:
-  - `nsgaii`, `moead`, `omopso`, `smpso`
+  - `nsgaii`, `nsgaiii`, `moead`, `ibea`, `spea2`, `omopso`, `smpso`, `cmpso`, `heia`
 - `problems`: List of problems to use in the experiment, supported problems are:
   - `ZDT1`, `ZDT2`, `ZDT3`, `ZDT4`, `ZDT6`
   - `DTLZ1`, `DTLZ2`, `DTLZ3`, `DTLZ4`, `DTLZ5`, `DTLZ6`, `DTLZ7`
   - `LZ09_F1`, `LZ09_F2`, `LZ09_F3`, `LZ09_F4`, `LZ09_F5`, `LZ09_F6`, `LZ09_F7`, `LZ09_F8`, `LZ09_F9`
+  - `UF1`, `UF2`, `UF3`, `UF4`, `UF5`, `UF6`, `UF7`, `UF8`, `UF9`, `UF10`
+  - `WFG1`, `WFG2`, `WFG3`, `WFG4`, `WFG5`, `WFG6`, `WFG7`, `WFG8`, `WFG9`
+  - `IMB1`, `IMB2`, `IMB3`, `IMB4`, `IMB5`, `IMB6`, `IMB7`, `IMB8`, `IMB9`, `IMB10`, `IMB11`, `IMB12`, `IMB13`, `IMB14`
+  - `MOP1`, `MOP2`, `MOP3`, `MOP4`, `MOP5`, `MOP6`, `MOP7`
+  - `DASCMOP`
+  - `FDA1`, `FDA2`, `FDA3`, `FDA4`, `FDA5`
+  - `UDF1`, `UDF2`, `UDF3`, `UDF4`, `UDF5`, `UDF6`, `UDF8`, `UDF9`
+  - `CDF1`, `CDF2`, `CDF3`, `CDF4`, `CDF5`, `CDF6`, `CDF7`, `CDF8`, `CDF9`, `CDF10`, `CDF11`, `CDF12`, `CDF13`, `CDF14`, `CDF15`
+  - `JY1`, `JY2`, `JY3`, `JY4`, `JY5`, `JY6`, `JY7`, `JY8`
 
-
-A csv file with the filename `600pop-30000evals-30runs.csv` will be created in the directory where the script was run.
-Detailed data for each algorithm and run will be stored in the `data-600pop-30000evals-30runs` directory.
+Detailed data for each algorithm and run will be stored in the `data-300pop-10000evals-3runs-` directory.
 
 ### generate_visualisations
-This script aggregates stats from the csv file created by `run_experiupment.py`
+This script aggregates stats from the csv file created by `run_experiment.py`
 
 Pass the data folder created into the script like so:
 ```
 python src/generate_visualisations.py data-600pop-30000evals-30runs-
 ```
+
+A csv file with the filename `300pop-10000evals-3runs.csv` will be created in the directory where the script was run.
+
 
 
 ## Acknowledgements
