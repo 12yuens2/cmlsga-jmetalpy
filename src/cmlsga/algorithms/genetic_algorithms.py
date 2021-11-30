@@ -201,11 +201,11 @@ class MOEADe(IncrementalMOEAD):
         block_max = offspring.number_of_variables / 2
         block_size = max(2, int((self.evaluations / 100000.0) * block_max))
 
-        proba_max = 0.5
+        proba_max = 0.8
         epigenetic_proba = max(0.1, (self.evaluations / 100000.0) * proba_max)
 
         if random.random() < self.epigenetic_proba:
-            block = int(offspring.number_of_variables / self.block_size)
+            block = int(offspring.number_of_variables / block_size)
             block_start = random.randint(0, offspring.number_of_variables - block)
             for v in range(block_start, block_start + block):
                 offspring.variables[v] = mating_population[0].variables[v]

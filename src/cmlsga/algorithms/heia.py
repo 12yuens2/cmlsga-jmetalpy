@@ -4,9 +4,40 @@ import random
 from jmetal.algorithm.singleobjective.genetic_algorithm import GeneticAlgorithm
 from jmetal.config import store
 from jmetal.operator.crossover import SBXCrossover, DifferentialEvolutionCrossover
-from jmetal.util.archive import BoundedArchive
+from jmetal.util.archive import Archive, BoundedArchive
 from jmetal.util.comparator import DominanceComparator
 from jmetal.util.density_estimator import CrowdingDistance
+
+class HEIAArchive(Archive):
+
+    def __init__(self, maximum_size, comparator, density_estimator):
+        super(HEIAArchive, self).__init__()
+        self.maximum_size = maximum_size
+
+        self.comparator = comparator
+        self.density_estimator = density_estimator
+
+
+    def compute_density_estimator(self):
+        self.density_estimator.compute_density_estimator(self.solution_list)
+
+
+    def add(self, solution):
+        self.solution_list.append(solution)
+
+
+    def cull(self):
+        dominated_solutions = []
+        for i in range(len(self.solution_list)):
+            for j in range(1, len(self.solution_list) - 1):
+                d = self.comparator.compare(self.solution_list[i], self.solution_list[j])
+                if d == 1:
+                    dominated_solutions.append(j)
+                elif d == -1:
+                    dominated_solutions.append(i)
+
+        for i in set(dominated_solutions):
+            del self.solution_list[i]
 
 
 class HEIA(GeneticAlgorithm):
@@ -36,7 +67,7 @@ class HEIA(GeneticAlgorithm):
 
         self.NA = 20
         self.theta = 0.9
-        self.archive = BoundedArchive(100, DominanceComparator, CrowdingDistance())
+        self.archive = BoundedArchive(100, DominanceComparator(), CrowdingDistance())
 
 
     def create_initial_solutions(self):
@@ -103,6 +134,7 @@ class HEIA(GeneticAlgorithm):
 
         return offspring
 
+
     def evolve_de(self, clones, best_solutions):
         crossover_operator = DifferentialEvolutionCrossover(1, 0.5, 0.5)
         offspring = []
@@ -113,8 +145,9 @@ class HEIA(GeneticAlgorithm):
                 mating.extend(self.closest_neighbours(c, clones))
             else:
                 mating.extend(random.sample(best_solutions, 2))
+            offspring.extend(crossover_operator.execute(mating))
 
-        return crossover_operator.execute(mating)
+        return offspring
 
 
     def closest_neighbours(self, c, clones):
