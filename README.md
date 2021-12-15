@@ -19,7 +19,7 @@ This script takes 1 input: a `parameters.json` file
 
 Run the script with
 ```
-python src/run_experiment.py 600 30000 30
+python src/run_experiment.py parameters.json
 ```
 
 Example of parameter file:
@@ -36,8 +36,8 @@ Example of parameter file:
     "problems": ["ZDT1", "ZDT2"]
 }
 ```
-- `mlsga` determines if the experiment uses the MLSGA algorithm. Use an empty array to disable using MLSGA. Supported algorithms in this field are:
-  - `nsagii`, `nsgaiii`, `moead`, `omopso`, `smpso`, `cmpso`, `genetic_algorithm`
+- `mlsga` determines if the experiment uses the MLSGA algorithm. Use an empty array to disable using MLSGA. Use multiple algorithms here for cMLSGA. Supported algorithms in this field are:
+  - `nsagii`, `nsgaiii`, `moead`, `heia`, `omopso`, `smpso`, `cmpso`, `genetic_algorithm`
 - `algorithms`: List of algorithms to use in this experiment, supported algorithms are:
   - `nsgaii`, `nsgaiii`, `moead`, `ibea`, `spea2`, `omopso`, `smpso`, `cmpso`, `heia`
 - `problems`: List of problems to use in the experiment, supported problems are:
