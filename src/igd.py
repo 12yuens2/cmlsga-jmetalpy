@@ -1,5 +1,4 @@
-def generate_summary_from_experiment(input_dir, quality_indicators, problems, evaluations,
-                                     reference_fronts = ''):
+def generate_summary_from_experiment(input_dir, quality_indicators, problems, evaluations, reference_fronts = ''):
     reference_change = 2500
     ref_time = 1
     if not quality_indicators:

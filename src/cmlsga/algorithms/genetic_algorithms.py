@@ -205,7 +205,7 @@ class MOEADe(IncrementalMOEAD):
         epigenetic_proba = max(0.1, (self.evaluations / 100000.0) * proba_max)
 
         if random.random() < self.epigenetic_proba:
-            block = int(offspring.number_of_variables / block_size)
+            block = int(offspring.number_of_variables / self.block_size)
             block_start = random.randint(0, offspring.number_of_variables - block)
             for v in range(block_start, block_start + block):
                 offspring.variables[v] = mating_population[0].variables[v]
@@ -219,6 +219,32 @@ class MOEADe(IncrementalMOEAD):
         return "MOEAD-e"
 
 
+class MOEADeip(MOEADe):
+    def __init__(self, **kwargs):
+        super(MOEADeip, self).__init__(**kwargs)
+
+    def reproduction(self, mating_population):
+        proba_max = 0.8
+        self.epigenetic_proba = max(0.1, (self.evaluations / 100000.0) * proba_max)
+
+        return super(MOEADeip, self).reproduction(mating_population)
+
+    def get_name(self):
+        return "MOEAD-e-ip"
+
+
+class MOEADeib(MOEADe):
+    def __init__(self, **kwargs):
+        super(MOEADeib, self).__init__(**kwargs)
+
+    def reproduction(self, mating_population):
+        block_max = mating_population[0].number_of_variables / 2
+        self.block_size = max(2, int((self.evaluations / 100000.0) * block_max))
+
+        return super(MOEADeib, self).reproduction(mating_population)
+
+    def get_name(self):
+        return "MOEAD-e-ib"
 
 
 class MOGeneticAlgorithm(GeneticAlgorithm):
@@ -459,6 +485,46 @@ def moead(problem, population_size, max_evaluations, evaluator):
 def moeade(problem, population_size, max_evaluations, evaluator):
     return (
         MOEADe,
+        {
+            "problem": problem,
+            "population_size": population_size,
+            "crossover": DifferentialEvolutionCrossover(CR=1.0, F=0.5, K=0.5),
+            "mutation": PolynomialMutation(
+                probability=1.0 / problem.number_of_variables,
+                distribution_index=20
+            ),
+            "aggregative_function": Tschebycheff(dimension=problem.number_of_objectives),
+            "neighbor_size": 3,
+            "neighbourhood_selection_probability": 0.9,
+            "max_number_of_replaced_solutions": 2,
+            "weight_files_path": "resources/MOEAD_weights",
+            "termination_criterion": StoppingByEvaluations(max_evaluations=max_evaluations),
+            "population_evaluator": evaluator
+        }
+    )
+def moeadeip(problem, population_size, max_evaluations, evaluator):
+    return (
+        MOEADeip,
+        {
+            "problem": problem,
+            "population_size": population_size,
+            "crossover": DifferentialEvolutionCrossover(CR=1.0, F=0.5, K=0.5),
+            "mutation": PolynomialMutation(
+                probability=1.0 / problem.number_of_variables,
+                distribution_index=20
+            ),
+            "aggregative_function": Tschebycheff(dimension=problem.number_of_objectives),
+            "neighbor_size": 3,
+            "neighbourhood_selection_probability": 0.9,
+            "max_number_of_replaced_solutions": 2,
+            "weight_files_path": "resources/MOEAD_weights",
+            "termination_criterion": StoppingByEvaluations(max_evaluations=max_evaluations),
+            "population_evaluator": evaluator
+        }
+    )
+def moeadeib(problem, population_size, max_evaluations, evaluator):
+    return (
+        MOEADeib,
         {
             "problem": problem,
             "population_size": population_size,
