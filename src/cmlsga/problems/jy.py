@@ -250,7 +250,7 @@ class JY8(JY):
         solution.objectives[0] = (1 + sum_gx) * math.pow(x[0] + at * math.sin(wt * math.pi * x[0]), alpha_t)
         solution.objectives[1] = (1 + sum_gx) * math.pow(1 - (x[0] + at * math.sin(wt * math.pi * x[0])), alpha_t)
 
-        
+
     def pf(self, obj, num_points, time):
         pass
 
