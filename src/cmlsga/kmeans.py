@@ -16,10 +16,10 @@ def Clustering_kmeans(population, number_of_collectives):
 
 
 def Clustering(population, number_of_collectives, problem):
-    generator = store.default_generator
-    train_pop = [generator.new(problem) for _ in range(len(population))]
     labels = generate_labels(population, number_of_collectives)
 
+    #generator = store.default_generator
+    #train_pop = [generator.new(problem) for _ in range(len(population))]
     #clf = svm.SVC(decision_function_shape='ovr')
     #real_pop = [s.variables for s in population]
     #clf.fit([s.variables for s in train_pop], labels)
