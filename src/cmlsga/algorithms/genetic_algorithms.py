@@ -38,7 +38,7 @@ def incremental_stopping_condition_is_met(algo):
     return algo.termination_criterion.is_met
 
 
-class IncrementalNSGAII(DynamicNSGAII):
+class IncrementalNSGAII(NSGAII):
     def __init__(self, **kwargs):
         super(IncrementalNSGAII, self).__init__(**kwargs)
 
@@ -155,7 +155,9 @@ class IncrementalMOEAD(MOEAD):
 
 
     def update_progress(self):
-        if self.problem.the_problem_has_changed():
+        if (hasattr(self.problem, 'the_problem_has_changed') and
+            self.problem.the_problem_has_changed()):
+
             self.solutions = self.evaluate(self.solutions)
             self.problem.clear_changed()
 

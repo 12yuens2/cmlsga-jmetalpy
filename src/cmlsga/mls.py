@@ -21,11 +21,6 @@ from typing import TypeVar
 S = TypeVar('S')
 R = TypeVar('R')
 
-import numpy as np
-import os
-cwd = os.getcwd()
-fitness_dir = cwd+'/src/cmlsga/Individuals'
-
 class MultiLevelSelection(Algorithm[S, R]):
 
     def __init__(self,
@@ -40,10 +35,6 @@ class MultiLevelSelection(Algorithm[S, R]):
                  population_generator = store.default_generator,
                  population_evaluator = store.default_evaluator):
         super(MultiLevelSelection, self).__init__()
-        print('Started new generation')
-        self.current_gen = 1
-        np.save(fitness_dir + '/current_gen.npy', np.array([self.current_gen]))
-
         self.problem = problem
         self.number_of_collectives = number_of_collectives
         self.num_new_collectives = num_new_collectives
@@ -180,8 +171,6 @@ class MultiLevelSelection(Algorithm[S, R]):
 
     def _update_collectives(self):
         start = time.time()
-        self.current_gen += 1
-        np.save(fitness_dir + '/current_gen.npy', np.array([self.current_gen]))
         solutions = []
         for collective in self.collectives:
             collective.step()
