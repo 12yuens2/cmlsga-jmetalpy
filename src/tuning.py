@@ -1,4 +1,7 @@
 import numpy as np
+import os
+import shutil
+import time
 
 from cmlsga.algorithms.genetic_algorithms import *
 
@@ -10,22 +13,22 @@ from jmetal.util.evaluator import MapEvaluator
 from smac.facade.smac_bb_facade import SMAC4BB
 from smac.scenario.scenario import Scenario
 from ConfigSpace import ConfigurationSpace
-from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformFloatHyperparameter
+from ConfigSpace.hyperparameters import Constant, CategoricalHyperparameter, UniformFloatHyperparameter
 
 def tae(cfg):
     #TODO don't hardcode
-    algorithm = nsgaii
-    problem = ZDT1()
-    max_evaluations = 10000
-    runs = 3
-    output_path = "data-smac"
+    max_evaluations = 100000
+    runs = 5
+    output_path = "data-smac-100k"
 
+    algorithm = globals()[cfg["algorithm"]]
+    problem = globals()[cfg["problem"]]()
     population_size = cfg["population"]
     mutation_rate = cfg["mutation"]
     crossover_rate = cfg["crossover"]
     e = MapEvaluator(processes=4)
 
-    constructor, kwargs = nsgaii(problem, population_size, max_evaluations, e, mutation_rate, crossover_rate)
+    constructor, kwargs = algorithm(problem, population_size, max_evaluations, e, mutation_rate, crossover_rate)
     algorithm = constructor(**kwargs)
 
 
@@ -39,32 +42,58 @@ def tae(cfg):
 
     igd = compute_mean_indicator("QualityIndicatorSummary.csv", "IGD")
 
+    # Cleanup
+    os.remove("QualityIndicatorSummary.csv")
+    shutil.rmtree(output_path)
+
     # 1 - igd to minimise
     return 1 - igd
 
 
 if __name__ == "__main__":
-    cs = ConfigurationSpace()
 
-    cs.add_hyperparameter(CategoricalHyperparameter("population", choices=[100,200,300,400,500]))
-    cs.add_hyperparameter(UniformFloatHyperparameter("crossover", 0.1, 1.0))
-    cs.add_hyperparameter(UniformFloatHyperparameter("mutation", 0.0, 0.1))
+    algorithms = ["moead"]
+    problems = ["ZDT1", "ZDT2", "ZDT3", "ZDT4", "ZDT6",
+                "WFG1", "WFG2", "WFG3", "WFG4", "WFG5", "WFG6", "WFG7", "WFG8", "WFG9"]
 
-    scenario = Scenario(
-        {
-            "run_obj": "quality",
-            "runcount-limit": 50,
-            "cs": cs,
-        }
-    )
+    for algorithm in algorithms:
+        for problem in problems:
+            cs = ConfigurationSpace()
 
+            # Constants
+            cs.add_hyperparameter(Constant("problem", problem))
+            cs.add_hyperparameter(Constant("algorithm", algorithm))
 
-    smac = SMAC4BB(
-        scenario=scenario,
-        rng=np.random.RandomState(5),
-        tae_runner=tae
-    )
+            # Parameters to tune
+            cs.add_hyperparameter(CategoricalHyperparameter("population", [100,300,400,500,600,800,1000]))
+            cs.add_hyperparameter(UniformFloatHyperparameter("crossover", 0.1, 1.0))
+            cs.add_hyperparameter(UniformFloatHyperparameter("mutation", 0.0, 0.2))
 
-    best = smac.optimize()
+            scenario = Scenario(
+                {
+                    "run_obj": "quality",
+                    "runcount-limit": 50,
+                    "cs": cs,
+                }
+            )
 
-    print(best)
+            smac = SMAC4BB(
+                scenario=scenario,
+                rng=np.random.RandomState(5),
+                tae_runner=tae
+            )
+
+            start = time.time()
+            best = smac.optimize()
+            end = time.time()
+
+            with open("smac-parameters.csv", "a") as smac_output:
+                # Algorithm, Problem, Population size, Crossover, Mutation, Time (seconds)
+                smac_output.write("{},{},{},{},{},{}\n".format(
+                    algorithm, problem, best["population"], best["crossover"], best["mutation"], end - start
+                ))
+
+            print("Algorithm: {}, Problem: {}".format(algorithm, problem))
+            print("best: population: {}, crossover: {}, mutation: {}".format(
+                best["population"], best["crossover"], best["mutation"]
+            ))
