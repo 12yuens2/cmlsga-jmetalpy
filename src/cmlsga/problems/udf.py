@@ -5,6 +5,8 @@ import numpy as np
 from jmetal.core.problem import FloatProblem, DynamicProblem
 from jmetal.core.solution import FloatSolution
 
+from sympy import sin, pi, cos, ceiling
+
 class UDF(DynamicProblem, FloatProblem):
     def __init__(self):
         super(UDF, self).__init__()
@@ -65,6 +67,25 @@ class UDF1(UDF):
         solution.objectives[1] = 1 - x[0] + abs(self.gt) + (2 / size_j2) * j2
 
 
+    def differentials(self, s):
+        size_j1 = j1 = size_j2 = j2 = 0
+
+        for i in range(2, self.number_of_variables + 1):
+            y = s.xvars[i - 1] - sin((6 * pi * s.xvars[0]) + (i * pi / self.number_of_variables)) - self.gt
+
+            if i % 2 == 1:
+                size_j1 += 1
+                j1 += y**2 
+            else:
+                size_j2 += 1
+                j2 += y**2
+
+        f0 = s.xvars[0] + abs(self.gt) + (2 / size_j1) * j1
+        f1 = 1 - s.xvars[0] + abs(self.gt) + (2 / size_j2) * j2
+
+        return (f0, f1)
+
+
     def pf(self, obj, num_points, time):
         gt = math.sin(0.5 * math.pi * time/10)
 
@@ -92,17 +113,36 @@ class UDF2(UDF1):
         size_j1 = j1 = size_j2 = j2 = 0
 
         for i in range(2, self.number_of_variables + 1):
-            y = x[i - 1] - self.gt - math.pow(x[0], (0.5 * (2 + 3 * (i - 2) / (self.number_of_variables - 2)) + self.gt))
+            y = math.pow(x[0], (0.5 * (2 + 3 * (i - 2) / (self.number_of_variables - 2)) + self.gt))
 
             if i % 2 == 1:
                 size_j1 += 1
-                j1 += math.pow(y, 2)
+                j1 += math.pow(x[i - 1] - y - self.gt, 2)
             else:
                 size_j2 += 1
-                j2 += math.pow(y, 2)
+                j2 += math.pow(y - self.gt, 2)
 
         solution.objectives[0] = x[0] + abs(self.gt) + (2 / size_j1) * j1
         solution.objectives[1] = 1 - x[0] + abs(self.gt) + (2 / size_j2) * j2
+
+
+    def differentials(self, s):
+        size_j1 = j1 = size_j2 = j2 = 0
+
+        for i in range(2, self.number_of_variables + 1):
+            y = (s.xvars[0] ** (0.5 * (2 + (3 * (i - 2) / (self.number_of_variables - 2)) + self.gt)))
+
+            if i % 2 == 1:
+                size_j1 += 1
+                j1 += (s.xvars[i-1] - y - self.gt)**2 
+            else:
+                size_j2 += 1
+                j2 += (y - self.gt)**2
+
+        f0 = s.xvars[0] + abs(self.gt) + (2 / size_j1) * j1
+        f1 = 1 - s.xvars[0] + abs(self.gt) + (2 / size_j2) * j2
+
+        return (f0, f1)
 
 
     def get_name(self):
@@ -139,6 +179,27 @@ class UDF3(UDF):
         solution.objectives[0] = x[0] + (2 / size_j1) * math.pow(4 * j1 - 2 * mj1 + 2, 2) + maxf
         solution.objectives[1] = 1 - x[0] + (2 / size_j2) * math.pow(4 * j2 - 2 * mj2 + 2, 2) + maxf
 
+
+    def differentials(self, s):
+        nT = 10
+        size_j1 = j1 = mj1 = size_j2 = j2 = mj2 = 0
+
+        for i in range(2, self.number_of_variables + 1):
+            y = s.xvars[i - 1] - sin((6 * pi * s.xvars[0]) + (i * pi / self.number_of_variables))
+
+            if i % 2 == 1:
+                size_j1 += 1
+                j1 += y**2
+                mj1 *= cos((20 * y * pi) / (i**0.5))
+            else:
+                size_j2 += 1
+                j2 += y**2
+                mj2 *= cos((20 * y * pi) / (i**0.5))
+
+        f0 = s.xvars[0] + (2 / size_j1) * ((4 * j1 - 2 * mj1 + 2) ** 2)
+        f1 = 1 - s.xvars[0] + (2 / size_j2) * ((4 * j2 - 2 * mj2 + 2 )** 2)
+
+        return (f0, f1)
 
     def pf(self, obj, num_points, time):
         N = 10
@@ -192,6 +253,26 @@ class UDF4(UDF):
         solution.objectives[0] = x[0] + (2 / size_j1) * j1
         solution.objectives[1] = 1 - (mt * math.pow(x[0], mt)) + (2 / size_j2) * j2
 
+    def differentials(self, s):
+        size_j1 = j1 = size_j2 = j2 = 0
+        mt = 0.5 + abs(self.gt)
+        kt = ceiling(self.number_of_variables * self.gt)
+
+        for i in range(2, self.number_of_variables + 1):
+            y = s.xvars[i - 1] - sin((6 * pi * s.xvars[0]) + ((i + kt) * pi) / self.number_of_variables)
+
+            if i % 2 == 1:
+                size_j1 += 1
+                j1 += y**2
+            else:
+                size_j2 += 1
+                j2 += y**2
+
+        f0 = s.xvars[0] + (2 / size_j1) * j1
+        f1 = 1 - (mt * (s.xvars[0]**mt)) + (2 / size_j2) * j2
+
+        return (f0, f1)
+
 
     def pf(self, obj, num_points, time):
         gt = math.sin(0.5 * math.pi * time/10)
@@ -235,6 +316,26 @@ class UDF5(UDF4):
         solution.objectives[1] = 1 - (mt * math.pow(x[0], mt)) + (2 / size_j2) * j2
 
 
+    def differentials(self, s):
+        size_j1 = j1 = size_j2 = j2 = 0
+        mt = 0.5 + abs(self.gt)
+
+        for i in range(2, self.number_of_variables + 1):
+            y = s.xvars[i - 1] - self.gt - (s.xvars[0]**(0.5 * (2 + 3 * (i - 2) / (self.number_of_variables - 2)) + self.gt))
+
+            if i % 2 == 1:
+                size_j1 += 1
+                j1 += y**2
+            else:
+                size_j2 += 1
+                j2 += y**2
+
+        f0 = s.xvars[0] + (2 / size_j1) * j1
+        f1 = 1 - (mt * (s.xvars[0]**mt)) + (2 / size_j2) * j2
+
+        return (f0, f1)
+
+
     def get_name(self):
         return "UDF5"
 
@@ -270,6 +371,27 @@ class UDF6(UDF):
         solution.objectives[1] = 1 - mt * x[0] + h + (2 / size_j2) * j2
 
 
+    def differentials(self, s):
+        size_j1 = j1 = size_j2 = j2 = 0
+        h = (1 / (2 * self.nT) + 0.1) * abs(sin(2 * self.nT * pi * s.xvars[0]) - abs(2 * self.nT * self.gt))
+        mt = 0.5 + abs(self.gt)
+
+        for i in range(2, self.number_of_variables + 1):
+            y = s.xvars[i - 1] - sin(6 * pi * x[0] + i * pi / self.number_of_variables)
+
+            if i % 2 == 1:
+                size_j1 += 1
+                j1 += (2 * (y**2)) - cos(4 * pi * y) + 1
+            else:
+                size_j2 += 1
+                j2 += (2 * (y**2)) - cos(4 * pi * y) + 1
+
+        f0 = s.xvars[0] + h + (2 / size_j1) * j1
+        f1 = 1 - mt * s.xvars[0] + h + (2 / size_j2) * j2
+
+        return (f0, f1)
+
+        
     def pf(self, obj, num_points, time):
         f1 = []
         f2 = []
