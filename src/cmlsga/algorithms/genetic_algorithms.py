@@ -1,5 +1,7 @@
 import math
+import numpy
 import random
+import sympy
 import time
 
 from cmlsga.algorithms.heia import HEIA
@@ -24,7 +26,7 @@ from jmetal.util.density_estimator import CrowdingDistance
 
 from copy import copy
 
-from sympy import symbols, sin, pi, diff, oo, zoo, nan, cos
+from sympy import symbols, sin, pi, diff, oo, zoo, nan, cos, lambdify
 
 
 """
@@ -237,7 +239,7 @@ class MOEADegy(MOEADe):
         return self.problem.differentials(self)
 
     def get_gradients(self, differentials, values):
-        nT = 10
+        #nT = 10
 #        maxf = (1 / nT + 2 * 0.1) * (math.sin(2 * nT * math.pi * values[0]) - abs(2 * nT * self.problem.gt))
 #
 #        if maxf < 0:
@@ -245,15 +247,25 @@ class MOEADegy(MOEADe):
 
         gradients = []
         for j in range(self.problem.number_of_variables):
-            f0 = differentials[0].diff(self.xvars[j]).subs(
-                    [(self.xvars[i], v) for (i,v) in enumerate(values) if i == 0 or i % 2 == 0]
-                ).evalf()
+            f0 = lambdify(self.xvars, differentials[0].diff(self.xvars[j]), modules=[sympy])
+            f1 = lambdify(self.xvars, differentials[1].diff(self.xvars[j]), modules=[sympy])
 
-            f1 = differentials[1].diff(self.xvars[j]).subs(
-                    [(self.xvars[i], v) for (i,v) in enumerate(values) if i == 0 or i % 2 == 1]
-                ).evalf()
+            try:
+                g0 = f0(*values)
+                g1 = f1(*values)
+            except ValueError:
+                g0 = 0
+                g1 = 0
 
-            gradients.append(f0 + f1)
+            #f0 = differentials[0].diff(self.xvars[j]).subs(
+            #        [(self.xvars[i], v) for (i,v) in enumerate(values)]
+            #    ).evalf()
+
+            #f1 = differentials[1].diff(self.xvars[j]).subs(
+            #        [(self.xvars[i], v) for (i,v) in enumerate(values)]
+            #    ).evalf()
+
+            gradients.append(sympy.N(g0 + g1))
 
         return gradients
 
@@ -269,7 +281,10 @@ class MOEADegy(MOEADe):
 
             # choose block based on gradient
             for (i,g) in enumerate(gradients):
-                if not g.has(oo, -oo, nan, zoo) and g > 0 and (random.random() < self.epigenetic_proba):
+                if (not g.has(oo, -oo, nan, zoo)
+                    and g > 0
+                    and (random.random() < self.epigenetic_proba)):
+
                     offspring.variables[i] = mating_population[0].variables[i]
 
         self.mutation_operator.execute(offspring_population[0])
@@ -625,11 +640,11 @@ def moead_options(problem, population_size, max_evaluations, evaluator, mutation
         "population_evaluator": evaluator
     }
 
-def moead(problem, population_size, max_evaluations, evaluator, mutation_rate, crossover_rate):
+def moead(problem, population_size, max_evaluations, evaluator):
     return (
-        MOEAD,
+        IncrementalMOEAD,
         moead_options(problem, population_size, max_evaluations,
-                      evaluator, mutation_rate, crossover_rate)
+                      evaluator, 1 / problem.number_of_variables, 1.0)
     )
 
 def moeade(problem, population_size, max_evaluations, evaluator):
