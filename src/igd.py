@@ -1,10 +1,17 @@
+import os
+from pathlib import Path
+from jmetal.core.algorithm import Algorithm
+from jmetal.core.quality_indicator import *
+from jmetal.util.solution import print_function_values_to_file, print_variables_to_file, read_solutions
+
 def generate_summary_from_experiment(input_dir, quality_indicators, problems, evaluations, reference_fronts = ''):
     reference_change = 2500
     ref_time = 1
+    summary_filename = "igdsummary.csv"
     if not quality_indicators:
         quality_indicators = []
         
-    with open('QualityIndicatorSummary.csv', 'w+') as of:
+    with open(summary_filename, 'w+') as of:
         of.write('Algorithm,Problem,ExecutionId,Evaluations,IndicatorName,IndicatorValue\n')
 
     for dirname, _, filenames in os.walk(input_dir):
@@ -35,8 +42,7 @@ def generate_summary_from_experiment(input_dir, quality_indicators, problems, ev
                             if Path(reference_front_file).is_file():
                                 reference_front = []
                                 with open(reference_front_file) as file:
-                                    for line in file:
-                                        reference_front.append([float(x) for x in line.split()])
+                                    for line in file: reference_front.append([float(x) for x in line.split()])
 
                                 indicator.reference_front = reference_front
                             elif Path("resources/reference_front/{}.pf".format(problem_name)).is_file():
@@ -52,6 +58,13 @@ def generate_summary_from_experiment(input_dir, quality_indicators, problems, ev
                         result = indicator.compute([solutions[i].objectives for i in range(len(solutions))])
 
                         # Save quality indicator value to file
-                        with open('QualityIndicatorSummary.csv', 'a+') as of:
+                        with open(summary_filename, 'a+') as of:
                             of.write(','.join([algorithm, problem, str(run_tag), str(evaluation_tag), indicator.get_short_name(), str(result)]))
                             of.write('\n')
+
+
+problems = ["FDA1", "FDA2", "FDA3"]
+output_directory = "data-500pop-100000evals-20runs-"
+
+generate_summary_from_experiment(output_directory, [InvertedGenerationalDistance(None)], 
+                                 problems, 100000)

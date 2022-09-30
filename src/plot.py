@@ -18,6 +18,7 @@ from cmlsga.problems.uf import *
 from cmlsga.problems.wfgopt import *
 from cmlsga.problems.cdf import *
 from cmlsga.problems.udf import *
+from cmlsga.problems.fda import *
 
 
 class MLSPlot(Plot):
@@ -250,18 +251,19 @@ def write_pf(problem, time):
             f.write("\n")
             f.flush()
 
+    print(filename)
+
 #reference_points = problem.pf(1, 5)
 #print(list(reference_points))
 
 #p = UF6()
-for i in range(1, 11):
-    #write_pf(UDF1(), i)
-    #write_pf(UDF2(), i)
-    #write_pf(UDF3(), i)
-#    write_pf(UDF4(), i)
-#    write_pf(UDF5(), i)
-    write_pf(UDF6(), i)
-#    write_pf(UDF8(), i)
+for i in range(0, 41):
+    write_pf(FDA1e(), i)
+    write_pf(FDA2e(), i)
+    write_pf(FDA3e(), i)
+    write_pf(FDA4e(), i)
+    write_pf(FDA5e(), i)
+#    write_pf(FDA8(), i)
 
 #    write_pf(CDF9(), i)
 #    write_pf(CDF10(), i)

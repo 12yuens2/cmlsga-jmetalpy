@@ -146,15 +146,15 @@ class SMPSO_Variant(SMPSO):
         return "SMPSO-e"
 
 
-def omopso(problem, population_size, max_evaluations, evaluator):
+def omopso(problem, population_size, max_evaluations, evaluator, m, l):
     return (
-        IncrementalOMOPSO,
+        OMOPSO,
         {
             "problem": problem,
             "swarm_size": population_size,
             "epsilon": 0.0075,
             "uniform_mutation": UniformMutation(
-                probability=1.0 / problem.number_of_variables,
+                probability=m, #1.0 / problem.number_of_variables,
                 perturbation=0.5
             ),
             "non_uniform_mutation": NonUniformMutation(
@@ -162,7 +162,7 @@ def omopso(problem, population_size, max_evaluations, evaluator):
                 perturbation=0.5,
                 max_iterations=int(max_evaluations / population_size)
             ),
-            "leaders": CrowdingDistanceArchive(100),
+            "leaders": CrowdingDistanceArchive(int(l)),#100),
             "termination_criterion": StoppingByEvaluations(max_evaluations=max_evaluations),
             "swarm_evaluator": evaluator
         }
@@ -192,17 +192,17 @@ def omopsoe(problem, population_size, max_evaluations, evaluator):
     )
 
 
-def smpso(problem, population_size, max_evaluations, evaluator):
+def smpso(problem, population_size, max_evaluations, evaluator, m, l):
     return (
         IncrementalSMPSO,
         {
             "problem": problem,
             "swarm_size": population_size,
             "mutation": PolynomialMutation(
-                probability=1.0 / problem.number_of_variables,
+                probability= m, #1.0 / problem.number_of_variables,
                 distribution_index=20
             ),
-            "leaders": CrowdingDistanceArchive(100),
+            "leaders": CrowdingDistanceArchive(int(l)),
             "termination_criterion": StoppingByEvaluations(max_evaluations=max_evaluations)
         }
     )

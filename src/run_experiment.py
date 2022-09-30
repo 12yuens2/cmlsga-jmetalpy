@@ -1,3 +1,4 @@
+import csv
 import os
 import json
 import sys
@@ -127,19 +128,43 @@ def parse_problems(parameters):
 if __name__ == "__main__":
 
     if len(sys.argv) == 2:
-        json_file = open(sys.argv[1], "r")
-        parameters = json.loads(json_file.read())
+        #json_file = open(sys.argv[1], "r")
+        #parameters = json.loads(json_file.read())
 
-        population_size = parameters["population_size"]
-        max_evaluations = parameters["max_evaluations"]
-        number_of_runs = parameters["number_of_runs"]
-        comment = parameters["comment"]
+        #population_size = parameters["population_size"]
+        #max_evaluations = parameters["max_evaluations"]
+        #number_of_runs = parameters["number_of_runs"]
+        #comment = parameters["comment"]
 
-        algorithms = parse_algorithms(parameters)
-        problems = parse_problems(parameters)
+        #algorithms = parse_algorithms(parameters)
+        #problems = parse_problems(parameters)
 
-        run_experiment(population_size, max_evaluations, number_of_runs, comment=comment,
-                       algorithms=algorithms,
-                       problems=problems)
+        #run_experiment(population_size, max_evaluations, number_of_runs, comment=comment,
+        #               algorithms=algorithms,
+        #               problems=problems)
+
+        runs = 10
+        max_evaluations = 100000
+        output_path = "data-full-smac-100k"
+
+        with open(sys.argv[1], "r") as smac_file:
+            reader = csv.reader(smac_file)
+            for line in reader:
+                algorithm = globals()[line[0]]
+                problem = globals()[line[1]]()
+                population_size = int(line[2])
+                crossover_rate = float(line[3])
+                mutation_rate = float(line[4])
+                e = MapEvaluator(processes=4)
+
+                constructor, kwargs = algorithm(problem, population_size, max_evaluations,
+                                                e, mutation_rate, crossover_rate)
+                algorithm = constructor(**kwargs)
+
+                jobs = [Job(algorithm, algorithm.get_name(), problem.get_name(), run)
+                        for run in range(runs)]
+                experiment = Experiment(output_path, jobs)
+                experiment.run()
+
     else:
         print_usage()
