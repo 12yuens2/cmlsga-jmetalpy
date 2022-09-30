@@ -645,7 +645,13 @@ def moead(problem, population_size, max_evaluations, evaluator, mutation_rate, c
         MOEAD,
         moead_options(problem, population_size, max_evaluations,
                       evaluator, mutation_rate, crossover_rate)
-    )
+        )
+#def moead(problem, population_size, max_evaluations, evaluator):
+#    return (
+#        IncrementalMOEAD,
+#        moead_options(problem, population_size, max_evaluations,
+#                      evaluator, 1 / problem.number_of_variables, 1.0)
+#    )
 
 def moeade(problem, population_size, max_evaluations, evaluator):
     return (
