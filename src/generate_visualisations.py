@@ -78,5 +78,5 @@ if __name__ == "__main__":
     #generate_boxplot(filename=datafile)
 
     # Wilcoxon
-    compute_wilcoxon(filename)
+    #compute_wilcoxon(filename)
 
