@@ -22,7 +22,7 @@ from jmetal.problem.multiobjective.lz09 import *
 
 from jmetal.util.evaluator import MapEvaluator
 
-from smac.facade.smac_bb_facade import SMAC4BB
+from smac.facade.smac_ac_facade import SMAC4AC
 from smac.scenario.scenario import Scenario
 from ConfigSpace import ConfigurationSpace
 from ConfigSpace.hyperparameters import Constant, CategoricalHyperparameter, UniformFloatHyperparameter
@@ -143,7 +143,7 @@ def create_configuration(algorithm, problem, algorithm_type, output_path, evalua
     pops = [i for i in range(100, 1100, 100)]
 
     if algorithm == "moead":
-        pops = mead_pops
+        pops = moead_pops
 
     if algo_type == "ga":
         cs.add_hyperparameter(CategoricalHyperparameter("population", pops))
@@ -191,14 +191,15 @@ if __name__ == "__main__":
 	    "runcount-limit": 100,
 	    "cs": cs,
 	    "shared_model": True,
-	    "input_psmac_dirs": mainpath
+	    "input_psmac_dirs": mainpath,
+            "wallclock_limit": 43200
 	}
     )
 
-    smac = SMAC4BB(
+    smac = SMAC4AC(
 	scenario=scenario,
 	rng=np.random.RandomState(5),
-	tae_runner=tae
+	tae_runner=tae,
     )
 
     best = smac.optimize()
