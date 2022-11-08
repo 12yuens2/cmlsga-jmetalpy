@@ -113,21 +113,23 @@ def parse_algorithms(parameters):
 def parse_problems(parameters):
     problems = []
     for problem in parameters["problems"]:
-        problem_string = problem.split("(")
-
-        if len(problem_string) == 1:
-            problems.append(globals()[problem]())
-        else: # DASCMOP case
-            difficulty = int(problem_string[1][0])
-            problems.append(globals()[problem_string[0]](difficulty))
+        problems.append(parse_problem(problem))
 
     return problems
 
+def parse_problem(problem):
+    problem_string = problem.split("(")
+
+    if len(problem_string) == 1:
+        return globals()[problem]()
+    else: # DASCMOP case
+        difficulty = int(problem_string[1][0])
+        return globals()[problem_string[0]](difficulty)
 
 
 if __name__ == "__main__":
 
-    if len(sys.argv) == 2:
+    if len(sys.argv) == 3:
         #json_file = open(sys.argv[1], "r")
         #parameters = json.loads(json_file.read())
 
@@ -147,15 +149,24 @@ if __name__ == "__main__":
         max_evaluations = 100000
         output_path = "data-full-smac-100k"
 
+        algo_type = sys.argv[2]
+
         with open(sys.argv[1], "r") as smac_file:
             reader = csv.reader(smac_file)
             for line in reader:
                 algorithm = globals()[line[0]]
-                problem = globals()[line[1]]()
+                problem = parse_problem(line[1])
                 population_size = int(line[2])
-                crossover_rate = float(line[3])
+                crossover_rate = 0
                 mutation_rate = float(line[4])
+                leaders = 0
                 e = MapEvaluator(processes=4)
+
+                if algo_type == "pso":
+                    leaders = int(line[5])
+                    crossover_rate = leaders
+                else:
+                    crossover_rate = float(line[3])
 
                 constructor, kwargs = algorithm(problem, population_size, max_evaluations,
                                                 e, mutation_rate, crossover_rate)
