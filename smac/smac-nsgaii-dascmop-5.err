@@ -1,0 +1,14 @@
+/tmp/slurmd/job1882195/slurm_script: line 21: env/bin/activate: No such file or directory
+/tmp/slurmd/job1882189/slurm_script: line 21: env/bin/activate: No such file or directory
+Traceback (most recent call last):
+  File "src/tuning.py", line 8, in <module>
+    from cmlsga.algorithms.genetic_algorithms import *
+  File "/mainfs/home/sy6u19/cmlsga-jmetalpy/src/cmlsga/algorithms/genetic_algorithms.py", line 4, in <module>
+    import sympy
+ModuleNotFoundError: No module named 'sympy'
+Traceback (most recent call last):
+  File "src/tuning.py", line 8, in <module>
+    from cmlsga.algorithms.genetic_algorithms import *
+  File "/mainfs/home/sy6u19/cmlsga-jmetalpy/src/cmlsga/algorithms/genetic_algorithms.py", line 4, in <module>
+    import sympy
+ModuleNotFoundError: No module named 'sympy'
