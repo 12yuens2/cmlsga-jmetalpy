@@ -521,8 +521,8 @@ def mogae(problem, population_size, max_evaluations, evaluator):
 
 def mlsga(algorithms, problem, population_size, max_evaluations, evaluator):
     return (
-        IncrementalcMLSGA,
-        #MultiLevelSelection,
+        #IncrementalcMLSGA,
+        MultiLevelSelection,
         {
             "problem": problem,
             "population_size": population_size,
@@ -534,7 +534,7 @@ def mlsga(algorithms, problem, population_size, max_evaluations, evaluator):
     )
 
 
-def nsgaii(problem, population_size, max_evaluations, evaluator, mutation_rate=0.1, crossover_rate=1.0):
+def nsgaii(problem, population_size, max_evaluations, evaluator): #, mutation_rate=0.1, crossover_rate=1.0):
     return (
         NSGAII,
         {
@@ -542,10 +542,10 @@ def nsgaii(problem, population_size, max_evaluations, evaluator, mutation_rate=0
             "population_size": population_size,
             "offspring_population_size": population_size,
             "mutation": PolynomialMutation(
-                mutation_rate,
+                1.0 / problem.number_of_variables,
                 distribution_index=20
             ),
-            "crossover": SBXCrossover(probability=crossover_rate, distribution_index=20),
+            "crossover": SBXCrossover(probability=1.0, distribution_index=20),
             "termination_criterion": StoppingByEvaluations(max_evaluations=max_evaluations),
             "population_evaluator": evaluator
         }
@@ -569,9 +569,9 @@ def nsgaiie(problem, population_size, max_evaluations, evaluator):
     )
 
 
-def nsgaiii(problem, population_size, max_evaluations, evaluator, mutation_rate, crossover_rate):
+def nsgaiii(problem, population_size, max_evaluations, evaluator): #, mutation_rate, crossover_rate):
     return (
-        IncrementalNSGAIII,
+        NSGAIII,
         {
             "problem": problem,
             "population_size": population_size,
@@ -580,16 +580,16 @@ def nsgaiii(problem, population_size, max_evaluations, evaluator, mutation_rate,
                 n_points=population_size-1
             ),
             "mutation": PolynomialMutation(
-                mutation_rate,
+                1.0 / problem.number_of_variables,
                 distribution_index=20
             ),
-            "crossover": SBXCrossover(probability=crossover_rate, distribution_index=20),
+            "crossover": SBXCrossover(probability=1.0, distribution_index=20),
             "termination_criterion": StoppingByEvaluations(max_evaluations=max_evaluations),
         }
     )
 
 
-def ibea(problem, population_size, max_evaluations, evaluator, mutation_rate, crossover_rate):
+def ibea(problem, population_size, max_evaluations, evaluator): #, mutation_rate, crossover_rate):
     return (
         IBEA,
         {
@@ -598,10 +598,10 @@ def ibea(problem, population_size, max_evaluations, evaluator, mutation_rate, cr
             "population_size": population_size,
             "offspring_population_size": population_size,
             "mutation": PolynomialMutation(
-                mutation_rate,
+                1.0 / problem.number_of_variables,
                 distribution_index=20
             ),
-            "crossover": SBXCrossover(probability=crossover_rate, distribution_index=20),
+            "crossover": SBXCrossover(probability=1.0, distribution_index=20),
             "termination_criterion": StoppingByEvaluations(max_evaluations=max_evaluations),
         }
     )
@@ -640,18 +640,18 @@ def moead_options(problem, population_size, max_evaluations, evaluator, mutation
         "population_evaluator": evaluator
     }
 
-def moead(problem, population_size, max_evaluations, evaluator, mutation_rate, crossover_rate):
-    return (
-        MOEAD,
-        moead_options(problem, population_size, max_evaluations,
-                      evaluator, mutation_rate, crossover_rate)
-        )
-#def moead(problem, population_size, max_evaluations, evaluator):
+#def moead(problem, population_size, max_evaluations, evaluator, mutation_rate, crossover_rate):
 #    return (
-#        IncrementalMOEAD,
+#        MOEAD,
 #        moead_options(problem, population_size, max_evaluations,
-#                      evaluator, 1 / problem.number_of_variables, 1.0)
-#    )
+#                      evaluator, mutation_rate, crossover_rate)
+#        )
+def moead(problem, population_size, max_evaluations, evaluator):
+    return (
+        IncrementalMOEAD,
+        moead_options(problem, population_size, max_evaluations,
+                      evaluator, 1 / problem.number_of_variables, 1.0)
+    )
 
 def moeade(problem, population_size, max_evaluations, evaluator):
     return (
