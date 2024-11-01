@@ -109,7 +109,7 @@ def parse_algorithms(parameters):
     return algorithms
 
 
-def parse_problems(parameters): 
+def parse_problems(parameters):
     problems = []
     for problem in parameters["problems"]:
         problems.append(parse_problem(problem))

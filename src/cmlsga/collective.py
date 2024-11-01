@@ -27,6 +27,7 @@ class Collective(object):
 
     def restart(self):
         self.algorithm.solutions = self.solutions
+<<<<<<< HEAD
         self.algorithm.archive = CrowdingDistanceArchive(len(self.solutions))
         self.algorithm.population_size = len(self.solutions)
 
@@ -35,6 +36,8 @@ class Collective(object):
             self.algorithm.archive.non_dominated_solution_archive.solution_list.append(s)
 
         self.algorithm.archive.compute_density_estimator()
+=======
+>>>>>>> 903a598d6e4c6f11d0653317fc7195713274915b
         # self.algorithm.init_progress()
         # self.algorithm.evaluations += self.evaluations
 

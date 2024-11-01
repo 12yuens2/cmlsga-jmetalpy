@@ -127,6 +127,34 @@ if __name__ == "__main__":
 
     data_directory = sys.argv[1]
 
+    for data in data_directories:
+        print(data)
+        generate_summary_from_experiment(
+            data,
+            [InvertedGenerationalDistance(None)],
+            reference_fronts="resources/reference_front"
+        )
+
+        filename = data[5:].replace("/", "")
+        print("rename to " + filename)
+        os.rename("QualityIndicatorSummary.csv", filename)
+        #filename = data
+
+        print("Filename: " + filename)
+
+        print_stat(filename, "IGD", "mean")
+        print_stat(filename, "IGD", "min")
+        print_stat(filename, "IGD", "max")
+
+    #generate_latex_tables(filename=datafile)
+
+    # Generate boxplots
+    #generate_boxplot(filename=datafile)
+
+    # Wilcoxon
+    #compute_wilcoxon(filename)
+>>>>>>> 903a598d6e4c6f11d0653317fc7195713274915b
+
     generate_summary_from_experiment(
         data_directory,
         [InvertedGenerationalDistance(None), HyperVolume(None)],

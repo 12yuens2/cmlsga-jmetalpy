@@ -3,7 +3,8 @@ import os
 import shutil
 import time
 import sys
-import json 
+import json
+
 from cmlsga.algorithms.genetic_algorithms import *
 from cmlsga.algorithms.particle_swarm_optimisation import *
 
@@ -16,14 +17,12 @@ from cmlsga.problems.udf import *
 from cmlsga.problems.jy import *
 from cmlsga.problems.cdf import *
 
-
 from jmetal.core.quality_indicator import InvertedGenerationalDistance, HyperVolume
 from jmetal.lab.experiment import *
 from jmetal.problem.multiobjective.zdt import *
 from jmetal.problem.multiobjective.dtlz import *
 from jmetal.problem.multiobjective.lz09 import *
 from jmetal.problem.multiobjective.fda import *
-
 
 from jmetal.util.evaluator import MapEvaluator
 
@@ -406,3 +405,4 @@ if __name__ == "__main__":
     #print("best: population: {}, crossover: {}, mutation: {}, leaders: {}".format(
     #    best["epigenetic_proba"], best["block_size"]
     #))
+

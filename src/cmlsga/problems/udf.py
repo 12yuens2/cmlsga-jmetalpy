@@ -6,6 +6,7 @@ from jmetal.core.problem import FloatProblem, DynamicProblem
 from jmetal.core.solution import FloatSolution
 
 from sympy import sin, pi, cos, ceiling, symbols
+>>>>>>> 903a598d6e4c6f11d0653317fc7195713274915b
 
 class UDF(DynamicProblem, FloatProblem):
     def __init__(self):
@@ -41,7 +42,6 @@ class UDF(DynamicProblem, FloatProblem):
 
     def convert_differentials(self, f):
         return [f.diff(self.xvars[i]) for i in range(0, self.number_of_variables)]
-
 
     def evaluate(self, solution):
         pass
@@ -198,7 +198,6 @@ class UDF3(UDF):
 
         for i in range(2, self.number_of_variables + 1):
             y = self.xvars[i - 1] - sin((6 * pi * self.xvars[0]) + (i * pi / self.number_of_variables))
-
             if i % 2 == 1:
                 size_j1 += 1
                 j1 += y**2
