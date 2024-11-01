@@ -242,7 +242,6 @@ def omopsoe(problem, population_size, max_evaluations, evaluator):
 def smpso(problem, population_size, max_evaluations, evaluator, m=-1.0):
     if m == -1.0:
         m = 1.0 / problem.number_of_variables
-
     return (
         IncrementalSMPSO,
         {

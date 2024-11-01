@@ -148,11 +148,13 @@ if __name__ == "__main__":
     run_experiment(population_size, max_evaluations, number_of_runs, comment=comment,
                    algorithms=algorithms,
                    problems=problems)
-    
-    #runs = 20
+
+    #runs = 10
     #max_evaluations = 100000
-    #output_path = "new-smac-100k"
-    #
+    #output_path = "data-full-smac-100k"
+
+    #algo_type = sys.argv[2]
+
     #with open(sys.argv[1], "r") as smac_file:
     #    reader = csv.reader(smac_file)
     #    for line in reader:
@@ -190,5 +192,23 @@ if __name__ == "__main__":
     #            jobs.append(IncrementalOutputJob(algorithm, algorithm.get_name(), 
     #                            problem.get_name(), run))
 
+    #        population_size = int(line[2])
+    #        crossover_rate = 0
+    #        mutation_rate = float(line[4])
+    #        leaders = 0
+    #        e = MapEvaluator(processes=4)
+
+    #        if algo_type == "pso":
+    #            leaders = int(line[5])
+    #            crossover_rate = leaders
+    #        else:
+    #            crossover_rate = float(line[3])
+
+    #        constructor, kwargs = algorithm(problem, population_size, max_evaluations,
+    #                                        e, mutation_rate, crossover_rate)
+    #        algorithm = constructor(**kwargs)
+
+    #        jobs = [Job(algorithm, algorithm.get_name(), problem.get_name(), run)
+    #                for run in range(runs)]
     #        experiment = Experiment(output_path, jobs)
     #        experiment.run()
