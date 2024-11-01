@@ -1,0 +1,54 @@
+Running SLURM prolog script on gold51.cluster.local
+===============================================================================
+Job started on Sun Sep 29 21:16:06 BST 2024
+Job ID          : 6604734
+Job name        : U-NSGA-IIIe-non-cont-MOP.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/summary-slurm
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/summary-slurm/U-NSGA-IIIe-non-cont-MOP.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold51
+Job Output Follows ...
+===============================================================================
+Running SLURM prolog script on gold51.cluster.local
+===============================================================================
+Job started on Sun Sep 29 21:16:06 BST 2024
+Job ID          : 6604031
+Job name        : U-NSGA-IIIe-non-cont-MOP.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/summary-slurm
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/summary-slurm/U-NSGA-IIIe-non-cont-MOP.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold51
+Job Output Follows ...
+===============================================================================
+/ssdfs/users/sy6u19/data-100000evals-30runs-corrections-normals/U-NSGA-IIIe-non-cont/MOP6
+U-NSGA-IIIe-non-cont, MOP6
+U-NSGA-IIIe-non-cont, MOP6
+/ssdfs/users/sy6u19/data-100000evals-30runs-corrections-normals/U-NSGA-IIIe-non-cont/MOP7
+U-NSGA-IIIe-non-cont, MOP7
+U-NSGA-IIIe-non-cont, MOP7
+==============================================================================
+Running epilogue script on gold51.
+
+Submit time  : 2024-09-29T19:10:40
+Start time   : 2024-09-29T21:16:06
+End time     : 2024-09-29T21:16:22
+Elapsed time : 00:00:16 (Timelimit=1-23:55:00)
+
+Job ID: 6604734
+Array Job ID: 6604031_6
+Cluster: i5
+User/Group: sy6u19/mm
+State: FAILED (exit code 1)
+Cores: 1
+CPU Utilized: 00:00:04
+CPU Efficiency: 25.00% of 00:00:16 core-walltime
+Job Wall-clock time: 00:00:16
+Memory Utilized: 2.35 MB
+Memory Efficiency: 0.03% of 7.81 GB
+

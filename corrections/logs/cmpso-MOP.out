@@ -1,0 +1,34 @@
+Running SLURM prolog script on gold53.cluster.local
+===============================================================================
+Job started on Mon Aug 19 13:38:24 BST 2024
+Job ID          : 6462961
+Job name        : cmpso-MOP.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/slurm
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/slurm/cmpso-MOP.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold53
+Job Output Follows ...
+===============================================================================
+==============================================================================
+Running epilogue script on gold53.
+
+Submit time  : 2024-08-19T13:38:02
+Start time   : 2024-08-19T13:38:24
+End time     : 2024-08-19T14:20:04
+Elapsed time : 00:41:40 (Timelimit=1-23:55:00)
+
+Job ID: 6462961
+Array Job ID: 6462961_6
+Cluster: i5
+User/Group: sy6u19/mm
+State: COMPLETED (exit code 0)
+Cores: 1
+CPU Utilized: 00:41:07
+CPU Efficiency: 98.68% of 00:41:40 core-walltime
+Job Wall-clock time: 00:41:40
+Memory Utilized: 1.08 GB
+Memory Efficiency: 13.77% of 7.81 GB
+

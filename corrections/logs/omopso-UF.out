@@ -1,0 +1,34 @@
+Running SLURM prolog script on gold51.cluster.local
+===============================================================================
+Job started on Sat May 18 20:07:35 BST 2024
+Job ID          : 5983981
+Job name        : omopso-UF.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/slurm
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/slurm/omopso-UF.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold51
+Job Output Follows ...
+===============================================================================
+==============================================================================
+Running epilogue script on gold53.
+
+Submit time  : 2024-05-13T13:10:30
+Start time   : 2024-05-18T20:00:13
+End time     : 2024-05-18T23:19:23
+Elapsed time : 03:19:10 (Timelimit=2-11:55:00)
+
+Job ID: 6005254
+Array Job ID: 5983981_8
+Cluster: i5
+User/Group: sy6u19/mm
+State: COMPLETED (exit code 0)
+Cores: 1
+CPU Utilized: 03:15:22
+CPU Efficiency: 98.09% of 03:19:10 core-walltime
+Job Wall-clock time: 03:19:10
+Memory Utilized: 5.85 GB
+Memory Efficiency: 74.85% of 7.81 GB
+

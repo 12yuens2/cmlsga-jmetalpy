@@ -1,0 +1,10 @@
+{
+    "population_size": 100,
+    "max_evaluations": 100000,
+    "number_of_runs": 30,
+    "comment": "corrections-normals",
+
+    "mlsga": [],
+    "algorithms": ["moead"],
+    "problems": ["IMB8","IMB9","IMB10","IMB11","IMB12","IMB13","IMB14"]
+}

@@ -1,0 +1,137 @@
+Running SLURM prolog script on gold54.cluster.local
+===============================================================================
+Job started on Thu Jul 11 10:01:42 BST 2024
+Job ID          : 6226288
+Job name        : cmpso-MOP.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/smac-slurm
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/smac-slurm/cmpso-MOP.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold54
+Job Output Follows ...
+===============================================================================
+start
+start
+start
+==============================================================================
+Running epilogue script on gold54.
+
+Submit time  : 2024-07-10T09:50:09
+Start time   : 2024-07-11T09:54:42
+End time     : 2024-07-12T10:00:33
+Elapsed time : 1-00:05:51 (Timelimit=2-01:55:00)
+
+Job ID: 6235943
+Array Job ID: 6226288_3
+Cluster: i5
+User/Group: sy6u19/mm
+State: COMPLETED (exit code 0)
+Cores: 1
+CPU Utilized: 1-00:00:00
+CPU Efficiency: 99.60% of 1-00:05:51 core-walltime
+Job Wall-clock time: 1-00:05:51
+Memory Utilized: 2.00 GB
+Memory Efficiency: 25.55% of 7.81 GB
+
+==============================================================================
+Running epilogue script on gold53.
+
+Submit time  : 2024-07-10T09:50:09
+Start time   : 2024-07-11T09:55:42
+End time     : 2024-07-12T10:10:42
+Elapsed time : 1-00:15:00 (Timelimit=2-01:55:00)
+
+Job ID: 6235946
+Array Job ID: 6226288_5
+Cluster: i5
+User/Group: sy6u19/mm
+State: COMPLETED (exit code 0)
+Cores: 1
+CPU Utilized: 1-00:08:56
+CPU Efficiency: 99.58% of 1-00:15:00 core-walltime
+Job Wall-clock time: 1-00:15:00
+Memory Utilized: 2.02 GB
+Memory Efficiency: 25.88% of 7.81 GB
+
+==============================================================================
+Running epilogue script on gold54.
+
+Submit time  : 2024-07-10T09:50:09
+Start time   : 2024-07-11T09:54:42
+End time     : 2024-07-12T10:13:44
+Elapsed time : 1-00:19:02 (Timelimit=2-01:55:00)
+
+Job ID: 6235942
+Array Job ID: 6226288_2
+Cluster: i5
+User/Group: sy6u19/mm
+State: COMPLETED (exit code 0)
+Cores: 1
+CPU Utilized: 1-00:13:33
+CPU Efficiency: 99.62% of 1-00:19:02 core-walltime
+Job Wall-clock time: 1-00:19:02
+Memory Utilized: 1.90 GB
+Memory Efficiency: 24.27% of 7.81 GB
+
+==============================================================================
+Running epilogue script on gold53.
+
+Submit time  : 2024-07-10T09:50:09
+Start time   : 2024-07-11T09:53:42
+End time     : 2024-07-13T11:48:55
+Elapsed time : 2-01:55:13 (Timelimit=2-01:55:00)
+
+Job ID: 6235940
+Array Job ID: 6226288_1
+Cluster: i5
+User/Group: sy6u19/mm
+State: TIMEOUT (exit code 0)
+Cores: 1
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 2-01:55:13 core-walltime
+Job Wall-clock time: 2-01:55:13
+Memory Utilized: 709.72 MB
+Memory Efficiency: 8.87% of 7.81 GB
+
+==============================================================================
+Running epilogue script on gold54.
+
+Submit time  : 2024-07-10T09:50:09
+Start time   : 2024-07-11T09:54:42
+End time     : 2024-07-13T11:49:55
+Elapsed time : 2-01:55:13 (Timelimit=2-01:55:00)
+
+Job ID: 6235944
+Array Job ID: 6226288_4
+Cluster: i5
+User/Group: sy6u19/mm
+State: TIMEOUT (exit code 0)
+Cores: 1
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 2-01:55:13 core-walltime
+Job Wall-clock time: 2-01:55:13
+Memory Utilized: 1.19 GB
+Memory Efficiency: 15.24% of 7.81 GB
+
+==============================================================================
+Running epilogue script on gold53.
+
+Submit time  : 2024-07-10T09:50:09
+Start time   : 2024-07-11T09:55:42
+End time     : 2024-07-13T11:50:55
+Elapsed time : 2-01:55:13 (Timelimit=2-01:55:00)
+
+Job ID: 6235947
+Array Job ID: 6226288_6
+Cluster: i5
+User/Group: sy6u19/mm
+State: TIMEOUT (exit code 0)
+Cores: 1
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 2-01:55:13 core-walltime
+Job Wall-clock time: 2-01:55:13
+Memory Utilized: 937.12 MB
+Memory Efficiency: 11.71% of 7.81 GB
+

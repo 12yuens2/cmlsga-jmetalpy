@@ -25,8 +25,9 @@ class MultiLevelSelection(Algorithm[S, R]):
 
     def __init__(self,
                  problem=ZDT1(),
-                 number_of_collectives=6,
+                 number_of_collectives=8,
                  num_new_collectives=2,
+                 reproduction_delay=8,
                  population_size=600,
                  algorithms=[],
                  mls_mode=7,
@@ -38,7 +39,8 @@ class MultiLevelSelection(Algorithm[S, R]):
         self.problem = problem
         self.number_of_collectives = number_of_collectives
         self.num_new_collectives = num_new_collectives
-        self.population_size = population_size
+        self.reproduction_delay = 8
+        self.population_size = 1000 #population_size
 
         self.algorithms = algorithms
         self.coevolution_amount = len(algorithms)
@@ -165,8 +167,11 @@ class MultiLevelSelection(Algorithm[S, R]):
 
     def step(self):
         self._update_collectives()
-        for i in range(self.num_new_collectives):
-            self._replace_worst_collective()
+        if int(self.evaluations / self.population_size) % self.reproduction_delay == 0:
+            for i in range(self.num_new_collectives):
+                self._replace_worst_collective()
+
+        self.solutions = self.evaluate(self.solutions)
 
 
     def _update_collectives(self):

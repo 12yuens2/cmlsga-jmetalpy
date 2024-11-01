@@ -1,0 +1,256 @@
+Running SLURM prolog script on gold53.cluster.local
+===============================================================================
+Job started on Thu Apr  4 16:43:02 BST 2024
+Job ID          : 5773404
+Job name        : ibea.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/ibea.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold53
+Job Output Follows ...
+===============================================================================
+Running SLURM prolog script on gold53.cluster.local
+===============================================================================
+Job started on Thu Apr  4 16:43:02 BST 2024
+Job ID          : 5773406
+Job name        : ibea.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/ibea.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold53
+Job Output Follows ...
+===============================================================================
+Running SLURM prolog script on gold53.cluster.local
+===============================================================================
+Job started on Thu Apr  4 16:43:02 BST 2024
+Job ID          : 5773405
+Job name        : ibea.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/ibea.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold53
+Job Output Follows ...
+===============================================================================
+Running SLURM prolog script on gold53.cluster.local
+===============================================================================
+Job started on Thu Apr  4 16:43:02 BST 2024
+Job ID          : 5773402
+Job name        : ibea.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/ibea.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold53
+Job Output Follows ...
+===============================================================================
+==============================================================================
+==============================================================================
+==============================================================================
+==============================================================================
+==============================================================================
+==============================================================================
+Running epilogue script on gold53.
+Running epilogue script on gold51.
+Running epilogue script on gold51.
+
+==============================================================================
+
+==============================================================================
+Running epilogue script on gold53.
+Running epilogue script on gold53.
+Running epilogue script on gold53.
+
+
+Running epilogue script on gold53.
+==============================================================================
+
+Running epilogue script on gold53.
+
+Running epilogue script on gold53.
+
+
+
+==============================================================================
+Running epilogue script on gold53.
+
+Submit time  : 2024-04-04T16:42:53
+Submit time  : 2024-04-04T16:42:53
+Submit time  : 2024-04-04T16:42:53
+Submit time  : 2024-04-04T16:42:53
+Submit time  : 2024-04-04T16:42:53
+Submit time  : 2024-04-04T16:42:53
+Submit time  : 2024-04-04T16:42:53
+Submit time  : 2024-04-04T16:42:53
+Submit time  : 2024-04-04T16:42:53
+Submit time  : 2024-04-04T16:42:53
+Start time   : 2024-04-04T16:43:01
+Start time   : 2024-04-04T16:43:01
+Start time   : 2024-04-04T16:43:01
+Start time   : 2024-04-04T16:43:01
+Start time   : 2024-04-04T16:43:01
+Start time   : 2024-04-04T16:43:01
+Start time   : 2024-04-04T16:43:01
+Start time   : 2024-04-04T16:43:01
+End time     : 2024-04-05T15:50:31
+Start time   : 2024-04-04T16:43:01
+End time     : 2024-04-05T15:50:31
+End time     : 2024-04-05T15:50:31
+Start time   : 2024-04-04T16:43:01
+End time     : 2024-04-05T15:50:31
+End time     : 2024-04-05T15:50:31
+End time     : 2024-04-05T15:50:31
+End time     : 2024-04-05T15:50:31
+End time     : 2024-04-05T15:50:31
+End time     : 2024-04-05T15:50:31
+End time     : 2024-04-05T15:50:31
+Elapsed time : 23:07:30 Elapsed time : 23:07:30 Elapsed time : 23:07:30 Elapsed time : 23:07:30 Elapsed time : 23:07:30 Elapsed time : 23:07:30 Elapsed time : 23:07:30 Elapsed time : 23:07:30 Elapsed time : 23:07:30 (Timelimit=1-20:05:00)
+
+Elapsed time : 23:07:30 (Timelimit=1-20:05:00)
+(Timelimit=1-20:05:00)
+
+
+(Timelimit=1-20:05:00)
+(Timelimit=1-20:05:00)
+
+(Timelimit=1-20:05:00)
+(Timelimit=1-20:05:00)
+
+
+
+(Timelimit=1-20:05:00)
+(Timelimit=1-20:05:00)
+
+
+(Timelimit=1-20:05:00)
+
+Job ID: 5773405
+Array Job ID: 5773396_8
+Cluster: i5
+User/Group: sy6u19/mm
+State: CANCELLED (exit code 0)
+Cores: 1
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 23:07:30 core-walltime
+Job Wall-clock time: 23:07:30
+Memory Utilized: 1.17 GB
+Memory Efficiency: 29.90% of 3.91 GB
+Job ID: 5773402
+Array Job ID: 5773396_5
+Cluster: i5
+User/Group: sy6u19/mm
+State: CANCELLED (exit code 0)
+Cores: 1
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 23:07:30 core-walltime
+Job Wall-clock time: 23:07:30
+Memory Utilized: 1.23 GB
+Memory Efficiency: 31.50% of 3.91 GB
+
+
+Job ID: 5773406
+Array Job ID: 5773396_9
+Cluster: i5
+User/Group: sy6u19/mm
+State: CANCELLED (exit code 0)
+Cores: 1
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 23:07:30 core-walltime
+Job Wall-clock time: 23:07:30
+Memory Utilized: 1.29 GB
+Memory Efficiency: 32.96% of 3.91 GB
+
+Job ID: 5773403
+Array Job ID: 5773396_6
+Cluster: i5
+User/Group: sy6u19/mm
+State: CANCELLED (exit code 0)
+Cores: 1
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 23:07:30 core-walltime
+Job Wall-clock time: 23:07:30
+Memory Utilized: 1.70 GB
+Memory Efficiency: 43.61% of 3.91 GB
+
+Job ID: 5773401
+Array Job ID: 5773396_4
+Cluster: i5
+User/Group: sy6u19/mm
+State: CANCELLED (exit code 0)
+Cores: 1
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 23:07:30 core-walltime
+Job Wall-clock time: 23:07:30
+Memory Utilized: 1.68 GB
+Memory Efficiency: 43.02% of 3.91 GB
+Job ID: 5773404
+Array Job ID: 5773396_7
+Cluster: i5
+User/Group: sy6u19/mm
+State: CANCELLED (exit code 0)
+Cores: 1
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 23:07:30 core-walltime
+Job Wall-clock time: 23:07:30
+Memory Utilized: 1.24 GB
+Memory Efficiency: 31.80% of 3.91 GB
+
+
+Job ID: 5773397
+Array Job ID: 5773396_0
+Cluster: i5
+User/Group: sy6u19/mm
+State: CANCELLED (exit code 0)
+Cores: 1
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 23:07:30 core-walltime
+Job Wall-clock time: 23:07:30
+Memory Utilized: 2.14 GB
+Memory Efficiency: 54.78% of 3.91 GB
+Job ID: 5773398
+Array Job ID: 5773396_1
+Cluster: i5
+User/Group: sy6u19/mm
+State: CANCELLED (exit code 0)
+Cores: 1
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 23:07:30 core-walltime
+Job Wall-clock time: 23:07:30
+Memory Utilized: 1.55 GB
+Memory Efficiency: 39.72% of 3.91 GB
+Job ID: 5773400
+Array Job ID: 5773396_3
+Cluster: i5
+User/Group: sy6u19/mm
+State: CANCELLED (exit code 0)
+Cores: 1
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 23:07:30 core-walltime
+Job Wall-clock time: 23:07:30
+Memory Utilized: 1.55 GB
+Memory Efficiency: 39.68% of 3.91 GB
+Job ID: 5773399
+Array Job ID: 5773396_2
+Cluster: i5
+User/Group: sy6u19/mm
+State: CANCELLED (exit code 0)
+Cores: 1
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 23:07:30 core-walltime
+Job Wall-clock time: 23:07:30
+Memory Utilized: 1.52 GB
+Memory Efficiency: 38.92% of 3.91 GB
+
+
+
+

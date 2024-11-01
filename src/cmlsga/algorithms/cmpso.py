@@ -30,8 +30,8 @@ class CMPSO(ParticleSwarmOptimization):
         self.dominance_comparator = DominanceComparator()
 
         self.w_max = 0.9
-        self.w_min = 0.4
-        self.c1 = self.c2 = self.c3 = 4/3
+        self.w_min = 0.5
+        self.c1 = self.c2 = self.c3 = 4.0/3.0
         self.change_velocity1 = self.change_velocity2 = -1
 
         self.archive_size = 100
@@ -172,7 +172,7 @@ class CMPSO(ParticleSwarmOptimization):
 
 
     def update_velocity(self, swarms):
-        w = self.w_max - self.w_min * (self.termination_criterion.evaluations / self.termination_criterion.max_evaluations)
+        w = self.w_max - (self.w_max - self.w_min) * (self.termination_criterion.evaluations / self.termination_criterion.max_evaluations)
 
         for m in range(0, len(swarms)):
             gbest = self.gbests[m]
@@ -182,9 +182,9 @@ class CMPSO(ParticleSwarmOptimization):
                 archive_position = self.select_archive_solution()
 
                 pbest = current_position.attributes["local_best"]
-                r1 = self.generate_random_r()
-                r2 = self.generate_random_r()
-                r3 = self.generate_random_r()
+                r1 = random.random()
+                r2 = random.random()
+                r3 = random.random()
 
                 for d in range(0, self.problem.number_of_variables):
                     current = current_position.variables[d]
@@ -194,9 +194,6 @@ class CMPSO(ParticleSwarmOptimization):
 
                     self.speed[m][i][d] = w * self.speed[m][i][d] + v1 + v2 + v3
 
-
-    def generate_random_r(self):
-        return round(random.random(), 2)
 
 
     def update_position(self, swarms):
@@ -231,7 +228,8 @@ class CMPSO(ParticleSwarmOptimization):
             "PROBLEM": self.problem,
             "EVALUATIONS": self.evaluations,
             "SOLUTIONS": self.get_result(),
-            "ALL_SOLUTIONS": [s for swarm in self.solutions for s in swarm]        }
+            "ALL_SOLUTIONS": [s for swarm in self.solutions for s in swarm]        
+        }
 
     def get_result(self):
         return self.archive

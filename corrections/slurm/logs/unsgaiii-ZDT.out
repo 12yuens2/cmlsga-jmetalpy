@@ -1,0 +1,150 @@
+Running SLURM prolog script on gold52.cluster.local
+Running SLURM prolog script on gold52.cluster.local
+===============================================================================
+===============================================================================
+Job started on Fri Apr  5 16:07:22 BST 2024
+Job started on Fri Apr  5 16:07:22 BST 2024
+Job ID          : 5777032
+Job ID          : 5777033
+Job name        : unsgaiii-ZDT.slurm
+Job name        : unsgaiii-ZDT.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/slurm
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/slurm/unsgaiii-ZDT.slurm
+Partition       : serial
+Num hosts       : 1
+Running SLURM prolog script on gold52.cluster.local
+Num cores       : 1
+===============================================================================
+Num of tasks    : 1
+Job started on Fri Apr  5 16:07:22 BST 2024
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/slurm/unsgaiii-ZDT.slurm
+Hosts allocated : gold52
+Job ID          : 5777027
+Job Output Follows ...
+Job name        : unsgaiii-ZDT.slurm
+===============================================================================
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/slurm
+Partition       : serial
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/slurm/unsgaiii-ZDT.slurm
+Num hosts       : 1
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num cores       : 1
+Num of tasks    : 1
+Num of tasks    : 1
+Hosts allocated : gold52
+Hosts allocated : gold52
+Job Output Follows ...
+Job Output Follows ...
+===============================================================================
+===============================================================================
+Running SLURM prolog script on gold51.cluster.local
+Running SLURM prolog script on gold51.cluster.local
+===============================================================================
+===============================================================================
+Job started on Fri Apr  5 16:07:23 BST 2024
+Job started on Fri Apr  5 16:07:23 BST 2024
+Job ID          : 5777030
+Job ID          : 5777031
+Job name        : unsgaiii-ZDT.slurm
+Job name        : unsgaiii-ZDT.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/slurm
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/slurm/unsgaiii-ZDT.slurm
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/slurm/unsgaiii-ZDT.slurm
+Partition       : serial
+Partition       : serial
+Num hosts       : 1
+Num hosts       : 1
+Num cores       : 1
+Num cores       : 1
+Num of tasks    : 1
+Num of tasks    : 1
+Hosts allocated : gold51
+Hosts allocated : gold51
+Job Output Follows ...
+Job Output Follows ...
+===============================================================================
+===============================================================================
+==============================================================================
+Running epilogue script on gold51.
+
+Submit time  : 2024-04-05T16:07:15
+Start time   : 2024-04-05T16:07:22
+End time     : 2024-04-06T00:23:51
+Elapsed time : 08:16:29 (Timelimit=2-09:05:00)
+
+Job ID: 5777031
+Array Job ID: 5777027_2
+Cluster: i5
+User/Group: sy6u19/mm
+State: COMPLETED (exit code 0)
+Cores: 1
+CPU Utilized: 08:12:49
+CPU Efficiency: 99.26% of 08:16:29 core-walltime
+Job Wall-clock time: 08:16:29
+Memory Utilized: 1.77 GB
+Memory Efficiency: 22.60% of 7.81 GB
+
+==============================================================================
+Running epilogue script on gold51.
+
+Submit time  : 2024-04-05T16:07:15
+Start time   : 2024-04-05T16:07:22
+End time     : 2024-04-06T00:28:35
+Elapsed time : 08:21:13 (Timelimit=2-09:05:00)
+
+Job ID: 5777030
+Array Job ID: 5777027_1
+Cluster: i5
+User/Group: sy6u19/mm
+State: COMPLETED (exit code 0)
+Cores: 1
+CPU Utilized: 08:17:29
+CPU Efficiency: 99.26% of 08:21:13 core-walltime
+Job Wall-clock time: 08:21:13
+Memory Utilized: 1.72 GB
+Memory Efficiency: 21.97% of 7.81 GB
+
+==============================================================================
+Running epilogue script on gold52.
+
+Submit time  : 2024-04-05T16:07:15
+Start time   : 2024-04-05T16:07:22
+End time     : 2024-04-06T00:50:44
+Elapsed time : 08:43:22 (Timelimit=2-09:05:00)
+
+Job ID: 5777032
+Array Job ID: 5777027_3
+Cluster: i5
+User/Group: sy6u19/mm
+State: COMPLETED (exit code 0)
+Cores: 1
+CPU Utilized: 08:40:05
+CPU Efficiency: 99.37% of 08:43:22 core-walltime
+Job Wall-clock time: 08:43:22
+Memory Utilized: 1.65 GB
+Memory Efficiency: 21.15% of 7.81 GB
+
+==============================================================================
+Running epilogue script on gold52.
+
+Submit time  : 2024-04-05T16:07:15
+Start time   : 2024-04-05T16:07:22
+End time     : 2024-04-06T03:21:54
+Elapsed time : 11:14:32 (Timelimit=2-09:05:00)
+
+Job ID: 5777033
+Array Job ID: 5777027_4
+Cluster: i5
+User/Group: sy6u19/mm
+State: COMPLETED (exit code 0)
+Cores: 1
+CPU Utilized: 11:11:30
+CPU Efficiency: 99.55% of 11:14:32 core-walltime
+Job Wall-clock time: 11:14:32
+Memory Utilized: 1.37 GB
+Memory Efficiency: 17.53% of 7.81 GB
+

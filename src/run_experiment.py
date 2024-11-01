@@ -32,6 +32,7 @@ class IncrementalOutputJob(Job):
 
     def __init__(self, algorithm, algorithm_tag, problem_tag, run):
         super(IncrementalOutputJob, self).__init__(algorithm, algorithm_tag, problem_tag, run)
+        self.run_tag = run
         self.algorithm.run_tag = run
 
     def execute(self, output_path):
@@ -40,8 +41,8 @@ class IncrementalOutputJob(Job):
                 file_name = os.path.join(output_path, 'FUN.{}.tsv.{}'.format(self.run_tag, evaluations))
                 print_function_values_to_file(self.algorithm.get_result(), filename=file_name)
 
-                file_name = os.path.join(output_path, 'VAR.{}.tsv.{}'.format(self.run_tag, evaluations))
-                print_variables_to_file(self.algorithm.get_result(), filename=file_name)
+                #file_name = os.path.join(output_path, 'VAR.{}.tsv.{}'.format(self.run_tag, evaluations))
+                #print_variables_to_file(self.algorithm.get_result(), filename=file_name)
 
         self.algorithm.output_job = incremental_output
         self.algorithm.output_path = output_path
@@ -57,8 +58,7 @@ def configure_experiment(population_size, max_evaluations, number_of_runs,
     for run in range(number_of_runs):
         for problem in problems:
             for algorithm in algorithms:
-                constructor, kwargs = algorithm(problem, population_size,
-                                                max_evaluations, e)
+                constructor, kwargs = algorithm(problem, population_size, max_evaluations, e)
                 algorithm = constructor(**kwargs)
                 algorithm.observable.register(observer=ProgressBarObserver(max=max_evaluations))
 
@@ -77,18 +77,17 @@ def configure_experiment(population_size, max_evaluations, number_of_runs,
 
 
 def run_experiment(population_size, max_evaluations, number_of_runs, comment="",
-                   algorithms=[partial(mlsga, [nsgaii]),
-                               partial(mlsga, [omopso]),
+                   algorithms=[partial(cmlsga, [nsgaii]),
+                               partial(cmlsga, [omopso]),
                                nsgaii, moead, omopso],
                    problems=[ZDT1(), ZDT2(), ZDT3(), ZDT4(), ZDT6()]):
 
-    meta = "{}pop-{}evals-{}runs-{}".format(population_size, max_evaluations,
-                                            number_of_runs, comment)
+    meta = "{}evals-{}runs-{}".format(max_evaluations, 30, comment)
 
     jobs = configure_experiment(population_size, max_evaluations, number_of_runs,
                                 algorithms, problems)
 
-    output_directory = "data-{}".format(meta)
+    output_directory = "/ssdfs/users/sy6u19/data-{}".format(meta)
 
     experiment = Experiment(output_directory, jobs)
     experiment.run()
@@ -105,12 +104,12 @@ def parse_algorithms(parameters):
     algorithms = [globals()[name] for name in parameters["algorithms"]]
     if parameters["mlsga"]:
         collectives = [globals()[algorithm] for algorithm in parameters["mlsga"]]
-        algorithms.append(partial(mlsga, collectives))
+        algorithms.append(partial(cmlsga, collectives))
 
     return algorithms
 
 
-def parse_problems(parameters):
+def parse_problems(parameters): 
     problems = []
     for problem in parameters["problems"]:
         problems.append(parse_problem(problem))
@@ -129,53 +128,67 @@ def parse_problem(problem):
 
 if __name__ == "__main__":
 
-    if len(sys.argv) == 3:
-        #json_file = open(sys.argv[1], "r")
-        #parameters = json.loads(json_file.read())
+    #json_file = open(sys.argv[1], "r")
+    #parameters = json.loads(json_file.read())
+    
+    population_size = 100 #parameters["population_size"]
+    max_evaluations = 100000 #parameters["max_evaluations"]
+    number_of_runs = 20 #parameters["number_of_runs"]
+    comment = "corrections-normals" #parameters["comment"]
 
-        #population_size = parameters["population_size"]
-        #max_evaluations = parameters["max_evaluations"]
-        #number_of_runs = parameters["number_of_runs"]
-        #comment = parameters["comment"]
+    parameters = {
+        "algorithms": [sys.argv[1]],
+        "problems": [sys.argv[2]],
+        "mlsga": []
+    }
 
-        #algorithms = parse_algorithms(parameters)
-        #problems = parse_problems(parameters)
+    algorithms = parse_algorithms(parameters)
+    problems = parse_problems(parameters)
 
-        #run_experiment(population_size, max_evaluations, number_of_runs, comment=comment,
-        #               algorithms=algorithms,
-        #               problems=problems)
+    run_experiment(population_size, max_evaluations, number_of_runs, comment=comment,
+                   algorithms=algorithms,
+                   problems=problems)
+    
+    #runs = 20
+    #max_evaluations = 100000
+    #output_path = "new-smac-100k"
+    #
+    #with open(sys.argv[1], "r") as smac_file:
+    #    reader = csv.reader(smac_file)
+    #    for line in reader:
+    #        algorithm = globals()[line[0]]
+    #        problem = parse_problem(line[1])
 
-        runs = 10
-        max_evaluations = 100000
-        output_path = "data-full-smac-100k"
+    #        #epigenetic_proba = float(line[5])
+    #        #block_size = int(line[6])
+    #        
+    #        NA = int(line[5])
+    #        theta = float(line[6])
 
-        algo_type = sys.argv[2]
+    #        population_size = int(line[2])
+    #        crossover_rate = float(line[3])
+    #        mutation_rate = float(line[4])
+    #        #leaders = 0
+    #        e = MapEvaluator(processes=4)
+    #
+    #        #if algo_type == "pso":
+    #        #    leaders = int(line[5])
+    #        #    crossover_rate = leaders
+    #        #else:
+    #        #    crossover_rate = float(line[3])
+    #
+    #        constructor, kwargs = algorithm(problem, population_size, max_evaluations, e, mutation_rate, crossover_rate, NA, theta)
+    #        
+    #        jobs = []
+    #        for run in range(runs):
+    #            algorithm = constructor(**kwargs)
+    #            #if epigenetic_proba != 0 and block_size != 0:
+    #            #    algorithm = constructor(epigenetic_proba, block_size, **kwargs)
+    #            #else:
+    #            #    algorithm = constructor(**kwargs)
 
-        with open(sys.argv[1], "r") as smac_file:
-            reader = csv.reader(smac_file)
-            for line in reader:
-                algorithm = globals()[line[0]]
-                problem = parse_problem(line[1])
-                population_size = int(line[2])
-                crossover_rate = 0
-                mutation_rate = float(line[4])
-                leaders = 0
-                e = MapEvaluator(processes=4)
+    #            jobs.append(IncrementalOutputJob(algorithm, algorithm.get_name(), 
+    #                            problem.get_name(), run))
 
-                if algo_type == "pso":
-                    leaders = int(line[5])
-                    crossover_rate = leaders
-                else:
-                    crossover_rate = float(line[3])
-
-                constructor, kwargs = algorithm(problem, population_size, max_evaluations,
-                                                e, mutation_rate, crossover_rate)
-                algorithm = constructor(**kwargs)
-
-                jobs = [Job(algorithm, algorithm.get_name(), problem.get_name(), run)
-                        for run in range(runs)]
-                experiment = Experiment(output_path, jobs)
-                experiment.run()
-
-    else:
-        print_usage()
+    #        experiment = Experiment(output_path, jobs)
+    #        experiment.run()

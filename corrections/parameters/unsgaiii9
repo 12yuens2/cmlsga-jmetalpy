@@ -1,0 +1,10 @@
+{
+    "population_size": 100,
+    "max_evaluations": 100000,
+    "number_of_runs": 30,
+    "comment": "corrections-normals",
+
+    "mlsga": [],
+    "algorithms": ["nsgaiii"],
+    "problems": ["DASCMOP1(6)","DASCMOP2(6)","DASCMOP3(6)","DASCMOP4(6)","DASCMOP5(6)","DASCMOP6(6)"]
+}

@@ -1,0 +1,128 @@
+Running SLURM prolog script on gold51.cluster.local
+===============================================================================
+Job started on Sat May 18 14:37:07 BST 2024
+Job ID          : 6004931
+Job name        : omopso-DASCMOP-6.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/slurm
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/slurm/omopso-DASCMOP-6.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold51
+Job Output Follows ...
+===============================================================================
+Running SLURM prolog script on gold51.cluster.local
+===============================================================================
+Job started on Sat May 18 14:37:07 BST 2024
+Job ID          : 5983975
+Job name        : omopso-DASCMOP-6.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/slurm
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/slurm/omopso-DASCMOP-6.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold51
+Job Output Follows ...
+===============================================================================
+==============================================================================
+Running epilogue script on gold51.
+
+Submit time  : 2024-05-13T13:10:30
+Start time   : 2024-05-18T14:25:06
+End time     : 2024-05-18T14:39:04
+Elapsed time : 00:13:58 (Timelimit=2-11:55:00)
+
+Job ID: 6004915
+Array Job ID: 5983975_1
+Cluster: i5
+User/Group: sy6u19/mm
+State: COMPLETED (exit code 0)
+Cores: 1
+CPU Utilized: 00:12:33
+CPU Efficiency: 89.86% of 00:13:58 core-walltime
+Job Wall-clock time: 00:13:58
+Memory Utilized: 1.39 GB
+Memory Efficiency: 17.75% of 7.81 GB
+
+==============================================================================
+Running epilogue script on gold52.
+
+Submit time  : 2024-05-13T13:10:30
+Start time   : 2024-05-18T14:25:06
+End time     : 2024-05-18T14:42:29
+Elapsed time : 00:17:23 (Timelimit=2-11:55:00)
+
+Job ID: 6004917
+Array Job ID: 5983975_3
+Cluster: i5
+User/Group: sy6u19/mm
+State: COMPLETED (exit code 0)
+Cores: 1
+CPU Utilized: 00:15:30
+CPU Efficiency: 89.17% of 00:17:23 core-walltime
+Job Wall-clock time: 00:17:23
+Memory Utilized: 1.97 GB
+Memory Efficiency: 25.18% of 7.81 GB
+
+==============================================================================
+Running epilogue script on gold52.
+
+Submit time  : 2024-05-13T13:10:30
+Start time   : 2024-05-18T14:25:06
+End time     : 2024-05-18T14:43:08
+Elapsed time : 00:18:02 (Timelimit=2-11:55:00)
+
+Job ID: 6004916
+Array Job ID: 5983975_2
+Cluster: i5
+User/Group: sy6u19/mm
+State: COMPLETED (exit code 0)
+Cores: 1
+CPU Utilized: 00:16:05
+CPU Efficiency: 89.19% of 00:18:02 core-walltime
+Job Wall-clock time: 00:18:02
+Memory Utilized: 1.43 GB
+Memory Efficiency: 18.26% of 7.81 GB
+
+==============================================================================
+Running epilogue script on gold51.
+
+Submit time  : 2024-05-13T13:10:30
+Start time   : 2024-05-18T14:36:13
+End time     : 2024-05-18T14:49:42
+Elapsed time : 00:13:29 (Timelimit=2-11:55:00)
+
+Job ID: 6004929
+Array Job ID: 5983975_4
+Cluster: i5
+User/Group: sy6u19/mm
+State: COMPLETED (exit code 0)
+Cores: 1
+CPU Utilized: 00:11:36
+CPU Efficiency: 86.03% of 00:13:29 core-walltime
+Job Wall-clock time: 00:13:29
+Memory Utilized: 1.12 GB
+Memory Efficiency: 14.38% of 7.81 GB
+
+==============================================================================
+Running epilogue script on gold51.
+
+Submit time  : 2024-05-13T13:10:30
+Start time   : 2024-05-18T14:37:07
+End time     : 2024-05-18T14:50:00
+Elapsed time : 00:12:53 (Timelimit=2-11:55:00)
+
+Job ID: 6004931
+Array Job ID: 5983975_5
+Cluster: i5
+User/Group: sy6u19/mm
+State: COMPLETED (exit code 0)
+Cores: 1
+CPU Utilized: 00:11:38
+CPU Efficiency: 90.30% of 00:12:53 core-walltime
+Job Wall-clock time: 00:12:53
+Memory Utilized: 1.12 GB
+Memory Efficiency: 14.29% of 7.81 GB
+

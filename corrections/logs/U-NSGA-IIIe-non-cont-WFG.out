@@ -1,0 +1,215 @@
+Running SLURM prolog script on gold51.cluster.local
+===============================================================================
+Job started on Sun Sep 29 21:16:53 BST 2024
+Job ID          : 6604747
+Job name        : U-NSGA-IIIe-non-cont-WFG.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/summary-slurm
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/summary-slurm/U-NSGA-IIIe-non-cont-WFG.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold51
+Job Output Follows ...
+===============================================================================
+Running SLURM prolog script on gold51.cluster.local
+===============================================================================
+Job started on Sun Sep 29 21:16:53 BST 2024
+Job ID          : 6604746
+Job name        : U-NSGA-IIIe-non-cont-WFG.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/summary-slurm
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/summary-slurm/U-NSGA-IIIe-non-cont-WFG.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold51
+Job Output Follows ...
+===============================================================================
+/ssdfs/users/sy6u19/data-100000evals-30runs-corrections-normals/U-NSGA-IIIe-non-cont/WFG8
+U-NSGA-IIIe-non-cont, WFG8
+U-NSGA-IIIe-non-cont, WFG8
+/ssdfs/users/sy6u19/data-100000evals-30runs-corrections-normals/U-NSGA-IIIe-non-cont/WFG9
+U-NSGA-IIIe-non-cont, WFG9
+U-NSGA-IIIe-non-cont, WFG9
+/ssdfs/users/sy6u19/data-100000evals-30runs-corrections-normals/U-NSGA-IIIe-non-cont/WFG6
+U-NSGA-IIIe-non-cont, WFG6
+U-NSGA-IIIe-non-cont, WFG6
+/ssdfs/users/sy6u19/data-100000evals-30runs-corrections-normals/U-NSGA-IIIe-non-cont/WFG3
+U-NSGA-IIIe-non-cont, WFG3
+U-NSGA-IIIe-non-cont, WFG3
+/ssdfs/users/sy6u19/data-100000evals-30runs-corrections-normals/U-NSGA-IIIe-non-cont/WFG5
+U-NSGA-IIIe-non-cont, WFG5
+U-NSGA-IIIe-non-cont, WFG5
+/ssdfs/users/sy6u19/data-100000evals-30runs-corrections-normals/U-NSGA-IIIe-non-cont/WFG2
+U-NSGA-IIIe-non-cont, WFG2
+U-NSGA-IIIe-non-cont, WFG2
+/ssdfs/users/sy6u19/data-100000evals-30runs-corrections-normals/U-NSGA-IIIe-non-cont/WFG7
+U-NSGA-IIIe-non-cont, WFG7
+U-NSGA-IIIe-non-cont, WFG7
+/ssdfs/users/sy6u19/data-100000evals-30runs-corrections-normals/U-NSGA-IIIe-non-cont/WFG4
+U-NSGA-IIIe-non-cont, WFG4
+U-NSGA-IIIe-non-cont, WFG4
+/ssdfs/users/sy6u19/data-100000evals-30runs-corrections-normals/U-NSGA-IIIe-non-cont/WFG1
+U-NSGA-IIIe-non-cont, WFG1
+U-NSGA-IIIe-non-cont, WFG1
+==============================================================================
+Running epilogue script on gold52.
+
+Submit time  : 2024-09-29T19:10:40
+Start time   : 2024-09-29T21:16:52
+End time     : 2024-09-29T21:16:55
+Elapsed time : 00:00:03 (Timelimit=1-23:55:00)
+
+Job ID: 6604750
+Array Job ID: 6604033_8
+Cluster: i5
+User/Group: sy6u19/mm
+State: FAILED (exit code 1)
+Cores: 1
+CPU Utilized: 00:00:03
+CPU Efficiency: 100.00% of 00:00:03 core-walltime
+Job Wall-clock time: 00:00:03
+Memory Utilized: 2.54 MB
+Memory Efficiency: 0.03% of 7.81 GB
+
+==============================================================================
+==============================================================================
+==============================================================================
+Running epilogue script on gold51.
+Running epilogue script on gold51.
+
+Running epilogue script on gold51.
+
+
+==============================================================================
+Running epilogue script on gold51.
+
+Submit time  : 2024-09-29T19:10:40
+==============================================================================
+Running epilogue script on gold51.
+
+==============================================================================
+Running epilogue script on gold51.
+
+Submit time  : 2024-09-29T19:10:40
+Submit time  : 2024-09-29T19:10:40
+Submit time  : 2024-09-29T19:10:40
+Start time   : 2024-09-29T21:16:52
+Submit time  : 2024-09-29T19:10:40
+Start time   : 2024-09-29T21:16:52
+Submit time  : 2024-09-29T19:10:40
+Start time   : 2024-09-29T21:16:52
+Start time   : 2024-09-29T21:16:52
+End time     : 2024-09-29T21:17:00
+End time     : 2024-09-29T21:17:00
+Start time   : 2024-09-29T21:16:52
+End time     : 2024-09-29T21:17:00
+End time     : 2024-09-29T21:17:00
+Start time   : 2024-09-29T21:16:52
+Elapsed time : 00:00:08 End time     : 2024-09-29T21:17:00
+Elapsed time : 00:00:08 Elapsed time : 00:00:08 Elapsed time : 00:00:08 End time     : 2024-09-29T21:17:00
+(Timelimit=1-23:55:00)
+
+Elapsed time : 00:00:08 (Timelimit=1-23:55:00)
+
+(Timelimit=1-23:55:00)
+
+(Timelimit=1-23:55:00)
+
+Elapsed time : 00:00:08 (Timelimit=1-23:55:00)
+
+(Timelimit=1-23:55:00)
+
+==============================================================================
+Running epilogue script on gold51.
+
+Submit time  : 2024-09-29T19:10:40
+Start time   : 2024-09-29T21:16:52
+Job ID: 6604744
+Array Job ID: 6604033_2
+Cluster: i5
+User/Group: sy6u19/mm
+State: FAILED (exit code 1)
+Cores: 1
+CPU Utilized: 00:00:03
+CPU Efficiency: 37.50% of 00:00:08 core-walltime
+Job Wall-clock time: 00:00:08
+Memory Utilized: 2.36 MB
+Memory Efficiency: 0.03% of 7.81 GB
+Job ID: 6604748
+Array Job ID: 6604033_6
+Cluster: i5
+User/Group: sy6u19/mm
+State: FAILED (exit code 1)
+Cores: 1
+CPU Utilized: 00:00:03
+CPU Efficiency: 37.50% of 00:00:08 core-walltime
+Job Wall-clock time: 00:00:08
+Memory Utilized: 2.35 MB
+Memory Efficiency: 0.03% of 7.81 GB
+
+Job ID: 6604745
+Array Job ID: 6604033_3
+Cluster: i5
+User/Group: sy6u19/mm
+State: FAILED (exit code 1)
+Cores: 1
+CPU Utilized: 00:00:03
+CPU Efficiency: 37.50% of 00:00:08 core-walltime
+Job Wall-clock time: 00:00:08
+Memory Utilized: 2.35 MB
+Memory Efficiency: 0.03% of 7.81 GB
+Job ID: 6604743
+Array Job ID: 6604033_1
+Cluster: i5
+User/Group: sy6u19/mm
+State: FAILED (exit code 1)
+Cores: 1
+CPU Utilized: 00:00:03
+CPU Efficiency: 37.50% of 00:00:08 core-walltime
+Job Wall-clock time: 00:00:08
+Memory Utilized: 2.35 MB
+Memory Efficiency: 0.03% of 7.81 GB
+
+
+
+Job ID: 6604749
+Array Job ID: 6604033_7
+Cluster: i5
+User/Group: sy6u19/mm
+State: FAILED (exit code 1)
+Cores: 1
+CPU Utilized: 00:00:03
+CPU Efficiency: 37.50% of 00:00:08 core-walltime
+Job Wall-clock time: 00:00:08
+Memory Utilized: 2.35 MB
+Memory Efficiency: 0.03% of 7.81 GB
+End time     : 2024-09-29T21:17:00
+
+Job ID: 6604747
+Array Job ID: 6604033_5
+Cluster: i5
+User/Group: sy6u19/mm
+State: FAILED (exit code 1)
+Cores: 1
+CPU Utilized: 00:00:03
+CPU Efficiency: 37.50% of 00:00:08 core-walltime
+Job Wall-clock time: 00:00:08
+Memory Utilized: 2.35 MB
+Memory Efficiency: 0.03% of 7.81 GB
+
+Elapsed time : 00:00:08 (Timelimit=1-23:55:00)
+
+Job ID: 6604746
+Array Job ID: 6604033_4
+Cluster: i5
+User/Group: sy6u19/mm
+State: FAILED (exit code 1)
+Cores: 1
+CPU Utilized: 00:00:03
+CPU Efficiency: 37.50% of 00:00:08 core-walltime
+Job Wall-clock time: 00:00:08
+Memory Utilized: 2.35 MB
+Memory Efficiency: 0.03% of 7.81 GB
+

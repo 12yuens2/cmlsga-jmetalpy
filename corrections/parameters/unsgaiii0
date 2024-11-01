@@ -1,0 +1,10 @@
+{
+    "population_size": 100,
+    "max_evaluations": 100000,
+    "number_of_runs": 30,
+    "comment": "corrections-normals",
+
+    "mlsga": [],
+    "algorithms": ["nsgaiii"],
+    "problems": ["ZDT1","ZDT2","ZDT3","ZDT4","ZDT6"]
+}

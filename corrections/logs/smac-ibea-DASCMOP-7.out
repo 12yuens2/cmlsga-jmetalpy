@@ -1,0 +1,190 @@
+Running SLURM prolog script on gold55.cluster.local
+===============================================================================
+Job started on Mon Aug  5 11:14:02 BST 2024
+Job ID          : 6364398
+Job name        : ibea-DASCMOP-7.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/smac-slurm
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/smac-slurm/ibea-DASCMOP-7.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold55
+Job Output Follows ...
+===============================================================================
+Running SLURM prolog script on gold55.cluster.local
+===============================================================================
+Job started on Mon Aug  5 11:14:02 BST 2024
+Job ID          : 6364401
+Job name        : ibea-DASCMOP-7.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/smac-slurm
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/smac-slurm/ibea-DASCMOP-7.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold55
+Job Output Follows ...
+===============================================================================
+Running SLURM prolog script on gold55.cluster.local
+===============================================================================
+Job started on Mon Aug  5 11:14:02 BST 2024
+Job ID          : 6364399
+Job name        : ibea-DASCMOP-7.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/smac-slurm
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/smac-slurm/ibea-DASCMOP-7.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold55
+Job Output Follows ...
+===============================================================================
+Running SLURM prolog script on gold55.cluster.local
+===============================================================================
+Job started on Mon Aug  5 11:14:02 BST 2024
+Job ID          : 6364402
+Job name        : ibea-DASCMOP-7.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/smac-slurm
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/smac-slurm/ibea-DASCMOP-7.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold55
+Job Output Follows ...
+===============================================================================
+Running SLURM prolog script on gold55.cluster.local
+===============================================================================
+Job started on Mon Aug  5 11:14:02 BST 2024
+Job ID          : 6364400
+Job name        : ibea-DASCMOP-7.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/smac-slurm
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/smac-slurm/ibea-DASCMOP-7.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold55
+Job Output Follows ...
+===============================================================================
+Running SLURM prolog script on gold55.cluster.local
+===============================================================================
+Job started on Mon Aug  5 11:14:02 BST 2024
+Job ID          : 6364377
+Job name        : ibea-DASCMOP-7.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/smac-slurm
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/smac-slurm/ibea-DASCMOP-7.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold55
+Job Output Follows ...
+===============================================================================
+start
+start
+start
+start
+start
+start
+==============================================================================
+Running epilogue script on gold55.
+
+Submit time  : 2024-08-05T11:12:55
+Start time   : 2024-08-05T11:14:02
+End time     : 2024-08-06T11:24:22
+Elapsed time : 1-00:10:20 (Timelimit=2-01:55:00)
+
+Job ID: 6364402
+Array Job ID: 6364377_5
+Cluster: i5
+User/Group: sy6u19/mm
+State: COMPLETED (exit code 0)
+Cores: 1
+CPU Utilized: 1-00:06:27
+CPU Efficiency: 99.73% of 1-00:10:20 core-walltime
+Job Wall-clock time: 1-00:10:20
+Memory Utilized: 185.91 MB
+Memory Efficiency: 2.32% of 7.81 GB
+
+==============================================================================
+Running epilogue script on gold55.
+
+Submit time  : 2024-08-05T11:12:55
+Start time   : 2024-08-05T11:14:02
+End time     : 2024-08-06T11:33:25
+Elapsed time : 1-00:19:23 (Timelimit=2-01:55:00)
+
+Job ID: 6364398
+Array Job ID: 6364377_1
+Cluster: i5
+User/Group: sy6u19/mm
+State: COMPLETED (exit code 0)
+Cores: 1
+CPU Utilized: 1-00:15:33
+CPU Efficiency: 99.74% of 1-00:19:23 core-walltime
+Job Wall-clock time: 1-00:19:23
+Memory Utilized: 1.05 GB
+Memory Efficiency: 13.41% of 7.81 GB
+
+==============================================================================
+Running epilogue script on gold55.
+
+Submit time  : 2024-08-05T11:12:55
+Start time   : 2024-08-05T11:14:02
+End time     : 2024-08-06T11:33:27
+Elapsed time : 1-00:19:25 (Timelimit=2-01:55:00)
+
+Job ID: 6364401
+Array Job ID: 6364377_4
+Cluster: i5
+User/Group: sy6u19/mm
+State: COMPLETED (exit code 0)
+Cores: 1
+CPU Utilized: 1-00:15:35
+CPU Efficiency: 99.74% of 1-00:19:25 core-walltime
+Job Wall-clock time: 1-00:19:25
+Memory Utilized: 181.47 MB
+Memory Efficiency: 2.27% of 7.81 GB
+
+==============================================================================
+Running epilogue script on gold55.
+
+Submit time  : 2024-08-05T11:12:55
+Start time   : 2024-08-05T11:14:02
+End time     : 2024-08-06T11:34:07
+Elapsed time : 1-00:20:05 (Timelimit=2-01:55:00)
+
+Job ID: 6364399
+Array Job ID: 6364377_2
+Cluster: i5
+User/Group: sy6u19/mm
+State: COMPLETED (exit code 0)
+Cores: 1
+CPU Utilized: 1-00:16:14
+CPU Efficiency: 99.74% of 1-00:20:05 core-walltime
+Job Wall-clock time: 1-00:20:05
+Memory Utilized: 182.21 MB
+Memory Efficiency: 2.28% of 7.81 GB
+
+==============================================================================
+Running epilogue script on gold55.
+
+Submit time  : 2024-08-05T11:12:55
+Start time   : 2024-08-05T11:14:02
+End time     : 2024-08-06T11:55:21
+Elapsed time : 1-00:41:19 (Timelimit=2-01:55:00)
+
+Job ID: 6364400
+Array Job ID: 6364377_3
+Cluster: i5
+User/Group: sy6u19/mm
+State: COMPLETED (exit code 0)
+Cores: 1
+CPU Utilized: 1-00:37:20
+CPU Efficiency: 99.73% of 1-00:41:19 core-walltime
+Job Wall-clock time: 1-00:41:19
+Memory Utilized: 868.82 MB
+Memory Efficiency: 10.86% of 7.81 GB
+

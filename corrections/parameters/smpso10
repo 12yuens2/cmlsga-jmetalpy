@@ -1,0 +1,10 @@
+{
+    "population_size": 100,
+    "max_evaluations": 100000,
+    "number_of_runs": 30,
+    "comment": "corrections-normals",
+
+    "mlsga": [],
+    "algorithms": ["smpso"],
+    "problems": ["DASCMOP1(7)","DASCMOP2(7)","DASCMOP3(7)","DASCMOP4(7)","DASCMOP5(7)","DASCMOP6(7)"]
+}

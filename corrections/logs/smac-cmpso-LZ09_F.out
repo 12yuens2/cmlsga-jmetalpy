@@ -1,0 +1,210 @@
+Running SLURM prolog script on gold51.cluster.local
+===============================================================================
+Job started on Thu Jul 11 09:53:42 BST 2024
+Job ID          : 6235938
+Job name        : cmpso-LZ09_F.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/smac-slurm
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/smac-slurm/cmpso-LZ09_F.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold51
+Job Output Follows ...
+===============================================================================
+Running SLURM prolog script on gold52.cluster.local
+===============================================================================
+Job started on Thu Jul 11 09:53:42 BST 2024
+Job ID          : 6235939
+Job name        : cmpso-LZ09_F.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/smac-slurm
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/smac-slurm/cmpso-LZ09_F.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold52
+Job Output Follows ...
+===============================================================================
+Running SLURM prolog script on gold52.cluster.local
+===============================================================================
+Job started on Thu Jul 11 09:53:42 BST 2024
+Job ID          : 6226287
+Job name        : cmpso-LZ09_F.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/smac-slurm
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/smac-slurm/cmpso-LZ09_F.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold52
+Job Output Follows ...
+===============================================================================
+start
+start
+start
+start
+start
+start
+start
+start
+==============================================================================
+Running epilogue script on gold54.
+
+Submit time  : 2024-07-10T09:50:09
+Start time   : 2024-07-10T09:50:42
+End time     : 2024-07-11T15:25:54
+Elapsed time : 1-05:35:12 (Timelimit=2-01:55:00)
+
+Job ID: 6226326
+Array Job ID: 6226287_1
+Cluster: i5
+User/Group: sy6u19/mm
+State: COMPLETED (exit code 0)
+Cores: 1
+CPU Utilized: 1-05:30:11
+CPU Efficiency: 99.72% of 1-05:35:12 core-walltime
+Job Wall-clock time: 1-05:35:12
+Memory Utilized: 192.18 MB
+Memory Efficiency: 2.40% of 7.81 GB
+
+==============================================================================
+Running epilogue script on gold52.
+
+Submit time  : 2024-07-10T09:50:09
+Start time   : 2024-07-11T09:52:42
+End time     : 2024-07-12T09:55:12
+Elapsed time : 1-00:02:30 (Timelimit=2-01:55:00)
+
+Job ID: 6235933
+Array Job ID: 6226287_3
+Cluster: i5
+User/Group: sy6u19/mm
+State: COMPLETED (exit code 0)
+Cores: 1
+CPU Utilized: 23:57:08
+CPU Efficiency: 99.63% of 1-00:02:30 core-walltime
+Job Wall-clock time: 1-00:02:30
+Memory Utilized: 1.88 GB
+Memory Efficiency: 24.11% of 7.81 GB
+
+==============================================================================
+Running epilogue script on gold51.
+
+Submit time  : 2024-07-10T09:50:09
+Start time   : 2024-07-11T09:53:42
+End time     : 2024-07-12T09:56:09
+Elapsed time : 1-00:02:27 (Timelimit=2-01:55:00)
+
+Job ID: 6235938
+Array Job ID: 6226287_7
+Cluster: i5
+User/Group: sy6u19/mm
+State: COMPLETED (exit code 0)
+Cores: 1
+CPU Utilized: 23:56:18
+CPU Efficiency: 99.57% of 1-00:02:27 core-walltime
+Job Wall-clock time: 1-00:02:27
+Memory Utilized: 1.90 GB
+Memory Efficiency: 24.27% of 7.81 GB
+
+==============================================================================
+Running epilogue script on gold52.
+
+Submit time  : 2024-07-10T09:50:09
+Start time   : 2024-07-11T09:53:42
+End time     : 2024-07-12T09:56:12
+Elapsed time : 1-00:02:30 (Timelimit=2-01:55:00)
+
+Job ID: 6235939
+Array Job ID: 6226287_8
+Cluster: i5
+User/Group: sy6u19/mm
+State: COMPLETED (exit code 0)
+Cores: 1
+CPU Utilized: 23:57:00
+CPU Efficiency: 99.62% of 1-00:02:30 core-walltime
+Job Wall-clock time: 1-00:02:30
+Memory Utilized: 1.98 GB
+Memory Efficiency: 25.36% of 7.81 GB
+
+==============================================================================
+Running epilogue script on gold52.
+
+Submit time  : 2024-07-10T09:50:09
+Start time   : 2024-07-11T09:52:42
+End time     : 2024-07-12T09:58:29
+Elapsed time : 1-00:05:47 (Timelimit=2-01:55:00)
+
+Job ID: 6235935
+Array Job ID: 6226287_5
+Cluster: i5
+User/Group: sy6u19/mm
+State: COMPLETED (exit code 0)
+Cores: 1
+CPU Utilized: 1-00:00:29
+CPU Efficiency: 99.63% of 1-00:05:47 core-walltime
+Job Wall-clock time: 1-00:05:47
+Memory Utilized: 1.89 GB
+Memory Efficiency: 24.14% of 7.81 GB
+
+==============================================================================
+Running epilogue script on gold52.
+
+Submit time  : 2024-07-10T09:50:09
+Start time   : 2024-07-11T09:52:42
+End time     : 2024-07-12T10:04:24
+Elapsed time : 1-00:11:42 (Timelimit=2-01:55:00)
+
+Job ID: 6235934
+Array Job ID: 6226287_4
+Cluster: i5
+User/Group: sy6u19/mm
+State: COMPLETED (exit code 0)
+Cores: 1
+CPU Utilized: 1-00:06:20
+CPU Efficiency: 99.63% of 1-00:11:42 core-walltime
+Job Wall-clock time: 1-00:11:42
+Memory Utilized: 1.90 GB
+Memory Efficiency: 24.36% of 7.81 GB
+
+==============================================================================
+Running epilogue script on gold52.
+
+Submit time  : 2024-07-10T09:50:09
+Start time   : 2024-07-11T09:52:42
+End time     : 2024-07-12T10:10:42
+Elapsed time : 1-00:18:00 (Timelimit=2-01:55:00)
+
+Job ID: 6235932
+Array Job ID: 6226287_2
+Cluster: i5
+User/Group: sy6u19/mm
+State: COMPLETED (exit code 0)
+Cores: 1
+CPU Utilized: 1-00:12:23
+CPU Efficiency: 99.61% of 1-00:18:00 core-walltime
+Job Wall-clock time: 1-00:18:00
+Memory Utilized: 1.94 GB
+Memory Efficiency: 24.81% of 7.81 GB
+
+==============================================================================
+Running epilogue script on gold51.
+
+Submit time  : 2024-07-10T09:50:09
+Start time   : 2024-07-11T09:52:57
+End time     : 2024-07-13T11:48:25
+Elapsed time : 2-01:55:28 (Timelimit=2-01:55:00)
+
+Job ID: 6235936
+Array Job ID: 6226287_6
+Cluster: i5
+User/Group: sy6u19/mm
+State: TIMEOUT (exit code 0)
+Cores: 1
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 2-01:55:28 core-walltime
+Job Wall-clock time: 2-01:55:28
+Memory Utilized: 195.03 MB
+Memory Efficiency: 2.44% of 7.81 GB
+

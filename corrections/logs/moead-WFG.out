@@ -1,0 +1,252 @@
+Running SLURM prolog script on gold52.cluster.local
+===============================================================================
+Job started on Mon Aug 19 12:31:26 BST 2024
+Job ID          : 6462632
+Job name        : moead-WFG.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/slurm
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/slurm/moead-WFG.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold52
+Job Output Follows ...
+===============================================================================
+Running SLURM prolog script on gold52.cluster.local
+===============================================================================
+Job started on Mon Aug 19 12:31:26 BST 2024
+Job ID          : 6462631
+Job name        : moead-WFG.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/slurm
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/slurm/moead-WFG.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold52
+Job Output Follows ...
+===============================================================================
+Running SLURM prolog script on gold52.cluster.local
+===============================================================================
+Job started on Mon Aug 19 12:31:26 BST 2024
+Job ID          : 6462633
+Job name        : moead-WFG.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/slurm
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/slurm/moead-WFG.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold52
+Job Output Follows ...
+===============================================================================
+Running SLURM prolog script on gold52.cluster.local
+===============================================================================
+Job started on Mon Aug 19 12:31:26 BST 2024
+Job ID          : 6462634
+Job name        : moead-WFG.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/slurm
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/slurm/moead-WFG.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold52
+Job Output Follows ...
+===============================================================================
+Running SLURM prolog script on gold53.cluster.local
+===============================================================================
+Job started on Mon Aug 19 12:31:26 BST 2024
+Job ID          : 6462635
+Job name        : moead-WFG.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/slurm
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/slurm/moead-WFG.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold53
+Job Output Follows ...
+===============================================================================
+Running SLURM prolog script on gold53.cluster.local
+===============================================================================
+Job started on Mon Aug 19 12:31:26 BST 2024
+Job ID          : 6462636
+Job name        : moead-WFG.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/slurm
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/slurm/moead-WFG.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold53
+Job Output Follows ...
+===============================================================================
+Running SLURM prolog script on gold53.cluster.local
+===============================================================================
+Job started on Mon Aug 19 12:31:26 BST 2024
+Job ID          : 6462637
+Job name        : moead-WFG.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/slurm
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/slurm/moead-WFG.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold53
+Job Output Follows ...
+===============================================================================
+Running SLURM prolog script on gold53.cluster.local
+===============================================================================
+Job started on Mon Aug 19 12:31:26 BST 2024
+Job ID          : 6462630
+Job name        : moead-WFG.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/slurm
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/slurm/moead-WFG.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold53
+Job Output Follows ...
+===============================================================================
+==============================================================================
+Running epilogue script on gold52.
+
+Submit time  : 2024-08-19T12:31:18
+Start time   : 2024-08-19T12:31:25
+End time     : 2024-08-19T12:55:00
+Elapsed time : 00:23:35 (Timelimit=1-23:55:00)
+
+Job ID: 6462633
+Array Job ID: 6462630_4
+Cluster: i5
+User/Group: sy6u19/mm
+State: COMPLETED (exit code 0)
+Cores: 1
+CPU Utilized: 00:21:41
+CPU Efficiency: 91.94% of 00:23:35 core-walltime
+Job Wall-clock time: 00:23:35
+Memory Utilized: 1.05 GB
+Memory Efficiency: 13.39% of 7.81 GB
+
+==============================================================================
+Running epilogue script on gold52.
+
+Submit time  : 2024-08-19T12:31:18
+Start time   : 2024-08-19T12:31:25
+End time     : 2024-08-19T12:56:26
+Elapsed time : 00:25:01 (Timelimit=1-23:55:00)
+
+Job ID: 6462631
+Array Job ID: 6462630_2
+Cluster: i5
+User/Group: sy6u19/mm
+State: COMPLETED (exit code 0)
+Cores: 1
+CPU Utilized: 00:23:05
+CPU Efficiency: 92.27% of 00:25:01 core-walltime
+Job Wall-clock time: 00:25:01
+Memory Utilized: 1.05 GB
+Memory Efficiency: 13.40% of 7.81 GB
+
+==============================================================================
+Running epilogue script on gold53.
+
+Submit time  : 2024-08-19T12:31:18
+Start time   : 2024-08-19T12:31:25
+End time     : 2024-08-19T12:57:05
+Elapsed time : 00:25:40 (Timelimit=1-23:55:00)
+
+Job ID: 6462637
+Array Job ID: 6462630_8
+Cluster: i5
+User/Group: sy6u19/mm
+State: COMPLETED (exit code 0)
+Cores: 1
+CPU Utilized: 00:23:47
+CPU Efficiency: 92.66% of 00:25:40 core-walltime
+Job Wall-clock time: 00:25:40
+Memory Utilized: 1.05 GB
+Memory Efficiency: 13.48% of 7.81 GB
+
+==============================================================================
+Running epilogue script on gold53.
+
+Submit time  : 2024-08-19T12:31:18
+Start time   : 2024-08-19T12:31:25
+End time     : 2024-08-19T12:57:16
+Elapsed time : 00:25:51 (Timelimit=1-23:55:00)
+
+Job ID: 6462636
+Array Job ID: 6462630_7
+Cluster: i5
+User/Group: sy6u19/mm
+State: COMPLETED (exit code 0)
+Cores: 1
+CPU Utilized: 00:24:01
+CPU Efficiency: 92.91% of 00:25:51 core-walltime
+Job Wall-clock time: 00:25:51
+Memory Utilized: 1.05 GB
+Memory Efficiency: 13.48% of 7.81 GB
+
+==============================================================================
+Running epilogue script on gold53.
+
+Submit time  : 2024-08-19T12:31:18
+Start time   : 2024-08-19T12:31:25
+End time     : 2024-08-19T12:57:26
+Elapsed time : 00:26:01 (Timelimit=1-23:55:00)
+
+Job ID: 6462635
+Array Job ID: 6462630_6
+Cluster: i5
+User/Group: sy6u19/mm
+State: COMPLETED (exit code 0)
+Cores: 1
+CPU Utilized: 00:24:09
+CPU Efficiency: 92.83% of 00:26:01 core-walltime
+Job Wall-clock time: 00:26:01
+Memory Utilized: 1.05 GB
+Memory Efficiency: 13.46% of 7.81 GB
+
+==============================================================================
+Running epilogue script on gold52.
+
+Submit time  : 2024-08-19T12:31:18
+Start time   : 2024-08-19T12:31:25
+End time     : 2024-08-19T12:57:41
+Elapsed time : 00:26:16 (Timelimit=1-23:55:00)
+
+Job ID: 6462632
+Array Job ID: 6462630_3
+Cluster: i5
+User/Group: sy6u19/mm
+State: COMPLETED (exit code 0)
+Cores: 1
+CPU Utilized: 00:24:20
+CPU Efficiency: 92.64% of 00:26:16 core-walltime
+Job Wall-clock time: 00:26:16
+Memory Utilized: 1.05 GB
+Memory Efficiency: 13.50% of 7.81 GB
+
+==============================================================================
+Running epilogue script on gold52.
+
+Submit time  : 2024-08-19T12:31:18
+Start time   : 2024-08-19T12:31:25
+End time     : 2024-08-19T13:02:30
+Elapsed time : 00:31:05 (Timelimit=1-23:55:00)
+
+Job ID: 6462634
+Array Job ID: 6462630_5
+Cluster: i5
+User/Group: sy6u19/mm
+State: COMPLETED (exit code 0)
+Cores: 1
+CPU Utilized: 00:29:21
+CPU Efficiency: 94.42% of 00:31:05 core-walltime
+Job Wall-clock time: 00:31:05
+Memory Utilized: 1.10 GB
+Memory Efficiency: 14.02% of 7.81 GB
+

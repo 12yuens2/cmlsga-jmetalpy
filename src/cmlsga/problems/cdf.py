@@ -130,7 +130,7 @@ class CDF2(CDF):
     def eval_constraints(self, x):
         k = x[1] - math.sin(6 * math.pi * x[0] + (2 * math.pi / self.number_of_variables)) - 0.5 * x[0] + 0.25
 
-        return k / (1 + math.pow(math.e, 4 * abs(k)))
+        return [k / (1 + math.pow(math.e, 4 * abs(k)))]
 
     def pf(self, obj, num_points, time):
         f1 = [0 + i * 1/(num_points - 1) for i in range(num_points)]
@@ -184,7 +184,7 @@ class CDF3(CDF):
     def eval_constraints(self, x):
         k = x[1] - math.pow(x[0], (0.5 * (2 + 3 * (2 - 2) / (self.number_of_variables - 2)) + abs(self.gt)))
 
-        return k
+        return [k]
 
 
     def pf(self, obj, num_points, time):
@@ -234,7 +234,7 @@ class CDF4(CDF):
     def eval_constraints(self, x):
         k = x[0] + x[1] - 1 * abs(math.sin(self.nT * math.pi * (x[0] - x[1] + 1))) - 1
 
-        return k
+        return [k]
 
 
     def pf(self, obj, num_points, time):
@@ -296,7 +296,7 @@ class CDF5(CDF):
     def eval_constraints(self, x):
         k = x[1] + 0.8 * x[0] * math.sin(6 * math.pi * x[0] + (2 * math.pi / self.number_of_variables)) - 0.5 * x[0] + 0.25 - self.gt
 
-        return k
+        return [k]
 
 
     def pf(self, obj, num_points, time):
@@ -421,7 +421,7 @@ class CDF7(CDF):
     def eval_constraints(self, x):
         k = x[0] + x[1] - 2 * abs(self.gt) - 1 * abs(math.sin(self.nT * math.pi * (x[0] - x[1] + 1))) - 1
 
-        return k
+        return [k]
 
 
     def pf(self, obj, num_points, time):
@@ -474,7 +474,7 @@ class CDF8(CDF):
     def eval_constraints(self, x):
         k = x[1] + math.pow(x[0], 0.5) - 1 * math.sin(2 * math.pi * math.pow(x[0], 0.5) - x[1] + 1) - 1
 
-        return k
+        return [k]
 
 
     def pf(self, obj, num_points, time):
@@ -678,7 +678,7 @@ class CDF11(CDF):
     def eval_constraints(self, x):
         k = x[1] - 0.8 * x[0] * math.sin(6 * math.pi * x[0] + (2 * math.pi / self.number_of_variables)) - 0.5 * x[0] + 0.25
 
-        return k
+        return [k]
 
 
     def pf(self, obj, num_points, time):
@@ -737,7 +737,7 @@ class CDF12(CDF):
         N = 2
         k = x[1] + math.sqrt(x[0]) - 1 * math.sin(N * math.pi * (math.sqrt(x[0]) - x[1] + 1)) - 1
 
-        return k / (1 + math.exp(4 * abs(k)))
+        return [k / (1 + math.exp(4 * abs(k)))]
 
 
     def pf(self, obj, num_points, time):
@@ -813,7 +813,7 @@ class CDF13(CDF):
 
         k = x[1] + ht4 * math.pow(x[0], ht5) - math.sin(self.nT * math.pi * (ht4 * math.pow(x[0], ht5) - x[1] + 1)) - 1
 
-        return k
+        return [k]
 
 
     def pf(self, obj, num_points, time):
@@ -868,7 +868,7 @@ class CDF14(CDF):
     def eval_constraints(self, x):
         k = x[0] + x[1] - abs(math.sin(self.nT * math.pi * (x[0] - x[1] + 1))) - 1 + abs(self.gt)
 
-        return k
+        return [k]
 
 
     def pf(self, obj, num_points, time):
@@ -921,7 +921,7 @@ class CDF15(CDF):
     def eval_constraints(self, x):
         k = x[1] + math.pow(x[0], 2) - 1 * math.sin(self.nT * math.pi * (math.pow(x[0], 2) - x[1] + 1 + self.gt)) - 1
 
-        return k
+        return [k]
 
 
     def pf(self, obj, num_points, time):

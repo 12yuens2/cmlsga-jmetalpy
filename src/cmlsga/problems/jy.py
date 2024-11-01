@@ -5,7 +5,7 @@ import numpy as np
 from jmetal.core.problem import FloatProblem, DynamicProblem
 from jmetal.core.solution import FloatSolution
 
-from sympy import sin, pi, cos, floor
+from sympy import sin, pi, cos, floor, symbols
 
 
 class JY(DynamicProblem, FloatProblem):
@@ -24,6 +24,8 @@ class JY(DynamicProblem, FloatProblem):
 
         self.upper_bound = [1] + [1 for _ in range(self.number_of_variables - 1)]
         self.lower_bound = [0] + [-1 for _ in range(self.number_of_variables - 1)]
+
+        self.xvars = symbols("x0:{}".format(self.number_of_variables))
 
 
     def update(self, *args, **kwargs):
@@ -55,11 +57,17 @@ class JY(DynamicProblem, FloatProblem):
 
         return obj1, obj2
 
-    def get_differentials(self, s, at, wt):
-        sum_gx = sum([(s.xvars[i] - self.gt) ** 2 for i in range(1, self.number_of_variables)])
+    def convert_differentials(self, f):
+        return [f.diff(self.xvars[i]) for i in range(0, self.number_of_variables)]
 
-        f0 = (1 + sum_gx) * (s.xvars[0] + at * sin(wt * pi * s.xvars[0]))
-        f1 = (1 + sum_gx) * (1 - s.xvars[0] + at * sin(wt * pi * s.xvars[0]))
+    def get_differentials(self, at, wt):
+        sum_gx = sum([(self.xvars[i] - self.gt) ** 2 for i in range(1, self.number_of_variables)])
+
+        f0 = (1 + sum_gx) * (self.xvars[0] + at * sin(wt * pi * self.xvars[0]))
+        f0 = self.convert_differentials(f0)
+
+        f1 = (1 + sum_gx) * (1 - self.xvars[0] + at * sin(wt * pi * self.xvars[0]))
+        f1 = self.convert_differentials(f1)
 
         return (f0, f1)
 
@@ -84,8 +92,8 @@ class JY1(JY):
     def get_wt(self):
         return 6
 
-    def differentials(self, s):
-        return self.get_differentials(s, self.get_at(), self.get_wt())
+    def differentials(self):
+        return self.get_differentials(self.get_at(), self.get_wt())
 
     def pf(self, obj, num_points, time):
         pass
@@ -104,8 +112,8 @@ class JY2(JY):
     def get_wt(self):
         return math.floor(6 * math.sin(0.5 * math.pi * (self.time - 1)))
 
-    def differentials(self, s):
-        return self.get_differentials(s, self.get_at(), self.get_wt())
+    def differentials(self):
+        return self.get_differentials(self.get_at(), self.get_wt())
     
     def pf(self, obj, num_points, time):
         pass
@@ -140,24 +148,27 @@ class JY3(JY):
         solution.objectives[0] = (1 + sum_gx) * (y0 + self.at * math.sin(wt * math.pi * y0))
         solution.objectives[1] = (1 + sum_gx) * (1 - y0 + self.at * math.sin(wt * math.pi * y0))
 
-    def differentials(self, s):
+    def differentials(self):
         wt = floor(6 * sin(0.5 * pi * (self.time - 1)))
         alpha = floor(100 * (sin(0.5 * pi * self.time) ** 2))
-        y0 = abs(s.xvars[0] * sin((2 * alpha + 0.5) * pi * s.xvars[0]))
+        y0 = abs(self.xvars[0] * sin((2 * alpha + 0.5) * pi * self.xvars[0]))
 
         sum_gx = 0
         for i in range(1, self.number_of_variables):
-            yi = s.xvars[i]
+            yi = self.xvars[i]
             yj = 0
             if i == 1:
                 yj = y0
             else:
-                yj = s.xvars[i - 1]
+                yj = self.xvars[i - 1]
 
             sum_gx += ((yi ** 2 ) - yj) ** 2
 
         f0 = (1 + sum_gx) * (y0 + self.at * sin(wt * pi * y0))
+        f0 = self.convert_differentials(f0)
+
         f1 = (1 + sum_gx) * (1 - y0 + self.at * sin(wt * pi * y0))
+        f1 = self.convert_differentials(f1)
 
         return (f0, f1)
 
@@ -181,8 +192,8 @@ class JY4(JY):
     def get_wt(self):
         return math.pow(10, 1 + abs(self.gt))
 
-    def differentials(self, s):
-        return self.get_differentials(s, self.get_at(), self.get_wt())
+    def differentials(self):
+        return self.get_differentials(self.get_at(), self.get_wt())
 
     def pf(self, obj, num_points, time):
         pass
@@ -202,8 +213,8 @@ class JY5(JY):
     def get_wt(self):
         return 1
 
-    def differentials(self, s):
-        return self.get_differentials(s, self.get_at(), self.get_wt())
+    def differentials(self):
+        return self.get_differentials(self.get_at(), self.get_wt())
 
     def pf(self, obj, num_points, time):
         pass
@@ -230,15 +241,18 @@ class JY6(JY):
         solution.objectives[1] = (1 + sum_gx) * (1 - x[0] + self.at * math.sin(self.wt * math.pi * x[0]))
 
 
-    def differentials(self, s):
+    def differentials(self):
         kt = 2 * math.floor(10 * abs(self.gt))
         sum_gx = 0
         for i in range(1, self.number_of_variables):
-            yi = s.xvars[i] - self.gt
+            yi = self.xvars[i] - self.gt
             sum_gx += 4 * (yi ** 2) - cos(kt * pi * yi) + 1
 
-        f0 = (1 + sum_gx) * (s.xvars[0] + self.at * sin(self.wt * pi * s.xvars[0]))
-        f1 = (1 + sum_gx) * (1 - s.xvars[0] + self.at * sin(self.wt * pi * s.xvars[0]))
+        f0 = (1 + sum_gx) * (self.xvars[0] + self.at * sin(self.wt * pi * self.xvars[0]))
+        f0 = self.convert_differentials(f0)
+
+        f1 = (1 + sum_gx) * (1 - self.xvars[0] + self.at * sin(self.wt * pi * self.xvars[0]))
+        f1 = self.convert_differentials(f1)
 
         return (f0, f1)
 
@@ -270,15 +284,18 @@ class JY7(JY):
         solution.objectives[1] = (1 + sum_gx) * math.pow(1 - x[0] + self.at * math.sin(self.wt * math.pi * x[0]), alpha_t)
 
 
-    def differentials(self, s):
+    def differentials(self):
         alpha_t = 0.2 + 2.8 * abs(self.gt)
         sum_gx = 0
         for i in range(1, self.number_of_variables):
-            yi = s.xvars[i] - self.gt
+            yi = self.xvars[i] - self.gt
             sum_gx += (yi ** 2) - 10 * cos(2 * pi * yi) + 10
 
-        f0 = (1 + sum_gx) * ((s.xvars[0] + self.at * sin(self.wt * pi * s.xvars[0])) ** alpha_t)
-        f1 = (1 + sum_gx) * ((1 - s.xvars[0] + self.at * sin(self.wt * pi * s.xvars[0])) ** alpha_t)
+        f0 = (1 + sum_gx) * ((self.xvars[0] + self.at * sin(self.wt * pi * self.xvars[0])) ** alpha_t)
+        f0 = self.convert_differentials(f0)
+
+        f1 = (1 + sum_gx) * ((1 - self.xvars[0] + self.at * sin(self.wt * pi * self.xvars[0])) ** alpha_t)
+        f1 = self.convert_differentials(f1)
 
         return (f0, f1)
 
@@ -309,14 +326,17 @@ class JY8(JY):
         solution.objectives[1] = (1 + sum_gx) * math.pow(1 - (x[0] + self.at * math.sin(self.wt * math.pi * x[0])), alpha_t)
 
 
-    def differentials(self, s):
+    def differentials(self):
         beta_t = 10 - 9.8 * abs(self.gt)
         alpha_t = 2 / beta_t
 
-        sum_gx = sum([s.xvars[i] ** 2 for i in range(1, self.number_of_variables)])
+        sum_gx = sum([self.xvars[i] ** 2 for i in range(1, self.number_of_variables)])
 
-        f0 = (1 + sum_gx) * ((s.xvars[0] + self.at * sin(self.wt * pi * s.xvars[0])) ** alpha_t)
-        f1 = (1 + sum_gx) * ((1 - (s.xvars[0] + self.at * sin(self.wt * pi * s.xvars[0]))) ** alpha_t)
+        f0 = (1 + sum_gx) * ((self.xvars[0] + self.at * sin(self.wt * pi * self.xvars[0])) ** alpha_t)
+        f0 = self.convert_differentials(f0)
+
+        f1 = (1 + sum_gx) * ((1 - (self.xvars[0] + self.at * sin(self.wt * pi * self.xvars[0]))) ** alpha_t)
+        f1 = self.convert_differentials(f1)
 
         return (f0, f1)
 

@@ -11,7 +11,7 @@ from jmetal.config import store
 from jmetal.core.algorithm import ParticleSwarmOptimization
 from jmetal.operator import PolynomialMutation, UniformMutation
 from jmetal.operator.mutation import NonUniformMutation
-from jmetal.util.archive import CrowdingDistanceArchive
+from jmetal.util.archive import CrowdingDistanceArchive, NonDominatedSolutionsArchive
 from jmetal.util.comparator import DominanceComparator
 from jmetal.util.termination_criterion import StoppingByEvaluations
 
@@ -20,8 +20,8 @@ Extended classes for incremental data output. TODO refactor
 """
 def incremental_stopping_condition_is_met(algo):
     if algo.output_path:
-        if algo.termination_criterion.evaluations / (algo.output_count * 10000) > 1:
-            algo.output_job(algo.output_count * 10000)
+        if algo.termination_criterion.evaluations / (algo.output_count * 1000) > 1:
+            algo.output_job(algo.output_count * 1000)
             algo.output_count += 1
 
     return algo.termination_criterion.is_met
@@ -30,10 +30,11 @@ class IncrementalOMOPSO(OMOPSO):
     def __init__(self, **kwargs):
         super(IncrementalOMOPSO, self).__init__(**kwargs)
 
+        self.solutions_archive = NonDominatedSolutionsArchive()
         self.output_count = 1
 
-    #def stopping_condition_is_met(self):
-    #    return incremental_stopping_condition_is_met(self)
+    def stopping_condition_is_met(self):
+        return incremental_stopping_condition_is_met(self)
 
     def get_observable_data(self):
         return {
@@ -42,12 +43,25 @@ class IncrementalOMOPSO(OMOPSO):
             "SOLUTIONS": self.get_result(),
             "ALL_SOLUTIONS": self.solutions
         }
+
+    def step(self):
+        super(IncrementalOMOPSO, self).step()
+
+        for s in self.epsilon_archive.solution_list:
+            self.solutions_archive.add(s)
+
+    def result(self):
+        return self.solutions_archive.solution_list
+
+    def get_result(self):
+        return self.solutions_archive.solution_list
 
 
 class IncrementalSMPSO(SMPSO):
     def __init__(self, **kwargs):
         super(IncrementalSMPSO, self).__init__(**kwargs)
 
+        self.solutions_archive = NonDominatedSolutionsArchive()
         self.output_count = 1
 
     def get_observable_data(self):
@@ -58,17 +72,44 @@ class IncrementalSMPSO(SMPSO):
             "ALL_SOLUTIONS": self.solutions
         }
 
+    def step(self):
+        super(IncrementalSMPSO, self).step()
+
+        for s in self.leaders.solution_list:
+            self.solutions_archive.add(s)
+
+    def result(self):
+        return self.solutions_archive.solution_list
+
+    def get_result(self):
+        return self.solutions_archive.solution_list
+
     #def stopping_condition_is_met(self):
     #    return incremental_stopping_condition_is_met(self)
+
 
 class IncrementalCMPSO(CMPSO):
     def __init__(self, **kwargs):
         super(IncrementalCMPSO, self).__init__(**kwargs)
 
+        self.solutions_archive = NonDominatedSolutionsArchive()
         self.output_count = 1
 
-    def stopping_condition_is_met(self):
-        return incremental_stopping_condition_is_met(self)
+    def step(self):
+        super(IncrementalCMPSO, self).step()
+
+        for s in self.archive:
+           self.solutions_archive.add(s)
+
+    def result(self):
+        return self.solutions_archive.solution_list
+
+    def get_result(self):
+        return self.solutions_archive.solution_list
+
+    #def stopping_condition_is_met(self):
+    #    return incremental_stopping_condition_is_met(self)
+
 
 class OMOPSOe(OMOPSO):
     def __init__(self, **kwargs):
@@ -146,23 +187,29 @@ class SMPSO_Variant(SMPSO):
         return "SMPSO-e"
 
 
-def omopso(problem, population_size, max_evaluations, evaluator, m, l):
+def omopso(problem, population_size, max_evaluations, evaluator, uniform_m=-1.0, nonuniform_m=-1.0):
+    if uniform_m == -1.0:
+        uniform_m = 1.0 / problem.number_of_variables
+
+    if nonuniform_m == -1.0:
+        nonuniform_m = 1.0 / problem.number_of_variables
+
     return (
-        OMOPSO,
+        IncrementalOMOPSO,
         {
             "problem": problem,
-            "swarm_size": population_size,
+            "swarm_size": 100,
             "epsilon": 0.0075,
             "uniform_mutation": UniformMutation(
-                probability=m, #1.0 / problem.number_of_variables,
+                probability=uniform_m,
                 perturbation=0.5
             ),
             "non_uniform_mutation": NonUniformMutation(
-                probability=1.0 / problem.number_of_variables,
+                probability=nonuniform_m,
                 perturbation=0.5,
                 max_iterations=int(max_evaluations / population_size)
             ),
-            "leaders": CrowdingDistanceArchive(int(l)),#100),
+            "leaders": CrowdingDistanceArchive(population_size),
             "termination_criterion": StoppingByEvaluations(max_evaluations=max_evaluations),
             "swarm_evaluator": evaluator
         }
@@ -192,17 +239,20 @@ def omopsoe(problem, population_size, max_evaluations, evaluator):
     )
 
 
-def smpso(problem, population_size, max_evaluations, evaluator, m, l):
+def smpso(problem, population_size, max_evaluations, evaluator, m=-1.0):
+    if m == -1.0:
+        m = 1.0 / problem.number_of_variables
+
     return (
         IncrementalSMPSO,
         {
             "problem": problem,
-            "swarm_size": population_size,
+            "swarm_size": 100,
             "mutation": PolynomialMutation(
-                probability= m, #1.0 / problem.number_of_variables,
+                probability=m,
                 distribution_index=20
             ),
-            "leaders": CrowdingDistanceArchive(int(l)),
+            "leaders": CrowdingDistanceArchive(population_size),
             "termination_criterion": StoppingByEvaluations(max_evaluations=max_evaluations)
         }
     )
@@ -226,7 +276,7 @@ def smpsoe(problem, population_size, max_evaluations, evaluator):
 
 def cmpso(problem, population_size, max_evaluations, evaluator):
     return (
-        CMPSO,
+        IncrementalCMPSO,
         {
             "problem": problem,
             "swarm_size": population_size,

@@ -1,0 +1,10 @@
+{
+    "population_size": 100,
+    "max_evaluations": 100000,
+    "number_of_runs": 30,
+    "comment": "corrections-normals",
+
+    "mlsga": [],
+    "algorithms": ["nsgaiii"],
+    "problems": ["JY1","JY2","JY3","JY4","JY6","JY7","JY8"]
+}

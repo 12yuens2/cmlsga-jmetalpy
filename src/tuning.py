@@ -17,7 +17,7 @@ from cmlsga.problems.jy import *
 from cmlsga.problems.cdf import *
 
 
-from jmetal.core.quality_indicator import InvertedGenerationalDistance
+from jmetal.core.quality_indicator import InvertedGenerationalDistance, HyperVolume
 from jmetal.lab.experiment import *
 from jmetal.problem.multiobjective.zdt import *
 from jmetal.problem.multiobjective.dtlz import *
@@ -187,7 +187,7 @@ def tae(cfg):
 
     population = cfg["population"]
 
-    if algorithm_name == "nsgaiii":
+    if algorithm_name == "unsgaiii":
         crossover = cfg["crossover"]
         mutation = cfg["mutation"]
         ref_points = cfg["ref_points"]
@@ -243,7 +243,7 @@ def tae(cfg):
 
     #epigenetic constructor
     #algorithm = constructor(epigenetic_proba, block_size, **kwargs)
-    
+
     #non-epigenetic constructor
     algorithm = constructor(**kwargs)
 
@@ -260,18 +260,17 @@ def tae(cfg):
     #                                 summary_filename=summary_filename)
 
     #non-dynamic output
-    generate_summary_from_experiment(output_path, [InvertedGenerationalDistance(None), HyperVolume(None)],
+    generate_summary_from_experiment(output_path, [InvertedGenerationalDistance(None)],
                                      reference_fronts="resources/reference_front",
                                      summary_filename=summary_filename)
 
     igd = compute_mean_indicator(summary_filename, "IGD")
-    hv = compute_mean_indicator(summary_filename, "HV")
 
     # Cleanup
     os.remove(summary_filename)
     shutil.rmtree(output_path)
 
-    return 1 - hv # We want to minimize
+    return igd # We want to minimize
 
 
 def create_configuration(algorithm_name, problem_name, outpath, evaluations):
@@ -292,8 +291,8 @@ def create_configuration(algorithm_name, problem_name, outpath, evaluations):
     problem = parse_problem(problem_name)
 
     # nsgaiii
-    if algorithm_name == "nsgaiii":
-        cs.add_hyperparameter(CategoricalHyperparameter("population", pops, default_value=128))
+    if algorithm_name == "unsgaiii":
+        cs.add_hyperparameter(UniformIntegerHyperparameter("population", 2, 1000, default_value=128))
         cs.add_hyperparameter(UniformFloatHyperparameter("crossover", 0.0, 1.0, default_value=0.9))
         cs.add_hyperparameter(UniformFloatHyperparameter("mutation", 0.0, 1.0, default_value=1.0/problem.number_of_variables))
         cs.add_hyperparameter(UniformIntegerHyperparameter("ref_points", 2, 100, default_value=16))
@@ -329,25 +328,25 @@ def create_configuration(algorithm_name, problem_name, outpath, evaluations):
 
     # ibea
     if algorithm_name == "ibea":
-        cs.add_hyperparameter(CategoricalHyperparameter("population", pops, default_value=100))
+        cs.add_hyperparameter(UniformIntegerHyperparameter("population", 2, 1000, default_value=100))
         cs.add_hyperparameter(UniformFloatHyperparameter("crossover", 0.0, 1.0, default_value=1.0))
         cs.add_hyperparameter(UniformFloatHyperparameter("mutation", 0.0, 1.0, default_value=1.0/problem.number_of_variables))
         cs.add_hyperparameter(UniformFloatHyperparameter("kappa", 0.01, 1.0, default_value=0.05))
 
     # omopso
     if algorithm_name == "omopso":
-        cs.add_hyperparameter(CategoricalHyperparameter("population", pops, default_value=100))
+        cs.add_hyperparameter(UniformIntegerHyperparameter("population", 10, 1000, default_value=100))
         cs.add_hyperparameter(UniformFloatHyperparameter("uniform_mutation", 0.0, 1.0, default_value=1.0/problem.number_of_variables))
         cs.add_hyperparameter(UniformFloatHyperparameter("nonuniform_mutation", 0.0, 1.0, default_value=1.0/problem.number_of_variables))
 
     # smpso
     if algorithm_name == "smpso":
-        cs.add_hyperparameter(CategoricalHyperparameter("population", pops, default_value=100))
+        cs.add_hyperparameter(UniformIntegerHyperparameter("population", 10, 1000, default_value=100))
         cs.add_hyperparameter(UniformFloatHyperparameter("mutation", 0.0, 1.0, default_value=1.0/problem.number_of_variables))
 
     # cmpso
     if algorithm_name == "cmpso":
-         cs.add_hyperparameter(CategoricalHyperparameter("population", pops, default_value=20))
+         cs.add_hyperparameter(UniformIntegerHyperparameter("population", 2, 1000, default_value=20))
 
 
     return cs
@@ -375,7 +374,7 @@ if __name__ == "__main__":
     problem = sys.argv[2]
     evaluations = 100000 #int(sys.argv[4])
 
-    mainpath = "/ssdfs/users/sy6u19/corrections/{}/{}".format(algorithm, problem)
+    mainpath = "/ssdfs/users/sy6u19/corrections-smac/{}/{}".format(algorithm, problem)
     outpath = mainpath + "/data"
 
     cs = create_configuration(algorithm, problem, outpath, evaluations)
@@ -399,9 +398,9 @@ if __name__ == "__main__":
 
     best = smac.optimize()
 
-    with open("smac-normal-corrections.csv", "a") as smac_output:
+    with open("corrections/smac/{}.csv".format(algorithm), "a") as smac_output:
 	# Algorithm, Problem, Population size, Crossover, Mutation, Leaders (for pso), neighour size, selection, F, Epigenetic Prob, Block size
-        smac_output.write("{},{},{}\n".format(algorithm, problem, best))
+        smac_output.write("{}\n{}\n".format(best.get_dictionary().keys(), best.get_dictionary().values()))
 
     #print("Algorithm: {}, Problem: {}".format(algorithm, problem))
     #print("best: population: {}, crossover: {}, mutation: {}, leaders: {}".format(

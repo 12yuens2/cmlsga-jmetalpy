@@ -1,0 +1,10 @@
+{
+    "population_size": 100,
+    "max_evaluations": 100000,
+    "number_of_runs": 30,
+    "comment": "corrections-normals",
+
+    "mlsga": [],
+    "algorithms": ["nsgaiii"],
+    "problems": ["WFG6","WFG7","WFG8","WFG9"]
+}

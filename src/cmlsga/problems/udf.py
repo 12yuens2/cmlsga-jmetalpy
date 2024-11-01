@@ -5,7 +5,7 @@ import numpy as np
 from jmetal.core.problem import FloatProblem, DynamicProblem
 from jmetal.core.solution import FloatSolution
 
-from sympy import sin, pi, cos, ceiling
+from sympy import sin, pi, cos, ceiling, symbols
 
 class UDF(DynamicProblem, FloatProblem):
     def __init__(self):
@@ -24,6 +24,8 @@ class UDF(DynamicProblem, FloatProblem):
         self.upper_bound = [1] + [2 for _ in range(self.number_of_variables - 1)]
         self.lower_bound = [0] + [-1 for _ in range(self.number_of_variables - 1)]
 
+        self.xvars = symbols("x0:{}".format(self.number_of_variables))
+
     def update(self, *args, **kwargs):
        counter = kwargs["COUNTER"]
        self.time = (1.0 / self.nT) * math.floor(counter * 1.0 / self.tau)
@@ -36,6 +38,10 @@ class UDF(DynamicProblem, FloatProblem):
 
     def clear_changed(self):
         self.problem_modified = False
+
+    def convert_differentials(self, f):
+        return [f.diff(self.xvars[i]) for i in range(0, self.number_of_variables)]
+
 
     def evaluate(self, solution):
         pass
@@ -67,11 +73,11 @@ class UDF1(UDF):
         solution.objectives[1] = 1 - x[0] + abs(self.gt) + (2 / size_j2) * j2
 
 
-    def differentials(self, s):
+    def differentials(self):
         size_j1 = j1 = size_j2 = j2 = 0
 
         for i in range(2, self.number_of_variables + 1):
-            y = s.xvars[i - 1] - sin((6 * pi * s.xvars[0]) + (i * pi / self.number_of_variables)) - self.gt
+            y = self.xvars[i - 1] - sin((6 * pi * self.xvars[0]) + (i * pi / self.number_of_variables)) - self.gt
 
             if i % 2 == 1:
                 size_j1 += 1
@@ -80,8 +86,11 @@ class UDF1(UDF):
                 size_j2 += 1
                 j2 += y**2
 
-        f0 = s.xvars[0] + abs(self.gt) + (2 / size_j1) * j1
-        f1 = 1 - s.xvars[0] + abs(self.gt) + (2 / size_j2) * j2
+        f0 = self.xvars[0] + abs(self.gt) + (2 / size_j1) * j1
+        f0 = self.convert_differentials(f0)
+
+        f1 = 1 - self.xvars[0] + abs(self.gt) + (2 / size_j2) * j2
+        f1 = self.convert_differentials(f1)
 
         return (f0, f1)
 
@@ -126,21 +135,24 @@ class UDF2(UDF1):
         solution.objectives[1] = 1 - x[0] + abs(self.gt) + (2 / size_j2) * j2
 
 
-    def differentials(self, s):
+    def differentials(self):
         size_j1 = j1 = size_j2 = j2 = 0
 
         for i in range(2, self.number_of_variables + 1):
-            y = (s.xvars[0] ** (0.5 * (2 + (3 * (i - 2) / (self.number_of_variables - 2)) + self.gt)))
+            y = (self.xvars[0] ** (0.5 * (2 + (3 * (i - 2) / (self.number_of_variables - 2)) + self.gt)))
 
             if i % 2 == 1:
                 size_j1 += 1
-                j1 += (s.xvars[i-1] - y - self.gt)**2 
+                j1 += (self.xvars[i-1] - y - self.gt)**2 
             else:
                 size_j2 += 1
                 j2 += (y - self.gt)**2
 
-        f0 = s.xvars[0] + abs(self.gt) + (2 / size_j1) * j1
-        f1 = 1 - s.xvars[0] + abs(self.gt) + (2 / size_j2) * j2
+        f0 = self.xvars[0] + abs(self.gt) + (2 / size_j1) * j1
+        f0 = self.convert_differentials(f0)
+
+        f1 = 1 - self.xvars[0] + abs(self.gt) + (2 / size_j2) * j2
+        f1 = self.convert_differentials(f1)
 
         return (f0, f1)
 
@@ -180,12 +192,12 @@ class UDF3(UDF):
         solution.objectives[1] = 1 - x[0] + (2 / size_j2) * math.pow(4 * j2 - 2 * mj2 + 2, 2) + maxf
 
 
-    def differentials(self, s):
+    def differentials(self):
         nT = 10
         size_j1 = j1 = mj1 = size_j2 = j2 = mj2 = 0
 
         for i in range(2, self.number_of_variables + 1):
-            y = s.xvars[i - 1] - sin((6 * pi * s.xvars[0]) + (i * pi / self.number_of_variables))
+            y = self.xvars[i - 1] - sin((6 * pi * self.xvars[0]) + (i * pi / self.number_of_variables))
 
             if i % 2 == 1:
                 size_j1 += 1
@@ -196,8 +208,11 @@ class UDF3(UDF):
                 j2 += y**2
                 mj2 *= cos((20 * y * pi) / (i**0.5))
 
-        f0 = s.xvars[0] + (2 / size_j1) * ((4 * j1 - 2 * mj1 + 2) ** 2)
-        f1 = 1 - s.xvars[0] + (2 / size_j2) * ((4 * j2 - 2 * mj2 + 2 )** 2)
+        f0 = self.xvars[0] + (2 / size_j1) * ((4 * j1 - 2 * mj1 + 2) ** 2)
+        f0 = self.convert_differentials(f0)
+
+        f1 = 1 - self.xvars[0] + (2 / size_j2) * ((4 * j2 - 2 * mj2 + 2 )** 2)
+        f1 = self.convert_differentials(f1)
 
         return (f0, f1)
 
@@ -253,13 +268,13 @@ class UDF4(UDF):
         solution.objectives[0] = x[0] + (2 / size_j1) * j1
         solution.objectives[1] = 1 - (mt * math.pow(x[0], mt)) + (2 / size_j2) * j2
 
-    def differentials(self, s):
+    def differentials(self):
         size_j1 = j1 = size_j2 = j2 = 0
         mt = 0.5 + abs(self.gt)
         kt = ceiling(self.number_of_variables * self.gt)
 
         for i in range(2, self.number_of_variables + 1):
-            y = s.xvars[i - 1] - sin((6 * pi * s.xvars[0]) + ((i + kt) * pi) / self.number_of_variables)
+            y = self.xvars[i - 1] - sin((6 * pi * self.xvars[0]) + ((i + kt) * pi) / self.number_of_variables)
 
             if i % 2 == 1:
                 size_j1 += 1
@@ -268,8 +283,11 @@ class UDF4(UDF):
                 size_j2 += 1
                 j2 += y**2
 
-        f0 = s.xvars[0] + (2 / size_j1) * j1
-        f1 = 1 - (mt * (s.xvars[0]**mt)) + (2 / size_j2) * j2
+        f0 = self.xvars[0] + (2 / size_j1) * j1
+        f0 = self.convert_differentials(f0)
+
+        f1 = 1 - (mt * (self.xvars[0]**mt)) + (2 / size_j2) * j2
+        f1 = self.convert_differentials(f1)
 
         return (f0, f1)
 
@@ -316,12 +334,12 @@ class UDF5(UDF4):
         solution.objectives[1] = 1 - (mt * math.pow(x[0], mt)) + (2 / size_j2) * j2
 
 
-    def differentials(self, s):
+    def differentials(self):
         size_j1 = j1 = size_j2 = j2 = 0
         mt = 0.5 + abs(self.gt)
 
         for i in range(2, self.number_of_variables + 1):
-            y = s.xvars[i - 1] - self.gt - (s.xvars[0]**(0.5 * (2 + 3 * (i - 2) / (self.number_of_variables - 2)) + self.gt))
+            y = self.xvars[i - 1] - self.gt - (self.xvars[0]**(0.5 * (2 + 3 * (i - 2) / (self.number_of_variables - 2)) + self.gt))
 
             if i % 2 == 1:
                 size_j1 += 1
@@ -330,8 +348,11 @@ class UDF5(UDF4):
                 size_j2 += 1
                 j2 += y**2
 
-        f0 = s.xvars[0] + (2 / size_j1) * j1
-        f1 = 1 - (mt * (s.xvars[0]**mt)) + (2 / size_j2) * j2
+        f0 = self.xvars[0] + (2 / size_j1) * j1
+        f0 = self.convert_differentials(f0)
+
+        f1 = 1 - (mt * (self.xvars[0]**mt)) + (2 / size_j2) * j2
+        f1 = self.convert_differentials(f1)
 
         return (f0, f1)
 
@@ -371,13 +392,13 @@ class UDF6(UDF):
         solution.objectives[1] = 1 - mt * x[0] + h + (2 / size_j2) * j2
 
 
-    def differentials(self, s):
+    def differentials(self):
         size_j1 = j1 = size_j2 = j2 = 0
-        h = (1 / (2 * self.nT) + 0.1) * abs(sin(2 * self.nT * pi * s.xvars[0]) - abs(2 * self.nT * self.gt))
+        h = (1 / (2 * self.nT) + 0.1) * abs(sin(2 * self.nT * pi * self.xvars[0]) - abs(2 * self.nT * self.gt))
         mt = 0.5 + abs(self.gt)
 
         for i in range(2, self.number_of_variables + 1):
-            y = s.xvars[i - 1] - sin(6 * pi * x[0] + i * pi / self.number_of_variables)
+            y = self.xvars[i - 1] - sin(6 * pi * self.xvars[0] + i * pi / self.number_of_variables)
 
             if i % 2 == 1:
                 size_j1 += 1
@@ -386,8 +407,11 @@ class UDF6(UDF):
                 size_j2 += 1
                 j2 += (2 * (y**2)) - cos(4 * pi * y) + 1
 
-        f0 = s.xvars[0] + h + (2 / size_j1) * j1
-        f1 = 1 - mt * s.xvars[0] + h + (2 / size_j2) * j2
+        f0 = self.xvars[0] + h + (2 / size_j1) * j1
+        f0 = self.convert_differentials(f0)
+
+        f1 = 1 - mt * self.xvars[0] + h + (2 / size_j2) * j2
+        f1 = self.convert_differentials(f1)
 
         return (f0, f1)
 

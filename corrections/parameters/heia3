@@ -1,0 +1,10 @@
+{
+    "population_size": 100,
+    "max_evaluations": 100000,
+    "number_of_runs": 30,
+    "comment": "corrections-normals",
+
+    "mlsga": [],
+    "algorithms": ["heia"],
+    "problems": ["MOP1","MOP2","MOP3","MOP4","MOP5","MOP6","MOP7"]
+}

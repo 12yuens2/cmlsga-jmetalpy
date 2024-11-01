@@ -1,0 +1,239 @@
+Running SLURM prolog script on gold51.cluster.local
+Running SLURM prolog script on gold51.cluster.local
+===============================================================================
+===============================================================================
+Job started on Sun Sep 29 21:08:07 BST 2024
+Job started on Sun Sep 29 21:08:07 BST 2024
+Job ID          : 6604640
+Job name        : U-NSGA-IIIe-cont-IMB.slurm
+Job ID          : 6604637
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/summary-slurm
+Job name        : U-NSGA-IIIe-cont-IMB.slurm
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/summary-slurm/U-NSGA-IIIe-cont-IMB.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold51
+Job Output Follows ...
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/summary-slurm
+===============================================================================
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/summary-slurm/U-NSGA-IIIe-cont-IMB.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold51
+Job Output Follows ...
+===============================================================================
+Running SLURM prolog script on gold51.cluster.local
+===============================================================================
+Job started on Sun Sep 29 21:08:07 BST 2024
+Job ID          : 6604638
+Job name        : U-NSGA-IIIe-cont-IMB.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/summary-slurm
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/summary-slurm/U-NSGA-IIIe-cont-IMB.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold51
+Job Output Follows ...
+===============================================================================
+Running SLURM prolog script on gold51.cluster.local
+===============================================================================
+Job started on Sun Sep 29 21:08:07 BST 2024
+Job ID          : 6604639
+Job name        : U-NSGA-IIIe-cont-IMB.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/summary-slurm
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/summary-slurm/U-NSGA-IIIe-cont-IMB.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold51
+Job Output Follows ...
+===============================================================================
+Running SLURM prolog script on gold51.cluster.local
+===============================================================================
+Job started on Sun Sep 29 21:08:07 BST 2024
+Job ID          : 6604641
+Job name        : U-NSGA-IIIe-cont-IMB.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/summary-slurm
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/summary-slurm/U-NSGA-IIIe-cont-IMB.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold51
+Job Output Follows ...
+===============================================================================
+Running SLURM prolog script on gold52.cluster.local
+===============================================================================
+Job started on Sun Sep 29 21:08:07 BST 2024
+Job ID          : 6604642
+Job name        : U-NSGA-IIIe-cont-IMB.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/summary-slurm
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/summary-slurm/U-NSGA-IIIe-cont-IMB.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold52
+Job Output Follows ...
+===============================================================================
+Running SLURM prolog script on gold52.cluster.local
+===============================================================================
+Job started on Sun Sep 29 21:08:07 BST 2024
+Job ID          : 6604019
+Job name        : U-NSGA-IIIe-cont-IMB.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/summary-slurm
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/summary-slurm/U-NSGA-IIIe-cont-IMB.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold52
+Job Output Follows ...
+===============================================================================
+/ssdfs/users/sy6u19/data-100000evals-30runs-corrections-normals/U-NSGA-IIIe-cont/IMB13
+U-NSGA-IIIe-cont, IMB13
+U-NSGA-IIIe-cont, IMB13
+/ssdfs/users/sy6u19/data-100000evals-30runs-corrections-normals/U-NSGA-IIIe-cont/IMB14
+U-NSGA-IIIe-cont, IMB14
+U-NSGA-IIIe-cont, IMB14
+/ssdfs/users/sy6u19/data-100000evals-30runs-corrections-normals/U-NSGA-IIIe-cont/IMB9
+U-NSGA-IIIe-cont, IMB9
+U-NSGA-IIIe-cont, IMB9
+/ssdfs/users/sy6u19/data-100000evals-30runs-corrections-normals/U-NSGA-IIIe-cont/IMB11
+U-NSGA-IIIe-cont, IMB11
+U-NSGA-IIIe-cont, IMB11
+/ssdfs/users/sy6u19/data-100000evals-30runs-corrections-normals/U-NSGA-IIIe-cont/IMB10
+U-NSGA-IIIe-cont, IMB10
+U-NSGA-IIIe-cont, IMB10
+/ssdfs/users/sy6u19/data-100000evals-30runs-corrections-normals/U-NSGA-IIIe-cont/IMB12
+U-NSGA-IIIe-cont, IMB12
+U-NSGA-IIIe-cont, IMB12
+/ssdfs/users/sy6u19/data-100000evals-30runs-corrections-normals/U-NSGA-IIIe-cont/IMB8
+U-NSGA-IIIe-cont, IMB8
+U-NSGA-IIIe-cont, IMB8
+==============================================================================
+Running epilogue script on gold52.
+
+Submit time  : 2024-09-29T19:10:40
+Start time   : 2024-09-29T21:08:06
+End time     : 2024-09-29T21:08:10
+Elapsed time : 00:00:04 (Timelimit=1-23:55:00)
+
+Job ID: 6604642
+Array Job ID: 6604019_13
+Cluster: i5
+User/Group: sy6u19/mm
+State: FAILED (exit code 1)
+Cores: 1
+CPU Utilized: 00:00:03
+CPU Efficiency: 75.00% of 00:00:04 core-walltime
+Job Wall-clock time: 00:00:04
+Memory Utilized: 2.37 MB
+Memory Efficiency: 0.03% of 7.81 GB
+
+==============================================================================
+==============================================================================
+Running epilogue script on gold51.
+Running epilogue script on gold51.
+
+
+==============================================================================
+Running epilogue script on gold51.
+
+Submit time  : 2024-09-29T19:10:40
+==============================================================================
+Running epilogue script on gold51.
+
+Submit time  : 2024-09-29T19:10:40
+==============================================================================
+Submit time  : 2024-09-29T19:10:40
+Running epilogue script on gold51.
+
+Start time   : 2024-09-29T21:08:06
+Submit time  : 2024-09-29T19:10:40
+Submit time  : 2024-09-29T19:10:40
+Start time   : 2024-09-29T21:08:06
+Start time   : 2024-09-29T21:08:06
+End time     : 2024-09-29T21:08:11
+End time     : 2024-09-29T21:08:11
+Start time   : 2024-09-29T21:08:06
+Start time   : 2024-09-29T21:08:06
+Elapsed time : 00:00:05 End time     : 2024-09-29T21:08:11
+End time     : 2024-09-29T21:08:11
+Elapsed time : 00:00:05 End time     : 2024-09-29T21:08:11
+Elapsed time : 00:00:05 Elapsed time : 00:00:05 (Timelimit=1-23:55:00)
+
+(Timelimit=1-23:55:00)
+
+Elapsed time : 00:00:05 (Timelimit=1-23:55:00)
+
+(Timelimit=1-23:55:00)
+
+(Timelimit=1-23:55:00)
+
+Job ID: 6604641
+Array Job ID: 6604019_12
+Cluster: i5
+User/Group: sy6u19/mm
+State: FAILED (exit code 1)
+Cores: 1
+CPU Utilized: 00:00:02
+CPU Efficiency: 40.00% of 00:00:05 core-walltime
+Job Wall-clock time: 00:00:05
+Memory Utilized: 2.35 MB
+Memory Efficiency: 0.03% of 7.81 GB
+Job ID: 6604639
+Array Job ID: 6604019_10
+Cluster: i5
+User/Group: sy6u19/mm
+State: FAILED (exit code 1)
+Cores: 1
+CPU Utilized: 00:00:03
+CPU Efficiency: 60.00% of 00:00:05 core-walltime
+Job Wall-clock time: 00:00:05
+Memory Utilized: 2.35 MB
+Memory Efficiency: 0.03% of 7.81 GB
+
+
+Job ID: 6604637
+Array Job ID: 6604019_8
+Cluster: i5
+User/Group: sy6u19/mm
+State: FAILED (exit code 1)
+Cores: 1
+CPU Utilized: 00:00:03
+CPU Efficiency: 60.00% of 00:00:05 core-walltime
+Job Wall-clock time: 00:00:05
+Memory Utilized: 2.35 MB
+Memory Efficiency: 0.03% of 7.81 GB
+Job ID: 6604640
+Array Job ID: 6604019_11
+Cluster: i5
+User/Group: sy6u19/mm
+State: FAILED (exit code 1)
+Cores: 1
+CPU Utilized: 00:00:02
+CPU Efficiency: 40.00% of 00:00:05 core-walltime
+Job Wall-clock time: 00:00:05
+Memory Utilized: 2.35 MB
+Memory Efficiency: 0.03% of 7.81 GB
+Job ID: 6604638
+Array Job ID: 6604019_9
+Cluster: i5
+User/Group: sy6u19/mm
+State: FAILED (exit code 1)
+Cores: 1
+CPU Utilized: 00:00:03
+CPU Efficiency: 60.00% of 00:00:05 core-walltime
+Job Wall-clock time: 00:00:05
+Memory Utilized: 2.36 MB
+Memory Efficiency: 0.03% of 7.81 GB
+
+
+

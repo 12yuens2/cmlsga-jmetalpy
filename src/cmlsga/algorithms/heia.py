@@ -1,10 +1,11 @@
 import math
 import random
 
+from copy import deepcopy
 from jmetal.algorithm.singleobjective.genetic_algorithm import GeneticAlgorithm
 from jmetal.config import store
 from jmetal.operator.crossover import SBXCrossover, DifferentialEvolutionCrossover
-from jmetal.util.archive import Archive, BoundedArchive
+from jmetal.util.archive import Archive, BoundedArchive, CrowdingDistanceArchive
 from jmetal.util.comparator import DominanceComparator
 from jmetal.util.density_estimator import CrowdingDistance
 
@@ -51,7 +52,8 @@ class HEIA(GeneticAlgorithm):
                  termination_criterion,
                  population_generator = store.default_generator,
                  population_evaluator = store.default_evaluator,
-                 NA = 20):
+                 NA = 20,
+                 theta = 0.9):
 
         super(HEIA, self).__init__(
             problem,
@@ -65,16 +67,17 @@ class HEIA(GeneticAlgorithm):
             population_evaluator
         )
 
-        self.NA = 20
-        self.theta = 0.9
-        self.archive = BoundedArchive(100, DominanceComparator(), CrowdingDistance())
+        self.NA = NA
+        self.theta = theta
+        self.archive = CrowdingDistanceArchive(population_size)
 
 
     def create_initial_solutions(self):
         solutions = [self.population_generator.new(self.problem) for _ in range(self.population_size)]
         solutions = self.evaluate(solutions)
         for s in solutions:
-            self.archive.add(s)
+            self.archive.solution_list.append(s)
+            self.archive.non_dominated_solution_archive.solution_list.append(s)
 
         self.archive.compute_density_estimator()
 
@@ -95,7 +98,7 @@ class HEIA(GeneticAlgorithm):
         p2 = []
         for bs in best_solutions:
             for _ in range(self.num_clones(bs, sum_distance)):
-                clone = bs.__copy__()
+                clone = deepcopy(bs)
                 if random.random() < 0.5:
                     p1.append(clone)
                 else:
@@ -104,12 +107,17 @@ class HEIA(GeneticAlgorithm):
         p1 = self.evolve_sbx(p1, best_solutions)
         p2 = self.evolve_de(p2, best_solutions)
 
-        for s in p1 + p2:
+        new_solutions = self.evaluate(p1 + p2)
+
+        for s in new_solutions:
             s = self.mutation_operator.execute(s)
             self.archive.add(s)
 
+        self.archive.compute_density_estimator()
+        self.solutions = self.archive.solution_list
+
         return self.archive.solution_list
-        
+
         #mating_population = self.selection(self.solutions)
         #offspring_population = self.reproduction(mating_population)
         #offspring_population = self.evaluate(offspring_population)
@@ -121,7 +129,10 @@ class HEIA(GeneticAlgorithm):
         d = solution.attributes["crowding_distance"]
         crowding_distance = 1 if math.isinf(d) else d
 
-        num = math.ceil(self.population_size * crowding_distance / sum_distance)
+        if float(sum_distance) == 0:
+            return 1
+
+        num = math.ceil(self.population_size * crowding_distance / float(sum_distance))
         return num
 
 
@@ -141,11 +152,13 @@ class HEIA(GeneticAlgorithm):
         for c in clones:
             crossover_operator.current_individual = c
             mating = [c]
-            if random.random() < self.theta:
-                mating.extend(self.closest_neighbours(c, clones))
-            else:
+            if random.random() < self.theta and len(clones) >= 3:
+                mating.extend(self.closest_neighbours(c, clones[:])) #clones[:] copies the clones list
+            elif len(best_solutions) >= 2:
                 mating.extend(random.sample(best_solutions, 2))
-            offspring.extend(crossover_operator.execute(mating))
+
+            if len(mating) >= 3:
+                offspring.extend(crossover_operator.execute(mating))
 
         return offspring
 
@@ -154,14 +167,19 @@ class HEIA(GeneticAlgorithm):
         clones.remove(c)
 
         objective = random.randint(0, self.problem.number_of_objectives - 1)
-        neighbours = sorted([(abs(c.objectives[objective] - n.objectives[objective]), n) for n in clones])[:2]
+        neighbours = sorted([(abs(c.objectives[objective] - n.objectives[objective]), n) for n in clones],
+				key=lambda x: x[0])[:2]
 
         return [neighbours[0][1], neighbours[1][1]]
 
+    def result(self):
+        return self.archive.solution_list
 
     def get_result(self):
         return self.archive.solution_list
 
+    def name(self):
+        return "HEIA"
 
     def get_name(self):
         return "HEIA"

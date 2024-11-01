@@ -1,0 +1,10 @@
+{
+    "population_size": 100,
+    "max_evaluations": 100000,
+    "number_of_runs": 30,
+    "comment": "corrections-normals",
+
+    "mlsga": [],
+    "algorithms": ["heia"],
+    "problems": ["IMB1","IMB2","IMB3","IMB4","IMB5","IMB6","IMB7"]
+}

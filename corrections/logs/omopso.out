@@ -1,0 +1,214 @@
+Running SLURM prolog script on gold52.cluster.local
+===============================================================================
+Job started on Fri Apr  5 14:40:04 BST 2024
+Job ID          : 5776115
+Job name        : omopso.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/omopso.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold52
+Job Output Follows ...
+===============================================================================
+==============================================================================
+==============================================================================
+Running epilogue script on gold53.
+Running epilogue script on gold53.
+
+
+==============================================================================
+Running epilogue script on gold52.
+
+Submit time  : 2024-04-05T14:40:02
+Submit time  : 2024-04-05T14:40:02
+Submit time  : 2024-04-05T14:40:02
+Start time   : 2024-04-05T14:40:03
+Start time   : 2024-04-05T14:40:03
+Start time   : 2024-04-05T14:40:03
+End time     : 2024-04-05T15:51:18
+End time     : 2024-04-05T15:51:18
+End time     : 2024-04-05T15:51:18
+Elapsed time : 01:11:15 Elapsed time : 01:11:15 Elapsed time : 01:11:15 (Timelimit=1-10:05:00)
+
+(Timelimit=1-10:05:00)
+
+(Timelimit=1-10:05:00)
+
+Job ID: 5776118
+Array Job ID: 5776101_8
+Cluster: i5
+User/Group: sy6u19/mm
+State: CANCELLED (exit code 0)
+Cores: 1
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 01:11:15 core-walltime
+Job Wall-clock time: 01:11:15
+Memory Utilized: 3.94 GB
+Memory Efficiency: 100.78% of 3.91 GB
+Job ID: 5776119
+Array Job ID: 5776101_9
+Cluster: i5
+User/Group: sy6u19/mm
+State: CANCELLED (exit code 0)
+Cores: 1
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 01:11:15 core-walltime
+Job Wall-clock time: 01:11:15
+Memory Utilized: 2.35 GB
+Memory Efficiency: 60.24% of 3.91 GB
+
+
+Job ID: 5776116
+Array Job ID: 5776101_6
+Cluster: i5
+User/Group: sy6u19/mm
+State: CANCELLED (exit code 0)
+Cores: 1
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 01:11:15 core-walltime
+Job Wall-clock time: 01:11:15
+Memory Utilized: 2.81 GB
+Memory Efficiency: 71.83% of 3.91 GB
+
+==============================================================================
+Running epilogue script on gold52.
+
+==============================================================================
+Running epilogue script on gold52.
+
+==============================================================================
+Running epilogue script on gold52.
+
+==============================================================================
+Running epilogue script on gold52.
+
+==============================================================================
+Running epilogue script on gold52.
+
+Submit time  : 2024-04-05T14:40:02
+Submit time  : 2024-04-05T14:40:02
+==============================================================================
+Running epilogue script on gold52.
+
+==============================================================================
+Running epilogue script on gold52.
+
+Submit time  : 2024-04-05T14:40:02
+Submit time  : 2024-04-05T14:40:02
+Start time   : 2024-04-05T14:40:03
+Submit time  : 2024-04-05T14:40:02
+Submit time  : 2024-04-05T14:40:02
+Submit time  : 2024-04-05T14:40:02
+Start time   : 2024-04-05T14:40:03
+Start time   : 2024-04-05T14:40:03
+Start time   : 2024-04-05T14:40:03
+Start time   : 2024-04-05T14:40:03
+Start time   : 2024-04-05T14:40:03
+End time     : 2024-04-05T15:51:18
+End time     : 2024-04-05T15:51:18
+End time     : 2024-04-05T15:51:18
+End time     : 2024-04-05T15:51:18
+Start time   : 2024-04-05T14:40:03
+Elapsed time : 01:11:15 Elapsed time : 01:11:15 End time     : 2024-04-05T15:51:18
+End time     : 2024-04-05T15:51:18
+Elapsed time : 01:11:15 Elapsed time : 01:11:15 End time     : 2024-04-05T15:51:18
+(Timelimit=1-10:05:00)
+
+Elapsed time : 01:11:15 (Timelimit=1-10:05:00)
+
+Elapsed time : 01:11:15 (Timelimit=1-10:05:00)
+
+(Timelimit=1-10:05:00)
+
+Elapsed time : 01:11:15 (Timelimit=1-10:05:00)
+
+(Timelimit=1-10:05:00)
+
+(Timelimit=1-10:05:00)
+
+Job ID: 5776111
+Array Job ID: 5776101_1
+Cluster: i5
+User/Group: sy6u19/mm
+State: CANCELLED (exit code 0)
+Cores: 1
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 01:11:15 core-walltime
+Job Wall-clock time: 01:11:15
+Memory Utilized: 13.00 GB
+Memory Efficiency: 332.86% of 3.91 GB
+
+Job ID: 5776112
+Array Job ID: 5776101_2
+Cluster: i5
+User/Group: sy6u19/mm
+State: CANCELLED (exit code 0)
+Cores: 1
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 01:11:15 core-walltime
+Job Wall-clock time: 01:11:15
+Memory Utilized: 9.07 GB
+Memory Efficiency: 232.12% of 3.91 GB
+
+Job ID: 5776115
+Array Job ID: 5776101_5
+Cluster: i5
+User/Group: sy6u19/mm
+State: CANCELLED (exit code 0)
+Cores: 1
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 01:11:15 core-walltime
+Job Wall-clock time: 01:11:15
+Memory Utilized: 13.21 GB
+Memory Efficiency: 338.21% of 3.91 GB
+Job ID: 5776114
+Array Job ID: 5776101_4
+Cluster: i5
+User/Group: sy6u19/mm
+State: CANCELLED (exit code 0)
+Cores: 1
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 01:11:15 core-walltime
+Job Wall-clock time: 01:11:15
+Memory Utilized: 7.50 GB
+Memory Efficiency: 191.89% of 3.91 GB
+
+
+Job ID: 5776113
+Array Job ID: 5776101_3
+Cluster: i5
+User/Group: sy6u19/mm
+State: CANCELLED (exit code 0)
+Cores: 1
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 01:11:15 core-walltime
+Job Wall-clock time: 01:11:15
+Memory Utilized: 10.31 GB
+Memory Efficiency: 263.87% of 3.91 GB
+Job ID: 5776110
+Array Job ID: 5776101_0
+Cluster: i5
+User/Group: sy6u19/mm
+State: CANCELLED (exit code 0)
+Cores: 1
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 01:11:15 core-walltime
+Job Wall-clock time: 01:11:15
+Memory Utilized: 14.06 GB
+Memory Efficiency: 359.89% of 3.91 GB
+
+
+Job ID: 5776117
+Array Job ID: 5776101_7
+Cluster: i5
+User/Group: sy6u19/mm
+State: CANCELLED (exit code 0)
+Cores: 1
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 01:11:15 core-walltime
+Job Wall-clock time: 01:11:15
+Memory Utilized: 15.43 GB
+Memory Efficiency: 395.02% of 3.91 GB
+

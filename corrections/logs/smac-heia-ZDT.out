@@ -1,0 +1,150 @@
+Running SLURM prolog script on gold51.cluster.local
+===============================================================================
+Job started on Tue Jul  2 16:53:49 BST 2024
+Job ID          : 6184365
+Job name        : heia-ZDT.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/smac-slurm
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/smac-slurm/heia-ZDT.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold51
+Job Output Follows ...
+===============================================================================
+Running SLURM prolog script on gold51.cluster.local
+===============================================================================
+Job started on Tue Jul  2 16:53:49 BST 2024
+Job ID          : 6184367
+Job name        : heia-ZDT.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/smac-slurm
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/smac-slurm/heia-ZDT.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold51
+Job Output Follows ...
+===============================================================================
+Running SLURM prolog script on gold51.cluster.local
+===============================================================================
+Job started on Tue Jul  2 16:53:49 BST 2024
+Job ID          : 6184364
+Job name        : heia-ZDT.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/smac-slurm
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/smac-slurm/heia-ZDT.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold51
+Job Output Follows ...
+===============================================================================
+Running SLURM prolog script on gold51.cluster.local
+===============================================================================
+Job started on Tue Jul  2 16:53:49 BST 2024
+Job ID          : 6184353
+Job name        : heia-ZDT.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/smac-slurm
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/smac-slurm/heia-ZDT.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold51
+Job Output Follows ...
+===============================================================================
+Running SLURM prolog script on gold51.cluster.local
+===============================================================================
+Job started on Tue Jul  2 16:53:49 BST 2024
+Job ID          : 6184366
+Job name        : heia-ZDT.slurm
+WorkDir         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/smac-slurm
+Command         : /mainfs/home/sy6u19/cmlsga-jmetalpy/corrections/smac-slurm/heia-ZDT.slurm
+Partition       : serial
+Num hosts       : 1
+Num cores       : 1
+Num of tasks    : 1
+Hosts allocated : gold51
+Job Output Follows ...
+===============================================================================
+==============================================================================
+Running epilogue script on gold51.
+
+==============================================================================
+Running epilogue script on gold51.
+
+==============================================================================
+Running epilogue script on gold51.
+
+Submit time  : 2024-07-02T16:50:29
+==============================================================================
+Running epilogue script on gold51.
+
+Submit time  : 2024-07-02T16:50:29
+Submit time  : 2024-07-02T16:50:29
+Start time   : 2024-07-02T16:53:49
+Start time   : 2024-07-02T16:53:49
+Submit time  : 2024-07-02T16:50:29
+End time     : 2024-07-02T16:53:50
+End time     : 2024-07-02T16:53:50
+Start time   : 2024-07-02T16:53:49
+Start time   : 2024-07-02T16:53:49
+Elapsed time : 00:00:01 Elapsed time : 00:00:01 End time     : 2024-07-02T16:53:50
+End time     : 2024-07-02T16:53:50
+(Timelimit=2-01:55:00)
+
+(Timelimit=2-01:55:00)
+
+Elapsed time : 00:00:01 Elapsed time : 00:00:01 (Timelimit=2-01:55:00)
+
+(Timelimit=2-01:55:00)
+
+Job ID: 6184364
+Array Job ID: 6184353_1
+Cluster: i5
+User/Group: sy6u19/mm
+State: FAILED (exit code 1)
+Cores: 1
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 00:00:01 core-walltime
+Job Wall-clock time: 00:00:01
+Memory Utilized: 2.35 MB
+Memory Efficiency: 0.03% of 7.81 GB
+Job ID: 6184367
+Array Job ID: 6184353_4
+Cluster: i5
+User/Group: sy6u19/mm
+State: FAILED (exit code 1)
+Cores: 1
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 00:00:01 core-walltime
+Job Wall-clock time: 00:00:01
+Memory Utilized: 2.35 MB
+Memory Efficiency: 0.03% of 7.81 GB
+
+
+Job ID: 6184366
+Array Job ID: 6184353_3
+Cluster: i5
+User/Group: sy6u19/mm
+State: FAILED (exit code 1)
+Cores: 1
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 00:00:01 core-walltime
+Job Wall-clock time: 00:00:01
+Memory Utilized: 2.34 MB
+Memory Efficiency: 0.03% of 7.81 GB
+
+Job ID: 6184365
+Array Job ID: 6184353_2
+Cluster: i5
+User/Group: sy6u19/mm
+State: FAILED (exit code 1)
+Cores: 1
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 00:00:01 core-walltime
+Job Wall-clock time: 00:00:01
+Memory Utilized: 2.35 MB
+Memory Efficiency: 0.03% of 7.81 GB
+
