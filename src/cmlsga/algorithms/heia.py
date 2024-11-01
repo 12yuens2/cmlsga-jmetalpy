@@ -1,18 +1,15 @@
 import math
 import random
 
-<<<<<<< HEAD
 from copy import deepcopy
 from jmetal.algorithm.singleobjective.genetic_algorithm import GeneticAlgorithm
 from jmetal.config import store
 from jmetal.operator.crossover import SBXCrossover, DifferentialEvolutionCrossover
 from jmetal.util.archive import Archive, BoundedArchive, CrowdingDistanceArchive
-=======
 from jmetal.algorithm.singleobjective.genetic_algorithm import GeneticAlgorithm
 from jmetal.config import store
 from jmetal.operator.crossover import SBXCrossover, DifferentialEvolutionCrossover
 from jmetal.util.archive import Archive, BoundedArchive
->>>>>>> 903a598d6e4c6f11d0653317fc7195713274915b
 from jmetal.util.comparator import DominanceComparator
 from jmetal.util.density_estimator import CrowdingDistance
 
@@ -59,12 +56,8 @@ class HEIA(GeneticAlgorithm):
                  termination_criterion,
                  population_generator = store.default_generator,
                  population_evaluator = store.default_evaluator,
-<<<<<<< HEAD
                  NA = 20,
                  theta = 0.9):
-=======
-                 NA = 20):
->>>>>>> 903a598d6e4c6f11d0653317fc7195713274915b
 
         super(HEIA, self).__init__(
             problem,
@@ -78,27 +71,17 @@ class HEIA(GeneticAlgorithm):
             population_evaluator
         )
 
-<<<<<<< HEAD
         self.NA = NA
         self.theta = theta
         self.archive = CrowdingDistanceArchive(population_size)
-=======
-        self.NA = 20
-        self.theta = 0.9
-        self.archive = BoundedArchive(100, DominanceComparator(), CrowdingDistance())
->>>>>>> 903a598d6e4c6f11d0653317fc7195713274915b
 
 
     def create_initial_solutions(self):
         solutions = [self.population_generator.new(self.problem) for _ in range(self.population_size)]
         solutions = self.evaluate(solutions)
         for s in solutions:
-<<<<<<< HEAD
             self.archive.solution_list.append(s)
             self.archive.non_dominated_solution_archive.solution_list.append(s)
-=======
-            self.archive.add(s)
->>>>>>> 903a598d6e4c6f11d0653317fc7195713274915b
 
         self.archive.compute_density_estimator()
 
@@ -119,11 +102,7 @@ class HEIA(GeneticAlgorithm):
         p2 = []
         for bs in best_solutions:
             for _ in range(self.num_clones(bs, sum_distance)):
-<<<<<<< HEAD
                 clone = deepcopy(bs)
-=======
-                clone = bs.__copy__()
->>>>>>> 903a598d6e4c6f11d0653317fc7195713274915b
                 if random.random() < 0.5:
                     p1.append(clone)
                 else:
@@ -132,7 +111,6 @@ class HEIA(GeneticAlgorithm):
         p1 = self.evolve_sbx(p1, best_solutions)
         p2 = self.evolve_de(p2, best_solutions)
 
-<<<<<<< HEAD
         new_solutions = self.evaluate(p1 + p2)
 
         for s in new_solutions:
@@ -144,14 +122,6 @@ class HEIA(GeneticAlgorithm):
 
         return self.archive.solution_list
 
-=======
-        for s in p1 + p2:
-            s = self.mutation_operator.execute(s)
-            self.archive.add(s)
-
-        return self.archive.solution_list
-        
->>>>>>> 903a598d6e4c6f11d0653317fc7195713274915b
         #mating_population = self.selection(self.solutions)
         #offspring_population = self.reproduction(mating_population)
         #offspring_population = self.evaluate(offspring_population)
@@ -163,14 +133,10 @@ class HEIA(GeneticAlgorithm):
         d = solution.attributes["crowding_distance"]
         crowding_distance = 1 if math.isinf(d) else d
 
-<<<<<<< HEAD
         if float(sum_distance) == 0:
             return 1
 
         num = math.ceil(self.population_size * crowding_distance / float(sum_distance))
-=======
-        num = math.ceil(self.population_size * crowding_distance / sum_distance)
->>>>>>> 903a598d6e4c6f11d0653317fc7195713274915b
         return num
 
 
@@ -190,7 +156,6 @@ class HEIA(GeneticAlgorithm):
         for c in clones:
             crossover_operator.current_individual = c
             mating = [c]
-<<<<<<< HEAD
             if random.random() < self.theta and len(clones) >= 3:
                 mating.extend(self.closest_neighbours(c, clones[:])) #clones[:] copies the clones list
             elif len(best_solutions) >= 2:
@@ -198,13 +163,6 @@ class HEIA(GeneticAlgorithm):
 
             if len(mating) >= 3:
                 offspring.extend(crossover_operator.execute(mating))
-=======
-            if random.random() < self.theta:
-                mating.extend(self.closest_neighbours(c, clones))
-            else:
-                mating.extend(random.sample(best_solutions, 2))
-            offspring.extend(crossover_operator.execute(mating))
->>>>>>> 903a598d6e4c6f11d0653317fc7195713274915b
 
         return offspring
 
@@ -213,7 +171,6 @@ class HEIA(GeneticAlgorithm):
         clones.remove(c)
 
         objective = random.randint(0, self.problem.number_of_objectives - 1)
-<<<<<<< HEAD
         neighbours = sorted([(abs(c.objectives[objective] - n.objectives[objective]), n) for n in clones],
 				key=lambda x: x[0])[:2]
 
@@ -221,21 +178,12 @@ class HEIA(GeneticAlgorithm):
 
     def result(self):
         return self.archive.solution_list
-=======
-        neighbours = sorted([(abs(c.objectives[objective] - n.objectives[objective]), n) for n in clones])[:2]
-
-        return [neighbours[0][1], neighbours[1][1]]
-
->>>>>>> 903a598d6e4c6f11d0653317fc7195713274915b
 
     def get_result(self):
         return self.archive.solution_list
 
-<<<<<<< HEAD
     def name(self):
         return "HEIA"
-=======
->>>>>>> 903a598d6e4c6f11d0653317fc7195713274915b
 
     def get_name(self):
         return "HEIA"

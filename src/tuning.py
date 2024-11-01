@@ -347,7 +347,6 @@ def create_configuration(algorithm_name, problem_name, outpath, evaluations):
     if algorithm_name == "cmpso":
          cs.add_hyperparameter(UniformIntegerHyperparameter("population", 2, 1000, default_value=20))
 
-
     return cs
 
 
@@ -405,4 +404,5 @@ if __name__ == "__main__":
     #print("best: population: {}, crossover: {}, mutation: {}, leaders: {}".format(
     #    best["epigenetic_proba"], best["block_size"]
     #))
+
 

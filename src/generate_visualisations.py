@@ -153,7 +153,6 @@ if __name__ == "__main__":
 
     # Wilcoxon
     #compute_wilcoxon(filename)
->>>>>>> 903a598d6e4c6f11d0653317fc7195713274915b
 
     generate_summary_from_experiment(
         data_directory,
@@ -161,3 +160,6 @@ if __name__ == "__main__":
         100000,
         reference_fronts="resources/reference_front"
     )
+=======
+
+>>>>>>> 903a598d6e4c6f11d0653317fc7195713274915b

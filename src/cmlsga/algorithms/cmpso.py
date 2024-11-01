@@ -30,13 +30,8 @@ class CMPSO(ParticleSwarmOptimization):
         self.dominance_comparator = DominanceComparator()
 
         self.w_max = 0.9
-<<<<<<< HEAD
         self.w_min = 0.5
         self.c1 = self.c2 = self.c3 = 4.0/3.0
-=======
-        self.w_min = 0.4
-        self.c1 = self.c2 = self.c3 = 4/3
->>>>>>> 903a598d6e4c6f11d0653317fc7195713274915b
         self.change_velocity1 = self.change_velocity2 = -1
 
         self.archive_size = 100
@@ -177,11 +172,7 @@ class CMPSO(ParticleSwarmOptimization):
 
 
     def update_velocity(self, swarms):
-<<<<<<< HEAD
         w = self.w_max - (self.w_max - self.w_min) * (self.termination_criterion.evaluations / self.termination_criterion.max_evaluations)
-=======
-        w = self.w_max - self.w_min * (self.termination_criterion.evaluations / self.termination_criterion.max_evaluations)
->>>>>>> 903a598d6e4c6f11d0653317fc7195713274915b
 
         for m in range(0, len(swarms)):
             gbest = self.gbests[m]
@@ -191,16 +182,9 @@ class CMPSO(ParticleSwarmOptimization):
                 archive_position = self.select_archive_solution()
 
                 pbest = current_position.attributes["local_best"]
-<<<<<<< HEAD
                 r1 = random.random()
                 r2 = random.random()
                 r3 = random.random()
-=======
-                r1 = self.generate_random_r()
-                r2 = self.generate_random_r()
-                r3 = self.generate_random_r()
->>>>>>> 903a598d6e4c6f11d0653317fc7195713274915b
-
                 for d in range(0, self.problem.number_of_variables):
                     current = current_position.variables[d]
                     v1 = (self.c1 * r1 * (pbest.variables[d] - current))
@@ -210,12 +194,9 @@ class CMPSO(ParticleSwarmOptimization):
                     self.speed[m][i][d] = w * self.speed[m][i][d] + v1 + v2 + v3
 
 
-<<<<<<< HEAD
-=======
     def generate_random_r(self):
         return round(random.random(), 2)
 
->>>>>>> 903a598d6e4c6f11d0653317fc7195713274915b
 
     def update_position(self, swarms):
         for m in range(len(swarms)):
@@ -249,12 +230,8 @@ class CMPSO(ParticleSwarmOptimization):
             "PROBLEM": self.problem,
             "EVALUATIONS": self.evaluations,
             "SOLUTIONS": self.get_result(),
-<<<<<<< HEAD
             "ALL_SOLUTIONS": [s for swarm in self.solutions for s in swarm]        
         }
-=======
-            "ALL_SOLUTIONS": [s for swarm in self.solutions for s in swarm]        }
->>>>>>> 903a598d6e4c6f11d0653317fc7195713274915b
 
     def get_result(self):
         return self.archive
